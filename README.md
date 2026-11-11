@@ -18,6 +18,7 @@ El avance de los retos se guarda en el navegador de cada persona.
 | 4. El laminador | `capa-a-capa-modulo-4a.html`, `capa-a-capa-modulo-4b.html`, `capa-a-capa-modulo-4c.html` |
 | 5. Calibración | `capa-a-capa-modulo-5a.html` (parte 1), `capa-a-capa-modulo-5b.html` (parte 2) |
 | 6. Errores y diagnóstico | `capa-a-capa-modulo-6a.html` (parte 1), `capa-a-capa-modulo-6b.html` (parte 2) |
+| 7. Diseño funcional | `capa-a-capa-modulo-7a.html` (parte 1) |
 
 Próximamente: segunda parte de Calibración, Errores y diagnóstico, Diseño de piezas funcionales, El taller, Del hobby al negocio y Glosario.
 
