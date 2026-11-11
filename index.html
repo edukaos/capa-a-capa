@@ -98,7 +98,44 @@ svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-lin
 .part.full .go{background:#12402F;color:var(--pop)}
 footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:18px}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* llevar el avance a otro dispositivo */
+.avance{background:var(--low);border-radius:28px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 28px;scroll-margin-top:20px}
+@media (max-width:860px){.avance{grid-template-columns:minmax(0,1fr)}}
+.avance h2{font-size:24px}
+.avance .col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.avance p{color:var(--ink-soft);font-size:15px}
+.avance .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.avance input{flex:1 1 200px;min-width:0;min-height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--outline);background:var(--bg);color:var(--ink);font:400 14px var(--f-mono)}
+.avance input:focus-visible{outline:3px solid var(--ui);outline-offset:2px}
+.avance label{font-weight:700;font-size:14px}
+.avance .col>input{flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:24px;background:var(--pri);color:var(--on-pri);font:700 15px var(--f-body);cursor:pointer}
+.btn:hover{background:#C3D8FF}
+.btn.tonal{background:var(--hi2);color:var(--ink)}
+.btn.tonal:hover{background:#3C4864}
+.btn:focus-visible{outline:3px solid var(--ui);outline-offset:3px}
+.aviso{font-size:14px;font-weight:600;border-radius:14px;padding:10px 14px}
+.aviso.ok{background:rgba(134,217,181,.12);color:#C9F2DF;box-shadow:inset 0 0 0 1.5px rgba(134,217,181,.5)}
+.aviso.bad{background:rgba(255,180,171,.12);color:#FFDAD6;box-shadow:inset 0 0 0 1.5px rgba(255,180,171,.5)}
+.llega{position:sticky;top:12px;z-index:30;background:var(--pri-c);color:var(--on-pri-c);border-radius:24px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.llega p{margin:0;font-weight:600;color:#fff}
+.llega .row{display:flex;gap:10px;flex-wrap:wrap}
 </style>
+<meta name="description" content="Manual interactivo de impresión 3D FDM de Quirón 3D: cada idea se entiende tocando, con simuladores, retos y fichas.">
+<meta name="theme-color" content="#141A27">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Capa a Capa">
+<meta property="og:title" content="Capa a Capa · Manual interactivo de impresión 3D">
+<meta property="og:description" content="Cada idea se entiende tocando: un control, un simulador y la consecuencia a la vista. De Quirón 3D.">
+<meta property="og:url" content="https://edukaos.github.io/capa-a-capa/">
+<meta property="og:image" content="https://edukaos.github.io/capa-a-capa/img/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
 </head>
 <body>
 <nav class="m3rail" aria-label="Navegación principal">
@@ -141,7 +178,23 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     <ol class="mods" id="mods"></ol>
   </section>
 
-  <footer>Basado en el curso de impresión 3D de Quirón. Cada módulo guarda tu avance en este navegador.</footer>
+  <section class="avance" id="avance" aria-labelledby="av-t">
+    <div class="col">
+      <h2 id="av-t">Llevá tu avance a otro dispositivo</h2>
+      <p>Tu avance se guarda solo en este navegador. Para seguir en el celular o en otra computadora, mandate este enlace y abrilo allá.</p>
+      <div class="row"><button class="btn" id="av-share" type="button">Copiar enlace con mi avance</button></div>
+      <input id="av-link" type="text" readonly aria-label="Enlace con tu avance" hidden>
+      <p class="aviso" id="av-msg" role="status" hidden></p>
+    </div>
+    <div class="col">
+      <label for="av-code">¿Ya tenés un enlace o código?</label>
+      <p>Pegalo acá y se suma al avance de este dispositivo. No se borra nada de lo que ya hiciste.</p>
+      <div class="row"><input id="av-code" type="text" autocomplete="off" spellcheck="false" placeholder="Pegá el enlace o el código"><button class="btn tonal" id="av-load" type="button">Cargar avance</button></div>
+      <p class="aviso" id="av-msg2" role="status" hidden></p>
+    </div>
+  </section>
+
+  <footer>Basado en el curso de impresión 3D de Quirón. Cada módulo guarda tu avance en este navegador; podés llevarlo a otro dispositivo desde la sección de arriba.</footer>
 </div>
 
 <script>
@@ -177,6 +230,39 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
   document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos. Tu avance se guarda en este navegador.':TOT+' lecciones en 9 módulos y un glosario. Tu avance se guarda en este navegador.';
   if(resume){document.getElementById('cta').href=resume.href;document.getElementById('cta-t').textContent='Seguir con el módulo '+resume.n}
 })();
+
+/* Llevar el avance a otro dispositivo: el avance viaja dentro del enlace, sin cuentas ni servidor. */
+(function(){
+  var $=function(id){return document.getElementById(id)},BASE='https://edukaos.github.io/capa-a-capa/index.html';
+  function leer(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^cac-m/.test(k)){var v=JSON.parse(localStorage.getItem(k)||'{}');if(v&&typeof v==='object')o[k]=v}}}catch(e){}return o}
+  function contar(o){var n=0;for(var k in o)for(var l in o[k])if(o[k][l])n++;return n}
+  function cod(o){var s=unescape(encodeURIComponent(JSON.stringify(o)));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
+  function decod(c){c=String(c||'').trim();var m=c.match(/avance=([A-Za-z0-9_-]+)/);if(m)c=m[1];c=c.replace(/-/g,'+').replace(/_/g,'/');while(c.length%4)c+='=';
+    var o=JSON.parse(decodeURIComponent(escape(atob(c))));if(!o||typeof o!=='object')throw 0;for(var k in o)if(!/^cac-m[\w]+$/.test(k)||typeof o[k]!=='object')throw 0;return o}
+  function sumar(o){var n=0;try{for(var k in o){var cur=JSON.parse(localStorage.getItem(k)||'{}')||{};for(var l in o[k])if(o[k][l]&&!cur[l]){cur[l]=o[k][l];n++}localStorage.setItem(k,JSON.stringify(cur))}}catch(e){return -1}return n}
+  function msg(el,t,ok){el.hidden=false;el.textContent=t;el.className='aviso '+(ok?'ok':'bad')}
+  function cargar(o,el){var n=sumar(o);if(n<0){msg(el,'No se pudo guardar en este navegador. Puede que esté en modo privado.',false);return false}
+    msg(el,n?'Listo: se sumaron '+n+' retos. Recargando…':'Ya tenías todo eso en este dispositivo.',true);if(n)setTimeout(function(){location.href='index.html'},1200);return true}
+  $('av-share').addEventListener('click',function(){var o=leer(),n=contar(o),m=$('av-msg');
+    if(!n){msg(m,'Todavía no resolviste ningún reto en este navegador.',false);return}
+    var url=BASE+'#avance='+cod(o),inp=$('av-link');inp.value=url;inp.hidden=false;
+    function ok(){msg(m,'Enlace copiado con tus '+n+' retos. Abrilo en el otro dispositivo.',true)}
+    function manual(){inp.focus();inp.select();msg(m,'Copiá el enlace de arriba y abrilo en el otro dispositivo.',true)}
+    try{navigator.clipboard.writeText(url).then(ok,manual)}catch(e){manual()}});
+  $('av-load').addEventListener('click',function(){var m=$('av-msg2');try{cargar(decod($('av-code').value),m)}catch(e){msg(m,'Ese enlace o código no es válido. Revisá que esté completo.',false)}});
+  // al abrir un enlace con avance, preguntar antes de sumarlo
+  window.addEventListener('hashchange',function(){if(location.hash.indexOf('avance=')>=0)location.reload()});
+  var h='';try{h=location.hash}catch(e){}if(h.indexOf('avance=')<0)return;var o;try{o=decod(h)}catch(e){return}
+  var b=document.createElement('div');b.className='llega';b.setAttribute('role','dialog');b.setAttribute('aria-label','Avance de otro dispositivo');
+  b.innerHTML='<p></p><div class="row"><button class="btn" type="button">Sumar a este dispositivo</button><button class="btn tonal" type="button">Ahora no</button></div>';
+  b.querySelector('p').textContent='Este enlace trae '+contar(o)+' retos resueltos en otro dispositivo.';
+  var bs=b.querySelectorAll('button');
+  bs[0].addEventListener('click',function(){var p=b.querySelector('p');var n=sumar(o);if(n<0){p.textContent='No se pudo guardar en este navegador.';return}
+    p.textContent=n?'Listo: se sumaron '+n+' retos.':'Ya tenías todo eso en este dispositivo.';bs[0].hidden=true;bs[1].textContent='Cerrar';try{history.replaceState(null,'','index.html')}catch(e){}setTimeout(function(){location.reload()},900)});
+  bs[1].addEventListener('click',function(){b.remove();try{history.replaceState(null,'','index.html')}catch(e){}});
+  var w=document.querySelector('.wrap');w.insertBefore(b,w.firstChild);
+})();
 </script>
+<script src="registro-sw.js"></script>
 </body>
 </html>

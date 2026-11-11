@@ -340,186 +340,21 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
-<style id="tema-material">
-/* ===== Tema Material 3 · azul = se toca · ámbar = tu avance y tu reto · verde = salió bien ===== */
-:root{
-  --bg:#141A27; --surface:#1F273A; --sunken:#171E2D; --line:#3A455C;
-  --ink:#E4E8F3; --ink-soft:#B9C2D8; --ui:#FFB95E; --ui-ink:#472A00;
-  --fil:#FF9E70; --fil2:#EE8455; --pop:#86D9B5; --bad:#FFB4AB;
-  --pri:#A9C7FF; --on-pri:#08305E; --pri-c:#254777; --on-pri-c:#D6E3FF;
-  --hi:#273147; --hi2:#313C55; --low:#1A2131; --outline:#56627D;
-  --r:28px;
-}
-body{background:var(--bg)}
-.wrap{max-width:1120px;gap:24px}
-button:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--ui)!important;outline-offset:3px}
-
-/* riel de navegación */
-.m3rail{position:fixed;z-index:20;left:0;top:0;bottom:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 0;background:var(--bg)}
-.m3rail .lg{display:flex;flex-direction:column;gap:4px;align-items:flex-start;margin-bottom:22px}
-.m3rail .lg b{display:block;height:5px;border-radius:3px}
-.m3rail .lg b:nth-child(1){width:16px;background:#FFB95E}.m3rail .lg b:nth-child(2){width:24px;background:#FF9E70}.m3rail .lg b:nth-child(3){width:32px;background:#EE8455}
-.m3rail a{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:72px;padding:6px 0;text-decoration:none;color:var(--ink-soft);font:500 12px var(--f-body);border-radius:16px}
-.m3rail a span{display:grid;place-items:center;width:56px;height:32px;border-radius:16px;transition:background .15s ease-out}
-.m3rail a:hover span{background:var(--hi)}
-.m3rail a[aria-current="page"]{color:var(--ink);font-weight:700}
-.m3rail a[aria-current="page"] span{background:var(--pri-c);color:var(--on-pri-c)}
-.m3rail svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-body{padding-left:96px}
-@media (max-width:860px){
-  body{padding-left:0;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
-  .m3rail{top:auto;right:0;width:auto;flex-direction:row;justify-content:space-around;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--low);border-top:1px solid var(--line)}
-  .m3rail .lg{display:none}
-}
-
-/* barra superior */
-.brand{font-size:20px}
-.prog .bar{background:var(--line)}
-.prog .bar i{background:var(--ui);transition:width .4s ease-out}
-.snd,.rstm{border:0;background:var(--hi);color:var(--ink);min-height:40px}
-.snd{width:40px;height:40px}.rstm{height:40px;padding:0 16px}
-.snd:hover,.rstm:hover{background:var(--hi2)}
-.modnav a,.modnav .mn-off{padding:8px 16px;min-height:40px;display:inline-flex;align-items:center}
-.modnav .mn-next,.modnav .mn-prev{background:var(--hi);color:var(--ink);font-weight:700}
-.modnav .mn-next:hover,.modnav .mn-prev:hover{background:var(--hi2)}
-.modnav .mn-home{background:transparent;color:var(--pri);border:1px solid var(--outline)}
-.modnav .mn-home:hover{background:var(--hi);color:var(--pri)}
-@media (min-width:861px){.modnav:not(.modbot) .mn-home{visibility:hidden}}
-
-/* portada del módulo */
-.mhero{border-radius:28px}
-.mhero .k{color:var(--ui)}
-
-/* pasos del módulo, con nombre */
-.steps{max-width:none;gap:0;background:var(--low);border-radius:28px;padding:20px 12px 18px;align-items:flex-start}
-.steps button{position:relative;width:44px;height:44px;margin:0 calc((100% - var(--n,6)*44px)/(var(--n,6)*2));background:var(--low);border:2px solid var(--outline);color:var(--ink-soft)}
-.steps i{display:none}
-.steps{position:relative}
-.steps::before{content:"";position:absolute;left:calc(12px + (100% - 24px)/(var(--n,6)*2));right:calc(12px + (100% - 24px)/(var(--n,6)*2));top:40.5px;height:3px;border-radius:2px;background:var(--line)}
-.steps button.done{background:#12402F;border-color:var(--pop);color:var(--pop)}
-.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 5px rgba(255,185,94,.22)}
-.steps button::after{content:attr(data-t);position:absolute;left:50%;top:52px;transform:translateX(-50%);width:max-content;max-width:var(--lw,150px);font:500 13px/1.25 var(--f-body);letter-spacing:0;color:var(--ink-soft);text-align:center;pointer-events:none}
-.steps button[aria-current="true"]::after{color:var(--ink);font-weight:700}
-@media (min-width:861px){.steps{padding-bottom:68px}.stepcap{display:none}}
-@media (max-width:860px){.steps button::after{display:none}.steps{padding:14px 6px}.steps::before{top:34.5px}}
-@media (max-width:420px){.steps button{width:40px;height:40px;margin:0 calc((100% - var(--n,6)*40px)/(var(--n,6)*2))}.steps::before{top:32.5px}}
-
-/* cabecera de lección */
-.eyebrow{color:var(--ui);letter-spacing:.08em}
-.lhead{max-width:68ch}
-.lhead h1{font-size:clamp(36px,4.6vw,56px)}
-.lhead p{font-size:19px}
-h1 .en{border:1px solid #8791A8;border-radius:10px;padding:4px 12px;font-size:14px;vertical-align:.5em;margin-left:6px}
-
-/* guía de la lección */
-.pguide li{background:var(--low);border-color:var(--line);padding:8px 16px 8px 8px}
-.pguide li .n{background:var(--hi2)}
-.pguide li.now{border-color:var(--ui)}
-.pguide li.ok{border-color:var(--pop)}
-
-/* bloques */
-.criollo,.sim,.card,.mod{border:0;border-radius:28px}
-.criollo{background:var(--pri-c);padding:22px 24px;gap:10px}
-.criollo p{color:#fff;font-size:clamp(19px,2.2vw,22px);line-height:1.4}
-.criollo .pstep .t b{color:#fff}.criollo .pstep .t small{color:var(--on-pri-c)}
-.criollo .pstep .n{background:var(--pri);color:var(--on-pri)}
-.sim>.pstep{padding:22px 24px 0}
-.sim .mision{margin:14px 24px 18px}
-.simbody,.gside{padding:18px 24px 24px}
-.card{padding:22px 24px;gap:12px}
-.card h3{font-size:24px;line-height:1.15}
-.tag{color:var(--pri);font-size:13px;letter-spacing:.08em}
-.pstep{gap:14px}
-.pstep .n{width:44px;height:44px;border-radius:14px;background:var(--hi2);color:var(--pri);font-size:18px}
-.pstep .t b{font-size:20px}
-.pdone .pstep .n{background:#12402F;color:var(--pop)}
-.pdeep>h2{color:var(--ink-soft)}
-
-/* reto */
-.mision{background:rgba(255,185,94,.1);border:2px solid #7A5210;border-radius:20px;padding:14px 16px}
-.mision .ic{width:36px;height:36px;border-radius:12px}
-.mision.done{background:rgba(134,217,181,.1);border-color:var(--pop)}
-.mision .pst{background:#5C3B08;color:#FFDDB5}
-
-/* controles y lecturas */
-.pctl{background:var(--hi);border:2px solid #7A5210;border-radius:20px;padding:16px 18px}
-.pctl.used{border-color:transparent}
-.btn{background:var(--pri);color:var(--on-pri);min-height:44px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center}
-.btn:hover{transform:none;background:#C3D8FF}
-.btn.ghost{background:var(--hi2);color:var(--ink);border:0}
-.btn.ghost:hover{background:#3C4864}
-.btn.sq{border-radius:14px;min-width:48px;padding:0 12px}
-.rst{min-height:40px;padding:0 16px;font-size:14px}
-input[type=range]{accent-color:var(--ui);height:44px}
-.reads{gap:12px}
-.reads div{background:var(--hi);border-radius:20px;padding:14px 16px}
-.reads dd{font-family:var(--f-mono);font-size:26px;color:var(--ui)}
-.reads div:first-child dd{color:var(--pop)}
-.note{border-left:0;background:var(--sunken);border-radius:16px;padding:12px 16px;color:var(--ink-soft)}
-.msg{border-radius:16px;padding:12px 16px}
-.io div,.lp{background:var(--hi);border-radius:16px}
-.stations button{background:var(--hi);border:2px solid transparent;border-radius:16px;padding:12px 12px;min-height:52px}
-.stations button[aria-pressed="true"]{border-color:var(--pri);background:var(--pri-c);box-shadow:none}
-.prog-list{border-radius:16px;background:var(--sunken)}
-.vs>div+div{border-left-color:var(--line)}
-.bin{background:var(--sunken);border:1px solid var(--line);border-radius:20px}
-.bin>button{background:var(--hi2);border:0;border-radius:14px;min-height:44px}
-
-/* opciones */
-.opts button,.chipset button{background:transparent;border:2px solid var(--outline);border-radius:16px;min-height:48px;padding:8px 18px}
-.chipset button{border-radius:24px}
-.opts button:hover:not(:disabled),.chipset button:hover:not(:disabled){background:var(--hi)}
-.opts button.right,.chipset button.right{background:#12402F;border-color:var(--pop);color:#C9F2DF}
-.opts button.wrong,.chipset button.wrong{background:#5A1F1B;border-color:var(--bad);color:#FFDAD6}
-.chipset button[aria-pressed="true"]{background:var(--pri-c);border-color:var(--pri);color:var(--on-pri-c)}
-
-/* ficha, cierre y pie */
-details.ficha{background:var(--low);border:1px solid var(--line);border-radius:28px;padding:0 24px}
-details.ficha summary{padding:20px 0;font-family:var(--f-display);font-size:18px;align-items:center}
-details.ficha summary::after{color:var(--pri);font-size:20px}
-details.ficha .in{padding-bottom:22px}
-code{color:var(--ui)}
-.pnext{background:rgba(134,217,181,.1);border:2px solid var(--pop);border-radius:20px;padding:14px 16px}
-.cierre{background:var(--surface);border:2px solid var(--pop);padding:24px}
-.navrow{border-top:0;padding-top:4px}
-#next,.cierre .btn.big{min-height:52px;padding:0 26px;font-size:16px}
-.sello{background:rgba(15,20,30,.92)}
-.score{color:var(--ui)}
-
-/* narración y barra superior fija */
-.narr{flex:none;display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px 0 12px;border:0;border-radius:20px;background:var(--pri-c);color:var(--on-pri-c);font:700 14px var(--f-body);cursor:pointer;white-space:nowrap}
-.narr:hover{background:#2E5590}
-.narr.on{background:var(--pri);color:var(--on-pri)}
-.narr svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.narr:not(.on) svg{fill:currentColor;stroke-width:1.5}
-@media (min-width:861px){.top{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 0;margin-block:-12px;box-shadow:0 1px 0 var(--line)}}
-
-/* mini reto con respuesta: va dentro del simulador, como parte del reto */
-.card.preto{background:rgba(255,185,94,.08);border:2px solid #7A5210;border-radius:20px;padding:16px 18px;gap:10px}
-.card.preto .tag{color:var(--ui)}
-.card.preto h3{font-size:20px}
-
-/* celular: narración solo con ícono y fila superior que puede bajar de renglón */
-@media (max-width:860px){
-  .prog{flex-wrap:wrap;row-gap:8px;min-width:0}
-  .top{min-width:0}
-  .narr{width:40px;padding:0;justify-content:center}
-  .narr span{display:none}
-}
-
-/* celular: los tres botones redondos (reiniciar, sonido, narración) en una sola fila */
-@media (max-width:860px){
-  .top{position:relative}
-  .prog{flex:1 1 100%;flex-wrap:nowrap;gap:8px}
-  .prog>span:first-child{white-space:nowrap}
-  .prog .bar{flex:1 1 40px;width:auto;max-width:120px;min-width:32px}
-  .rstm{margin-left:auto;width:40px;padding:0;font-size:0;display:grid;place-items:center}
-  .rstm::before{content:"\21BA";font-size:19px;font-weight:700}
-  .rstm{position:relative;line-height:1}
-  .rstm.armed{background:#5A1F1B;color:#FFDAD6;box-shadow:inset 0 0 0 1.5px var(--bad)}
-  .rstm.armed::after{content:attr(data-ask);position:absolute;right:0;top:calc(100% + 8px);z-index:30;white-space:nowrap;padding:10px 16px;border-radius:20px;background:#5A1F1B;color:#FFDAD6;border:1px solid var(--bad);font:600 13px var(--f-body)}
-}
-</style>
+<meta name="description" content="Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
+<meta name="theme-color" content="#141A27">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Capa a Capa">
+<meta property="og:title" content="Capa a Capa Módulo 8A">
+<meta property="og:description" content="Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
+<meta property="og:url" content="https://edukaos.github.io/capa-a-capa/capa-a-capa-modulo-8a.html">
+<meta property="og:image" content="https://edukaos.github.io/capa-a-capa/img/compartir.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="tema.css">
 </head>
 <body>
 <nav class="m3rail" aria-label="Navegación principal">
@@ -1136,50 +971,7 @@ code{color:var(--ui)}
   h.innerHTML='<img src="img/m'+n+'.webp" alt="" loading="eager"><div class="tx"><span class="k">Módulo '+n+pt+'</span><h2></h2><p></p></div>';h.querySelector('h2').textContent=MT[n][0];h.querySelector('p').textContent=MT[n][1];
   var nav=document.querySelector('.steps');if(nav)nav.parentNode.insertBefore(h,nav)})();
 </script><!--/fx-->
-<script>(function(){var nv=document.getElementById("nav");if(!nv)return;var b=nv.querySelectorAll("button");nv.style.setProperty("--n",b.length);nv.style.setProperty("--lw",b.length>7?"104px":b.length>6?"128px":"150px");for(var i=0;i<b.length;i++){var a=b[i].getAttribute("aria-label")||"",k=a.indexOf(", ");b[i].setAttribute("data-t",k>0?a.slice(k+2):"Repaso")}})();</script>
-<script>
-(function(){
-  // Narración: lee título, introducción y analogía de cada lección con la voz del navegador.
-  // Arranca sola al cambiar de lección (después del primer toque) y se pausa o reanuda por oraciones.
-  var SY=window.speechSynthesis;if(!SY||!window.SpeechSynthesisUtterance)return;
-  var top=document.querySelector('.top'),secs=[].slice.call(document.querySelectorAll('section.lesson'));if(!top||!secs.length)return;
-  var KEY='cac-narr',auto=true;try{auto=localStorage.getItem(KEY)!=='off'}catch(e){}
-  var parts=[],idx=0,state='idle',token=0,cur=null,touched=false;
-  var IC={play:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z"/></svg>',pause:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>'};
-  var btn=document.createElement('button');btn.type='button';btn.className='narr';
-  (top.querySelector('.prog')||top).appendChild(btn);
-  function paint(){var t=state==='playing'?'Pausar':state==='paused'?'Reanudar':'Escuchar';
-    btn.innerHTML=(state==='playing'?IC.pause:IC.play)+'<span>'+t+'</span>';btn.setAttribute('aria-label',t+' la narración de la lección');btn.classList.toggle('on',state==='playing')}
-  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];
-    for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
-  function textOf(sec){var hd=sec.querySelector('.lhead');if(!hd)return[];var h=hd.querySelector('h1'),ps=hd.querySelectorAll('p'),cr=sec.querySelector('.criollo p'),t=[];
-    if(h){var c=h.cloneNode(true),en=c.querySelector('.en');if(en)c.removeChild(en);t.push(c.textContent.trim()+'.')}
-    if(ps[1])t.push(ps[1].textContent);if(cr)t.push(cr.textContent);
-    return (t.join(' ').match(/[^.!?…]+[.!?…]+|[^.!?…]+$/g)||[]).map(function(x){return x.trim()}).filter(Boolean)}
-  function next(){if(state!=='playing')return;if(idx>=parts.length){state='idle';idx=0;paint();return}
-    var my=++token,u=new SpeechSynthesisUtterance(parts[idx]),v=voice();u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;
-    u.onend=function(){if(my!==token)return;idx++;next()};
-    u.onerror=function(){if(my!==token)return;state='idle';idx=0;paint()};
-    try{SY.speak(u)}catch(e){state='idle';paint()}}
-  function halt(){token++;try{SY.cancel()}catch(e){}}
-  function play(){halt();if(idx>=parts.length)idx=0;state='playing';paint();next()}
-  function pause(){halt();state='paused';paint()}
-  function load(sec){halt();cur=sec;parts=sec?textOf(sec):[];idx=0;state='idle';btn.hidden=!parts.length;paint()}
-  function visible(){for(var i=0;i<secs.length;i++)if(!secs[i].hidden)return secs[i];return null}
-  btn.addEventListener('click',function(){if(state==='playing'){pause();auto=false}else{play();auto=true}try{localStorage.setItem(KEY,auto?'on':'off')}catch(e){}});
-  ['pointerdown','keydown'].forEach(function(ev){document.addEventListener(ev,function(){touched=true},true)});
-  var pend=0;new MutationObserver(function(){clearTimeout(pend);pend=setTimeout(function(){var v=visible();if(v===cur)return;load(v);if(v&&auto&&touched)play()},60)})
-    .observe(document.querySelector('.wrap')||document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});
-  window.addEventListener('pagehide',halt);try{SY.getVoices()}catch(e){}
-  // los módulos que ya traían un botón propio de lectura lo ceden a este
-  [].forEach.call(document.querySelectorAll('.listen'),function(b){b.hidden=true});
-  load(visible());
-})();
-
-(function(){ // en el celular, Reiniciar es solo un ícono: la pregunta de confirmación se muestra como globo
-  var r=document.querySelector('.rstm');if(!r)return;
-  new MutationObserver(function(){if(r.classList.contains('armed'))r.setAttribute('data-ask',r.textContent.trim());else r.removeAttribute('data-ask')}).observe(r,{attributes:true,attributeFilter:['class']});
-})();
-</script>
+<script src="comun.js"></script>
+<script src="registro-sw.js"></script>
 </body>
 </html>

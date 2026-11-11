@@ -1,12 +1,15 @@
 # Capa a Capa
 
-Manual interactivo de impresión 3D FDM de Quirón 3D. Cada lección explica una idea con una analogía cotidiana, un simulador animado que se puede tocar, un caso real, un mini reto y la ficha del curso.
+Manual interactivo de impresión 3D FDM de Quirón 3D. Cada lección explica una idea con una analogía cotidiana, un simulador animado que se puede tocar, un reto, un caso real y la ficha del curso.
+
+Sitio publicado: https://edukaos.github.io/capa-a-capa/
 
 ## Cómo usarlo
 
-Abrí `index.html` en cualquier navegador. No hace falta instalar nada: cada página es un único archivo HTML con su propio código. Las tipografías se cargan desde Google Fonts; sin conexión se usan las del sistema.
+Abrí `index.html` en cualquier navegador. No hace falta instalar nada. En el celular se puede agregar a la pantalla de inicio como una app, y después de la primera visita funciona sin internet.
 
-El avance de los retos se guarda en el navegador de cada persona.
+- **Narración:** cada lección se puede escuchar con la voz del navegador. Arranca sola al cambiar de lección y se pausa o reanuda desde el botón de arriba. La voz depende de cada dispositivo.
+- **Avance:** los retos resueltos se guardan en el navegador de cada persona. Para seguir en otro dispositivo, desde la portada se copia un enlace con el avance y se abre allá.
 
 ## Contenido
 
@@ -16,14 +19,37 @@ El avance de los retos se guarda en el navegador de cada persona.
 | 2. La máquina por dentro | `capa-a-capa-modulo-2.html`, `capa-a-capa-modulo-2b.html` |
 | 3. Filamentos y materiales | `capa-a-capa-modulo-3.html` |
 | 4. El laminador | `capa-a-capa-modulo-4a.html`, `capa-a-capa-modulo-4b.html`, `capa-a-capa-modulo-4c.html` |
-| 5. Calibración | `capa-a-capa-modulo-5a.html` (parte 1), `capa-a-capa-modulo-5b.html` (parte 2) |
-| 6. Errores y diagnóstico | `capa-a-capa-modulo-6a.html` (parte 1), `capa-a-capa-modulo-6b.html` (parte 2) |
-| 7. Diseño funcional | `capa-a-capa-modulo-7a.html` (parte 1), `capa-a-capa-modulo-7b.html` (parte 2) |
-| 8. El taller | `capa-a-capa-modulo-8a.html` (parte 1), `capa-a-capa-modulo-8b.html` (parte 2) |
-| 9. Del hobby al negocio | `capa-a-capa-modulo-9a.html` (parte 1), `capa-a-capa-modulo-9b.html` (parte 2) |
+| 5. Calibración | `capa-a-capa-modulo-5a.html`, `capa-a-capa-modulo-5b.html` |
+| 6. Errores y diagnóstico | `capa-a-capa-modulo-6a.html`, `capa-a-capa-modulo-6b.html` |
+| 7. Diseño de piezas funcionales | `capa-a-capa-modulo-7a.html`, `capa-a-capa-modulo-7b.html` |
+| 8. El taller | `capa-a-capa-modulo-8a.html`, `capa-a-capa-modulo-8b.html` |
+| 9. Del hobby al negocio | `capa-a-capa-modulo-9a.html`, `capa-a-capa-modulo-9b.html` |
 | 10. Glosario | `capa-a-capa-glosario.html` |
 
-Próximamente: segunda parte de Calibración, Errores y diagnóstico, Diseño de piezas funcionales, El taller, Del hobby al negocio y Glosario.
+## Archivos compartidos
+
+Cada página de módulo tiene su propio contenido y simuladores, y comparte estos archivos:
+
+| Archivo | Para qué sirve |
+| --- | --- |
+| `tema.css` | El diseño Material 3: colores, botones, tarjetas, riel de navegación y barra superior. Cambiar algo acá lo cambia en todos los módulos y el glosario. |
+| `comun.js` | Nombres de los pasos, narración y confirmación de Reiniciar. |
+| `sw.js` y `registro-sw.js` | Modo sin conexión. Al cambiar archivos, subí el número de `VERSION` en `sw.js`. |
+| `manifest.webmanifest` e `img/icono-*` | Nombre e ícono al instalarlo como app. |
+| `img/compartir.jpg` | Imagen que aparece al compartir el enlace. |
+
+La portada (`index.html`) tiene su propio estilo dentro del archivo.
+
+## Versiones
+
+Cada versión importante queda guardada en una rama, para poder volver atrás:
+
+| Rama | Qué tiene |
+| --- | --- |
+| `version-1.0-diseno-original` | El diseño anterior al rediseño. |
+| `version-2.0-material3` | Rediseño Material 3 con narración y mini retos arreglados. |
+| `version-2.1-app` | Lo anterior más íconos unificados, archivos compartidos, avance entre dispositivos, vista previa al compartir y modo sin conexión. |
+| `main` | La versión publicada. |
 
 ## Fuentes
 
