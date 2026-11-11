@@ -72,7 +72,7 @@ a:focus-visible{outline:3px solid var(--pop);outline-offset:3px;border-radius:8p
 .bar i{display:block;height:100%;background:var(--pop);border-radius:3px}
 .note{font-size:13px;color:var(--ink-soft)}
 footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:16px}
-</style>
+.mph{margin:-18px -18px 4px;height:150px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}.mph img{width:100%;height:100%;object-fit:cover;object-position:right 60%;display:block}.mph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--surface) 0%,rgba(40,50,74,0) 70%)}</style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
 <body>
@@ -96,7 +96,7 @@ footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);pad
       <div><b>En criollo</b><span>Una analogía de todos los días.</span></div>
       <div><b>Probalo</b><span>Un simulador con uno o dos controles.</span></div>
       <div><b>Caso real</b><span>Una pieza donde esto importa.</span></div>
-      <div><b>Mini reto</b><span>Una consigna corta con respuesta.</span></div>
+      <div><b>Tu reto</b><span>Lo que tenés que lograr con el simulador.</span></div>
       <div><b>Ficha</b><span>La definición del curso, para volver.</span></div>
     </div>
   </section>
@@ -124,7 +124,7 @@ footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];
   function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
   var box=document.getElementById('mods'),TOT=0,DONE=0;
-  MODS.forEach(function(m){var li=document.createElement('li'),ready=m.parts&&m.parts.every(function(p){return p[0]}),some=m.parts&&m.parts.some(function(p){return p[0]});li.className='mod'+(some?'':' soon');
+  MODS.forEach(function(m){var li=document.createElement('li'),ready=m.parts&&m.parts.every(function(p){return p[0]}),some=m.parts&&m.parts.some(function(p){return p[0]});li.className='mod'+(some?'':' soon');var ph=document.createElement('div');ph.className='mph';var im=document.createElement('img');im.src='img/m'+m.n+'.webp';im.alt='';im.loading='lazy';ph.appendChild(im);li.appendChild(ph);
     var hd=document.createElement('div');hd.className='mhead';var nm=document.createElement('span');nm.className='num';nm.textContent=m.n;var tx=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');h.textContent=m.t;p.textContent=m.d;tx.appendChild(h);tx.appendChild(p);hd.appendChild(nm);hd.appendChild(tx);li.appendChild(hd);
     var meta=document.createElement('div');meta.className='meta';var tg=document.createElement('span');tg.className='tag '+(ready?'ok':some?'half':'no');tg.textContent=ready?'Listo':some?'En curso':'Próximamente';meta.appendChild(tg);li.appendChild(meta);
     if(m.parts){var ps=document.createElement('div');ps.className='parts';m.parts.forEach(function(q){var a=document.createElement(q[0]?'a':'div');a.className='part'+(q[0]?'':' off');if(q[0])a.href=q[0];

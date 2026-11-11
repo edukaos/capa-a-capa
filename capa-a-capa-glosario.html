@@ -304,6 +304,16 @@ mark{background:rgba(255,217,138,.28);color:inherit;border-radius:3px;padding:0 
 #more{align-self:center}
 @media (max-width:600px){.gsearch{position:static}}
 </style>
+<style>/* portada de módulo */
+.mhero{position:relative;border-radius:var(--r,18px);overflow:hidden;aspect-ratio:3/1;max-width:100%;background:#0E1422;min-height:190px}
+.mhero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right 60%}
+.mhero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,34,.94) 0%,rgba(14,20,34,.7) 38%,rgba(14,20,34,0) 72%),linear-gradient(0deg,rgba(14,20,34,.55) 0%,rgba(14,20,34,0) 45%)}
+.mhero .tx{position:absolute;left:clamp(16px,3.5vw,32px);bottom:clamp(14px,3vw,28px);right:42%;z-index:1;display:flex;flex-direction:column;gap:6px}
+.mhero .k{font:500 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--fil,#FFB38A)}
+.mhero h2{margin:0;font:700 clamp(24px,3.6vw,38px)/1.05 var(--f-display);letter-spacing:-.02em;color:#EEF1F7;text-wrap:balance}
+.mhero p{margin:0;color:#D5DBE8;font-size:15px;line-height:1.45;max-width:44ch}
+@media (max-width:600px){.mhero{aspect-ratio:16/10}.mhero img{object-position:72% center}.mhero .tx{right:16px}.mhero::after{background:linear-gradient(0deg,rgba(14,20,34,.96) 0%,rgba(14,20,34,.6) 48%,rgba(14,20,34,.1) 100%)}.mhero p{display:none}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -313,6 +323,7 @@ mark{background:rgba(255,217,138,.28);color:inherit;border-radius:3px;padding:0 
   </header>
   <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-9b.html">← <span class="lg">Módulo 9 · parte 2</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><span class="mn-off"><span class="lg">Último módulo</span><span class="sh">Fin</span></span></nav>
 
+  <section class="mhero" aria-label="Módulo 10"><img src="img/m10.webp" alt=""><div class="tx"><span class="k">Módulo 10</span><h2>Glosario</h2><p>Todas las fichas del curso en un buscador, en español y en inglés.</p></div></section>
   <section class="lesson">
     <div class="lhead"><p class="eyebrow">Módulo 10</p><h1>Glosario <span class="en" lang="en">Glossary</span></h1>
       <p>Todas las fichas del curso, los títulos de las lecciones y los ajustes del laminador en un solo lugar. Buscá en español o en inglés: "retracción" y "retraction" llevan al mismo sitio.</p></div>
