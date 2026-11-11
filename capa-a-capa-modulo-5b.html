@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-cac="cac-m5b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -194,6 +194,46 @@ footer a{color:var(--ui)}
 .ftab td.l{text-align:left;font-weight:500;padding-right:10px;white-space:nowrap}
 .ftab .del{padding:4px 10px;font-size:13px;white-space:nowrap}
 h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
+/* lectura: textos un poco más grandes y nota ligada al simulador */
+.note{font-size:16px;color:var(--ink);line-height:1.55;border-left:3px solid var(--pop);padding:2px 0 2px 12px}
+.msg{font-size:16px}
+.card p{font-size:16px}
+details.ficha .in{font-size:16px}
+.opts button,.chipset button{font-size:16px}
+.stepcap{font-size:15px}
+.reads dt{font-size:13px}
+.q .why{font-size:15px}
+.io div{font-size:15px}.stations button{font-size:15px}.prog-list{font-size:14px}
+.crit,.crit .h{font-size:14px}.bin ul{font-size:14px}.ftab{font-size:15px}
+/* fx: consigna, mensajes, sello y sonido */
+.mision{display:flex;gap:12px;align-items:flex-start;background:rgba(255,217,138,.09);border:1.5px solid rgba(255,217,138,.5);border-radius:14px;padding:11px 14px;transition:background .3s,border-color .3s}
+.mision .ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ui);color:var(--ui-ink);font-size:16px;font-weight:700}
+.mision b{display:block;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ui);margin-bottom:2px}
+.mision p{margin:0;font-size:16px;font-weight:500;color:var(--ink);line-height:1.45}
+.mision.done{background:rgba(143,224,204,.09);border-color:rgba(143,224,204,.55)}
+.mision.done .ic{background:var(--pop)}
+.mision.done b{color:var(--pop)}
+.msg.ok,.msg.bad{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.msg.ok{background:rgba(143,224,204,.13);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5)}
+.msg.bad{background:rgba(255,154,154,.12);box-shadow:inset 0 0 0 1.5px rgba(255,154,154,.48)}
+.msg.ok::before,.msg.bad::before{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ui-ink);margin-top:1px}
+.msg.ok::before{content:"\2714";background:var(--pop)}
+.msg.bad::before{content:"\2716";background:var(--bad)}
+.fx-shake{animation:fxShake .42s ease-in-out}
+.fx-pop{animation:fxPop .5s ease-out}
+@keyframes fxShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+@keyframes fxPop{0%{transform:scale(1)}35%{transform:scale(1.025);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5),0 0 0 6px rgba(143,224,204,.18)}100%{transform:scale(1)}}
+.fxhost{position:relative}
+.sello{position:absolute;top:12px;right:12px;z-index:2;pointer-events:none;transform:rotate(-7deg);border:2.5px solid var(--pop);color:var(--pop);background:rgba(24,32,49,.9);border-radius:9px;padding:4px 10px;font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.sello.anim{animation:fxStamp .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes fxStamp{0%{opacity:0;transform:rotate(-7deg) scale(2.3)}60%{opacity:1}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+.steps button.fx-nav{animation:fxNav .7s ease-out}
+@keyframes fxNav{0%{transform:scale(1)}30%{transform:scale(1.4);box-shadow:0 0 0 8px rgba(143,224,204,.25)}100%{transform:scale(1)}}
+.snd{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:grid;place-items:center}
+.snd:hover{background:var(--surface)}
+.snd:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
+/* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
@@ -204,7 +244,7 @@ h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);f
     <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
     <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
   </header>
-  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-5a.html">← <span class="lg">Módulo 5 · parte 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><span class="mn-off"><span class="lg">Módulo 6: pronto</span><span class="sh">Pronto</span></span></nav>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-5a.html">← <span class="lg">Módulo 5 · parte 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-modulo-6a.html"><span class="lg">Módulo 6 · parte 1</span><span class="sh">Siguiente</span> →</a></nav>
 
   <nav class="steps" id="nav" aria-label="Lecciones del módulo 5, segunda parte">
     <button type="button" data-l="l1" aria-label="Lección 5.6, Pasos del extrusor">6</button><i></i>
@@ -708,5 +748,74 @@ h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);f
 })();
 </script>
 
+<!--fx--><script>
+(function(){
+  // ---------- misiones por modulo ----------
+  var MIS={
+  'cac-m1':{l1:'Mové el avance y compará cuánto material se desperdicia sumando y tallando. Después respondé el mini reto.',l2:'Tocá las etapas en el orden correcto, del archivo a la pieza.',l3:'Dibujá un cuadrado cerrado de 20 mm con el generador de G-code.',l4:'Mirá cómo trabajan FDM y resina, y después respondé el mini reto.',l5:'Ubicá los nueve objetos en la caja que corresponde.'},
+  'cac-m2':{l1:'Mové los ejes X, Y y Z hasta llevar la boquilla al anillo punteado.',l2:'Compará cómo se mueven la cama móvil y el CoreXY, y después respondé el mini reto.',l3:'Dejá el carro exactamente en 30 mm.',l4:'Dejá la correa en su punto justo: ni floja ni pasada de tensión.',l5:'Probá el homing y después respondé el mini reto.'},
+  'cac-m2b':{l1:'Compará Bowden y directo, y después respondé el mini reto.',l2:'Provocá un atasco en el hotend y después destrabalo.',l3:'Probá distintas boquillas y después respondé el mini reto.',l4:'Lográ que el PETG pegue bien y se suelte sin romper nada.',l5:'Recorré la electrónica y después respondé el mini reto.',l6:'Mirá cómo actúa la protección térmica y después respondé el mini reto.'},
+  'cac-m3':{l1:'Explorá los materiales y después adiviná cuál es por su etiqueta.',l2:'Elegí un material rígido que aguante el auto al sol.',l3:'Encontrá una buena temperatura para PETG.',l4:'Imprimí la caja de ABS sin que se levante.',l5:'Arruiná un nylon con humedad y después recuperalo.',l6:'Probá la refrigeración con cada material y después respondé el mini reto.',l7:'Explorá los materiales especiales y después respondé el mini reto.',l8:'Elegí el material para un soporte de celular en el tablero del auto.'},
+  'cac-m4a':{l1:'Recorré las capas hasta encontrar una con dos islas separadas.',l2:'Ubicá los nueve ajustes en el perfil donde se guardan.',l3:'Mirá qué guarda cada tipo de archivo y después respondé el mini reto.',l4:'Encontrá la orientación que aguanta toda la carga sin usar soportes.',l5:'Ajustá la altura de capa para dejarla lista para una miniatura.',l6:'Probá la altura de capa variable y después respondé el mini reto.'},
+  'cac-m4b':{l1:'Dejá el ancho de línea en el rango habitual para una boquilla de 0,4.',l2:'Reforzá la pieza sin tocar el relleno.',l3:'Cerrá la tapa con 1 mm de techo.',l4:'Elegí el relleno para una figura decorativa.',l5:'Lográ que un voladizo de 70° salga bien.',l6:'Cruzá un puente de 40 mm o más sin que cuelgue.'},
+  'cac-m4c':{l1:'Lográ que la torre aguante el empujón gastando poco plástico.',l2:'Limpiá las torres en Bowden con la menor retracción posible.',l3:'Dá una vuelta en menos de 1 segundo, con ondas apenas visibles.',l4:'Lográ una punta nítida en PLA.',l5:'Probá dónde cae la costura y después respondé el mini reto.',l6:'Revisá la vista previa de cada pieza, capa por capa, y encontrá qué problema tiene.'},
+  'cac-m5a':{l1:'Tocá las calibraciones en el orden en que conviene hacerlas.',l2:'Dejá las cuatro esquinas rozando el papel.',l3:'Medí la cama, probá la malla y después respondé el mini reto.',l4:'Dejá la primera capa justa.',l5:'Elegí la mejor temperatura para esta bobina de PLA.'},
+  'cac-m5b':{l1:'Pedí 100 mm, calculá el valor nuevo y hacé que 100 mm sean 100 mm.',l2:'Dejá la pared en 0,45 mm moviendo el flujo.',l3:'Encontrá el avance de presión que deja las esquinas limpias.',l4:'Elegí la menor distancia de retracción que deja la torre limpia.',l5:'Completá y guardá una ficha con, al menos, impresora y filamento.'},
+  'cac-m6a':{l1:'Dejá la prueba limpia cambiando una sola cosa por vez.',l2:'Lográ una base plana, sin esquinas levantadas ni pata de elefante.',l3:'Revisá de lo simple a lo complejo, encontrá el tapón y sacalo.',l4:'Dejá la torre sin capas corridas, sin bandas y sin ondas.',l5:'Lográ paredes sin grietas y un techo cerrado.'}};
+  var KEY=document.documentElement.getAttribute('data-cac')||'',M=MIS[KEY]||{};
+  function $q(s,r){return(r||document).querySelector(s)}
+  function $a(s,r){return[].slice.call((r||document).querySelectorAll(s))}
+
+  // ---------- sonido ----------
+  var snd=true;try{snd=localStorage.getItem('cac-sound')!=='0'}catch(e){}
+  var AC=null;function ac(){try{if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;AC=new A()}if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+  function tn(f,t0,d,ty,v){var a=ac();if(!a)return;var o=a.createOscillator(),g=a.createGain(),n=a.currentTime+t0;o.type=ty;o.frequency.setValueAtTime(f,n);g.gain.setValueAtTime(0.0001,n);g.gain.linearRampToValueAtTime(v,n+.012);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(a.destination);o.start(n);o.stop(n+d+.05)}
+  var lastS=0;function play(k){if(!snd)return;var n=performance.now();if(k!=='win'&&n-lastS<250)return;lastS=n;try{
+    if(k==='ok'){tn(880,0,.2,'sine',.12);tn(1320,.08,.3,'sine',.09)}
+    else if(k==='bad'){tn(240,0,.2,'triangle',.16);tn(170,.09,.28,'triangle',.14)}
+    else if(k==='win'){tn(784,0,.18,'sine',.11);tn(988,.11,.18,'sine',.11);tn(1319,.22,.5,'sine',.11);tn(1568,.22,.5,'sine',.05)}}catch(e){}}
+  (function(){var top=$q('header.top');if(!top)return;var b=document.createElement('button');b.type='button';b.className='snd';
+    function paint(){b.textContent=snd?'🔊':'🔇';b.setAttribute('aria-label',snd?'Sonido activado. Tocá para silenciar':'Sonido silenciado. Tocá para activar');b.setAttribute('aria-pressed',String(!snd))}
+    b.addEventListener('click',function(){snd=!snd;try{localStorage.setItem('cac-sound',snd?'1':'0')}catch(e){}paint();if(snd)play('ok')});paint();var pr=$q('.prog',top);(pr||top).appendChild(b)})();
+
+  // ---------- que fue el usuario ----------
+  var lastAct=0,lastType='';
+  ['pointerdown','keydown','input','change'].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;
+    if(t&&t.closest&&t.closest('#nav,.navrow,.modnav,.snd,details,.listen')){lastAct=0;return}lastAct=performance.now();lastType=(e.type==='input'&&t&&t.type==='range')?'slide':e.type},true)});
+  function user(){return performance.now()-lastAct<12000}
+
+  // ---------- misiones ----------
+  $a('section.lesson').forEach(function(sec){var tx=M[sec.id],sb=$q('.sim .simbody',sec)||$q('.sim .gside',sec);if(!tx||!sb)return;
+    var d=document.createElement('div');d.className='mision';d.innerHTML='<span class="ic" aria-hidden="true">🎯</span><div><b>Tu misión</b><p></p></div>';$q('p',d).textContent=tx;sb.insertBefore(d,sb.firstChild)});
+
+  // ---------- mensajes ----------
+  var ST=new WeakMap(),pend=[],sch=false;
+  function anim(el,c){el.classList.remove('fx-shake','fx-pop');void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},650)}
+  function proc(){sch=false;var now=performance.now(),list=pend;pend=[];var fired={};
+    list.forEach(function(m){if(m.__d)return;m.__d=1;var c=m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t=m.textContent,p=ST.get(m)||{c:'',t:'',at:0},go=false;
+      if(c&&!m.hidden){if(c!==p.c)go=true;else if((t!==p.t||m.__t)&&lastType!=='slide'&&now-p.at>700)go=true}
+      if(go&&user()){anim(m,c==='ok'?'fx-pop':'fx-shake');fired[c]=1;p.at=now}
+      p.c=c;p.t=t;ST.set(m,p)});
+    list.forEach(function(m){m.__d=0;m.__t=0});
+    if(fired.ok)play('ok');else if(fired.bad)play('bad')}
+  function msgOf(n){var e=n.nodeType===1?n:n.parentNode;return e&&e.closest?e.closest('.msg'):null}
+  function strip(v){return String(v||'').replace(/\s*fx-\S+/g,'').trim()}
+  var mo=new MutationObserver(function(rs){rs.forEach(function(r){var m=msgOf(r.target);if(!m)return;if(r.type==='attributes'&&r.attributeName==='class'){var o=r.oldValue||'',n=m.className;if(/fx-/.test(o+' '+n))return;if(o===n)m.__t=1}pend.push(m)});if(pend.length&&!sch){sch=true;Promise.resolve().then(proc)}});
+  $a('.msg').forEach(function(m){ST.set(m,{c:m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t:m.textContent,at:0})});
+  mo.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeOldValue:true,attributeFilter:['class','hidden']});
+
+  // ---------- repaso ----------
+  var qz=$q('#quiz');if(qz)qz.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setTimeout(function(){var q=b.closest('.q');if(b.classList.contains('wrong')){play('bad');if(q)anim(q,'fx-shake')}else if(b.classList.contains('right')){play('ok');if(q)anim(q,'fx-pop')}},0)});
+
+  // ---------- sello de reto cumplido ----------
+  function host(sec){var cs=$a('.card',sec).filter(function(c){var t=$q('.tag',c);return t&&/reto/i.test(t.textContent)});return cs[0]||$q('.sim',sec)}
+  function sync(animate){$a('#nav button').forEach(function(b){if(!b.classList.contains('done'))return;var sec=document.getElementById(b.dataset.l);if(!sec||sec.id==='repaso'||sec.__sello)return;sec.__sello=1;
+      var h=host(sec);if(h){h.classList.add('fxhost');var s=document.createElement('span');s.className='sello'+(animate?' anim':'');s.textContent='Reto cumplido';h.appendChild(s)}
+      var mi=$q('.mision',sec);if(mi){mi.classList.add('done');$q('b',mi).textContent='Misión cumplida';$q('.ic',mi).textContent='✔'}
+      if(animate){b.classList.remove('fx-nav');void b.offsetWidth;b.classList.add('fx-nav');setTimeout(function(){play('win')},180)}})}
+  sync(false);
+  var pt=$q('#prog-txt');if(pt)new MutationObserver(function(){sync(true)}).observe(pt,{childList:true,characterData:true,subtree:true});
+})();
+</script><!--/fx-->
 </body>
 </html>
