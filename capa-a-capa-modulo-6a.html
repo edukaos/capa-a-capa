@@ -240,6 +240,19 @@ details.ficha .in{font-size:16px}
 .rstm:hover{background:var(--surface);color:var(--ink)}
 .rstm:focus-visible,.rst:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
 @media (max-width:480px){.prog .bar{width:70px}}
+.navrow{align-items:center}
+#next{max-width:70%;display:inline-flex;align-items:center;min-width:0}
+#next .nxl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nextmod{text-decoration:none;display:inline-flex;align-items:center}
+.modbot{margin-block:2px 0;padding-top:4px}
+.modbot .lg{display:inline!important}.modbot .sh{display:none!important}
+@media (max-width:480px){.modbot{font-size:13px}.modbot a{padding:6px 6px}}
+.cierre{background:linear-gradient(160deg,rgba(143,224,204,.14),rgba(255,217,138,.1));border:1.5px solid rgba(143,224,204,.5);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cierre h2{margin:0;font-family:var(--f-display);font-size:clamp(22px,4vw,28px);line-height:1.2;text-wrap:balance}
+.cierre .cs{margin:0;color:var(--ink-soft);font-size:16px}
+.cierre .btn{text-decoration:none}
+.cierre .btn.big{font-size:17px;padding:12px 22px}
+@media (max-width:480px){#next{max-width:72%;font-size:14px}}
 @media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
 /* /fx */
 </style>
@@ -799,6 +812,22 @@ details.ficha .in{font-size:16px}
     var w=document.createElement('div');w.className='rstrow';w.appendChild(b);sec.appendChild(w);arm(b,lab,'¿Seguro? Tocá de nuevo para empezarla de cero',function(){wipe(sec.id);go(sec.id)})});
   (function(){var pr=$q('header.top .prog');if(!pr||!KEY)return;var b=document.createElement('button');b.type='button';b.className='rstm';var lab='↺ Reiniciar';b.textContent=lab;b.setAttribute('aria-label','Reiniciar el progreso de este módulo');
     pr.insertBefore(b,$q('.snd',pr));arm(b,lab,'¿Todo el módulo? Tocá otra vez',function(){wipe(null);go('l1')})})();
+
+  // ---------- navegacion clara al pie ----------
+  (function(){var nb=$a('#nav button'),nr=$q('.navrow'),nx=$q('#next'),top=$q('.modnav');if(!nb.length||!nr||!nx)return;
+    function tl(b){var a=b.getAttribute('aria-label')||'';var m=a.match(/^Lecci[oó]n\s+([\d.]+),\s*(.+)$/);return m?m[1]+' '+m[2]:a}
+    var mn=top&&$q('a.mn-next',top),nl=mn?(($q('.lg',mn)||mn).textContent.trim()):'',nh=mn?mn.getAttribute('href'):'index.html',
+      mod=(($q('#nav')||{}).getAttribute&&$q('#nav').getAttribute('aria-label')||'').replace(/^Lecciones del /,'');
+    var lab=document.createElement('span');lab.className='nxl';nx.textContent='';nx.appendChild(lab);
+    var go=document.createElement('a');go.className='btn nextmod';go.href=nh;go.textContent=mn?'Ir al '+nl+' →':'Volver al inicio →';go.hidden=true;nr.appendChild(go);
+    if(top){var bot=top.cloneNode(true);bot.classList.add('modbot');bot.setAttribute('aria-label','Módulos del manual, al pie');var ft=$q('footer');(ft&&ft.parentNode||nr.parentNode).insertBefore(bot,ft||null)}
+    var rp=document.getElementById('repaso');if(rp){var cd=document.createElement('div');cd.className='cierre';cd.innerHTML='<p class="eyebrow">Fin de esta parte</p><h2></h2><p class="cs"></p><div class="row"></div>';
+      var b1=document.createElement('a');b1.className='btn big';b1.href=nh;b1.textContent=mn?'Seguir con el '+nl+' →':'Volver al inicio →';var b2=document.createElement('a');b2.className='btn ghost';b2.href='index.html';b2.textContent='Volver al inicio';
+      $q('.row',cd).appendChild(b1);if(mn)$q('.row',cd).appendChild(b2);rp.appendChild(cd)}
+    function paint(){var cur=null;nb.forEach(function(b){var sec=document.getElementById(b.dataset.l);if(sec&&!sec.hidden)cur=b});if(!cur)return;var i=nb.indexOf(cur),last=i===nb.length-1;
+      var nt='Siguiente: '+tl(nb[last?i:i+1])+' →';if(!last&&lab.textContent!==nt)lab.textContent=nt;if(go.hidden!==!last)go.hidden=!last;if(nx.hidden!==last)nx.hidden=last;
+      if(rp&&last){var pt=($q('#prog-txt')||{}).textContent||'',sc=$q('#score'),fin=sc&&!sc.hidden,h=fin?'¡Terminaste el '+mod+'!':'Cuando termines el repaso, seguí por acá',cs=pt+(fin?' · repaso: '+sc.textContent.split('.')[0]:'')+(mn?'':' · el próximo módulo está en preparación');if($q('h2',cd).textContent!==h)$q('h2',cd).textContent=h;if($q('.cs',cd).textContent!==cs)$q('.cs',cd).textContent=cs}}
+    paint();new MutationObserver(paint).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});var pt=$q('#prog-txt');if(pt)new MutationObserver(paint).observe(pt,{childList:true,subtree:true,characterData:true})})();
   // ---------- sello de reto cumplido ----------
   function host(sec){var cs=$a('.card',sec).filter(function(c){var t=$q('.tag',c);return t&&/reto/i.test(t.textContent)});return cs[0]||$q('.sim',sec)}
   function sync(animate){$a('#nav button').forEach(function(b){if(!b.classList.contains('done'))return;var sec=document.getElementById(b.dataset.l);if(!sec||sec.id==='repaso'||sec.__sello)return;sec.__sello=1;
