@@ -216,6 +216,13 @@ details.ficha .in{font-size:16px}
 .snd{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:grid;place-items:center}
 .snd:hover{background:var(--surface)}
 .snd:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.rstrow{display:flex;justify-content:flex-end}
+.rst{font-size:14px;padding:7px 14px;color:var(--ink-soft)}
+.rst.armed,.rstm.armed{border-color:var(--bad);color:var(--bad)}
+.rstm{flex:none;height:36px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);font:600 13px var(--f-body);padding:0 12px;cursor:pointer;white-space:nowrap}
+.rstm:hover{background:var(--surface);color:var(--ink)}
+.rstm:focus-visible,.rst:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+@media (max-width:480px){.prog .bar{width:70px}}
 @media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
 /* /fx */
 </style>
@@ -736,6 +743,15 @@ details.ficha .in{font-size:16px}
   // ---------- repaso ----------
   var qz=$q('#quiz');if(qz)qz.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setTimeout(function(){var q=b.closest('.q');if(b.classList.contains('wrong')){play('bad');if(q)anim(q,'fx-shake')}else if(b.classList.contains('right')){play('ok');if(q)anim(q,'fx-pop')}},0)});
 
+
+  // ---------- reiniciar ----------
+  function arm(b,lab,ask,fn){b.addEventListener('click',function(){if(b.dataset.arm){fn();return}b.dataset.arm='1';b.textContent=ask;b.classList.add('armed');setTimeout(function(){if(b.isConnected){delete b.dataset.arm;b.textContent=lab;b.classList.remove('armed')}},4000)})}
+  function wipe(k){try{if(k){var d=JSON.parse(localStorage.getItem(KEY)||'{}');delete d[k];localStorage.setItem(KEY,JSON.stringify(d))}else localStorage.removeItem(KEY)}catch(e){}}
+  function go(h){try{if(location.hash==='#'+h)location.reload();else{location.hash=h;location.reload()}}catch(e){location.reload()}}
+  $a('section.lesson').forEach(function(sec){var b=document.createElement('button');b.type='button';b.className='btn ghost rst';var lab='↺ Volver a hacer esta lección';b.textContent=lab;
+    var w=document.createElement('div');w.className='rstrow';w.appendChild(b);sec.appendChild(w);arm(b,lab,'¿Seguro? Tocá de nuevo para empezarla de cero',function(){wipe(sec.id);go(sec.id)})});
+  (function(){var pr=$q('header.top .prog');if(!pr||!KEY)return;var b=document.createElement('button');b.type='button';b.className='rstm';var lab='↺ Reiniciar';b.textContent=lab;b.setAttribute('aria-label','Reiniciar el progreso de este módulo');
+    pr.insertBefore(b,$q('.snd',pr));arm(b,lab,'¿Todo el módulo? Tocá otra vez',function(){wipe(null);go('l1')})})();
   // ---------- sello de reto cumplido ----------
   function host(sec){var cs=$a('.card',sec).filter(function(c){var t=$q('.tag',c);return t&&/reto/i.test(t.textContent)});return cs[0]||$q('.sim',sec)}
   function sync(animate){$a('#nav button').forEach(function(b){if(!b.classList.contains('done'))return;var sec=document.getElementById(b.dataset.l);if(!sec||sec.id==='repaso'||sec.__sello)return;sec.__sello=1;
