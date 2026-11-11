@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es" data-cac="cac-m7b">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 7B</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+.steps{max-width:660px}
+@media (max-width:440px){.steps{gap:3px}.steps button{width:30px;height:30px;font-size:13px;border-width:1.5px}.steps i{min-width:3px}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);min-width:62px}
+.wiz{display:flex;flex-direction:column;gap:10px}
+.wq{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--sunken);border-radius:12px;padding:10px 14px}
+.wq>span{flex:1;min-width:200px}
+.rec{background:var(--sunken);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.recm{font-family:var(--f-display);font-size:44px;line-height:1;color:var(--ui)}
+.listen{align-self:flex-start;padding:7px 14px;font-size:14px}
+.ftabw{overflow-x:auto}
+.ftab{width:100%;border-collapse:collapse;font-size:14px}
+.ftab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:7px 10px 7px 0;border-top:1px solid var(--line)}
+.ftab td{text-align:right;font-weight:700;padding:7px 0;border-top:1px solid var(--line)}
+.ftab td.y{color:var(--pop)}.ftab td.n{color:var(--ink-soft)}.ftab td.m{color:var(--ui)}
+.cvT{aspect-ratio:4/3}
+@media (max-width:600px){.cvT{aspect-ratio:3/4}}
+.knobs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.knobs{grid-template-columns:minmax(0,1fr)}}
+.kn{background:var(--sunken);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kn b{font-size:14px}.kn .st{font-size:13px;color:var(--ui)}.kn .st.ok{color:var(--pop)}.kn .st.bad{color:var(--bad)}
+.kn .btn{padding:7px 14px;font-size:14px}
+.chipset button.right{border-color:var(--pop);color:var(--pop)}
+footer a{color:var(--ui)}
+.numin{width:120px;font:500 16px var(--f-mono);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:600px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fgrid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink-soft);min-width:0}
+.fgrid input{font:500 16px var(--f-body);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0;width:100%;box-sizing:border-box}
+.numin:focus-visible,.fgrid input:focus-visible{outline:2px solid var(--ui);outline-offset:1px}
+.ftab td.l{text-align:left;font-weight:500;padding-right:10px;white-space:nowrap}
+.ftab .del{padding:4px 10px;font-size:13px;white-space:nowrap}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
+/* lectura: textos un poco más grandes y nota ligada al simulador */
+.note{font-size:16px;color:var(--ink);line-height:1.55;border-left:3px solid var(--pop);padding:2px 0 2px 12px}
+.msg{font-size:16px}
+.card p{font-size:16px}
+details.ficha .in{font-size:16px}
+.opts button,.chipset button{font-size:16px}
+.stepcap{font-size:15px}
+.reads dt{font-size:13px}
+.q .why{font-size:15px}
+.io div{font-size:15px}.stations button{font-size:15px}.prog-list{font-size:14px}
+.crit,.crit .h{font-size:14px}.bin ul{font-size:14px}.ftab{font-size:15px}
+/* fx: consigna, mensajes, sello y sonido */
+.mision{display:flex;gap:12px;align-items:flex-start;background:rgba(255,217,138,.09);border:1.5px solid rgba(255,217,138,.5);border-radius:14px;padding:11px 14px;transition:background .3s,border-color .3s}
+.mision .ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ui);color:var(--ui-ink);font-size:16px;font-weight:700}
+.mision b{display:block;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ui);margin-bottom:2px}
+.mision p{margin:0;font-size:16px;font-weight:500;color:var(--ink);line-height:1.45}
+.mision.done{background:rgba(143,224,204,.09);border-color:rgba(143,224,204,.55)}
+.mision.done .ic{background:var(--pop)}
+.mision.done b{color:var(--pop)}
+.msg.ok,.msg.bad{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.msg.ok{background:rgba(143,224,204,.13);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5)}
+.msg.bad{background:rgba(255,154,154,.12);box-shadow:inset 0 0 0 1.5px rgba(255,154,154,.48)}
+.msg.ok::before,.msg.bad::before{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ui-ink);margin-top:1px}
+.msg.ok::before{content:"\2714";background:var(--pop)}
+.msg.bad::before{content:"\2716";background:var(--bad)}
+.fx-shake{animation:fxShake .42s ease-in-out}
+.fx-pop{animation:fxPop .5s ease-out}
+@keyframes fxShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+@keyframes fxPop{0%{transform:scale(1)}35%{transform:scale(1.025);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5),0 0 0 6px rgba(143,224,204,.18)}100%{transform:scale(1)}}
+.fxhost{position:relative}
+.sello{position:absolute;top:12px;right:12px;z-index:2;pointer-events:none;transform:rotate(-7deg);border:2.5px solid var(--pop);color:var(--pop);background:rgba(24,32,49,.9);border-radius:9px;padding:4px 10px;font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.sim>.sello{top:5px;right:14px;font-size:12px;padding:2px 8px;border-width:2px}
+.sello.anim{animation:fxStamp .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes fxStamp{0%{opacity:0;transform:rotate(-7deg) scale(2.3)}60%{opacity:1}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+.steps button.fx-nav{animation:fxNav .7s ease-out}
+@keyframes fxNav{0%{transform:scale(1)}30%{transform:scale(1.4);box-shadow:0 0 0 8px rgba(143,224,204,.25)}100%{transform:scale(1)}}
+.snd{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:grid;place-items:center}
+.snd:hover{background:var(--surface)}
+.snd:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.rstrow{display:flex;justify-content:flex-end}
+.rst{font-size:14px;padding:7px 14px;color:var(--ink-soft)}
+.rst.armed,.rstm.armed{border-color:var(--bad);color:var(--bad)}
+.rstm{flex:none;height:36px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);font:600 13px var(--f-body);padding:0 12px;cursor:pointer;white-space:nowrap}
+.rstm:hover{background:var(--surface);color:var(--ink)}
+.rstm:focus-visible,.rst:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+@media (max-width:480px){.prog .bar{width:70px}}
+.navrow{align-items:center}
+#next{max-width:70%;display:inline-flex;align-items:center;min-width:0}
+#next .nxl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nextmod{text-decoration:none;display:inline-flex;align-items:center}
+.modbot{margin-block:2px 0;padding-top:4px}
+.modbot .lg{display:inline!important}.modbot .sh{display:none!important}
+@media (max-width:480px){.modbot{font-size:13px}.modbot a{padding:6px 6px}}
+.cierre{background:linear-gradient(160deg,rgba(143,224,204,.14),rgba(255,217,138,.1));border:1.5px solid rgba(143,224,204,.5);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cierre h2{margin:0;font-family:var(--f-display);font-size:clamp(22px,4vw,28px);line-height:1.2;text-wrap:balance}
+.cierre .cs{margin:0;color:var(--ink-soft);font-size:16px}
+.cierre .btn{text-decoration:none}
+.cierre .btn.big{font-size:17px;padding:12px 22px}
+@media (max-width:480px){#next{max-width:72%;font-size:14px}}
+/* alturas compactas */
+.cvT,.cv3{aspect-ratio:5/2}
+@media (max-width:600px){.cvT,.cv3,.cv1{aspect-ratio:1/1}}
+@media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
+/* /fx */
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-7a.html">← <span class="lg">Módulo 7 · parte 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><span class="mn-off"><span class="lg">Módulo 8: pronto</span><span class="sh">Pronto</span></span></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 7, segunda parte">
+    <button type="button" data-l="l1" aria-label="Lección 7.6, Tornillos e insertos">6</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 7.7, Snap fit">7</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 7.8, Bisagras">8</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 7.9, Perfiles estructurales">9</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 7.10, Decisiones rápidas">10</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 7.6 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Lección 7.6</p><h1>Tornillos e insertos <span class="en" lang="en">Screws, heat-set inserts &amp; captive nuts</span></h1>
+      <p>Un tornillo directo en el plástico arma rápido, pero cada vez que lo sacás se lleva un poco de rosca. Si la pieza se va a abrir seguido, conviene que la rosca sea de metal: una tuerca encastrada o un inserto.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el tarugo en la pared. Un tornillo directo en el yeso aguanta una vez; si lo sacás y lo ponés varias veces, el agujero se agranda. Con tarugo, entra y sale mil veces.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c1" class="cvT" role="img" aria-label="Tetón en corte con un tornillo entrando y saliendo"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Unión</span><div class="chipset" id="typ1"><button type="button" data-v="directo" aria-pressed="true">Directo en plástico</button><button type="button" data-v="tuerca" aria-pressed="false">Tuerca cautiva</button><button type="button" data-v="inserto" aria-pressed="false">Inserto roscado</button></div></div>
+        <div class="row"><button class="btn" id="go1" type="button">Abrir y cerrar 10 veces</button></div>
+        <p class="msg" id="m1">Es la tapa del compartimento de pilas de un control: se abre seguido.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La caja de la placa electrónica</h3>
+        <p>Una carcasa para una placa con cuatro tornillos directo en el plástico. Después de varias aperturas para ajustar cables, dos tornillos giran en falso. En la versión nueva, los tetones llevan insertos de bronce colocados con el soldador: se abre todas las veces que haga falta.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Diez aperturas sin perder la rosca</h3>
+        <p>Elegí una unión que aguante abrir y cerrar seguido.</p><p class="msg" id="r1">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: tornillos, insertos y tuercas</summary><div class="in">
+      <dl><dt>Directo en plástico</dt><dd>Sencillo, pero tolera pocos desmontajes.</dd>
+      <dt>Pasante con tuerca</dt><dd>Resistente y reemplazable.</dd>
+      <dt>Inserto roscado</dt><dd>Heat-set insert. Duradero y adecuado para montajes repetidos. El alojamiento tiene en cuenta diámetro exterior, longitud, espesor alrededor, acceso para la herramienta, dirección de colocación y espacio para el material desplazado.</dd>
+      <dt>Tuerca cautiva</dt><dd>Captive nut. Alojamiento hexagonal con entrada lateral o superior, o insertada durante una pausa. Económica y reemplazable.</dd>
+      <dt>Tetones</dt><dd>Screw bosses. Con nervaduras, espesor suficiente, conectados a paredes cercanas, con radios en la base y sin apriete excesivo.</dd>
+      <dt>Agujeros</dt><dd>Pasante, piloto para que el tornillo forme rosca, para inserto, avellanado o cajeado.</dd></dl></div></details>
+  </section>
+
+  <!-- 7.7 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Lección 7.7</p><h1>Snap fit <span class="en" lang="en">Snap fit · encastre elástico</span></h1>
+      <p>Un brazo flexible con un gancho en la punta: al empujar, se dobla, pasa el escalón y vuelve a su lugar trabando la pieza. Si el brazo es corto o grueso, se dobla de más y se quiebra. Si es demasiado blando, no retiene.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la hebilla de la mochila. Las patitas se aprietan, entran y se abren solas adentro. Una patita corta y gorda no se dejaría apretar: se partiría.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c2" class="cvT" role="img" aria-label="Brazo flexible con gancho entrando en una traba"></canvas>
+      <div class="simbody">
+        <div class="row"><label for="len2">Largo del brazo</label><input id="len2" type="range" min="6" max="20" step="1" value="8"><span class="val" id="vlen2">8 mm</span></div>
+        <div class="row"><label for="thk2">Espesor</label><input id="thk2" type="range" min="1" max="3" step="0.25" value="2.5"><span class="val" id="vthk2">2,5 mm</span></div>
+        <div class="row"><span>Capas</span><div class="chipset" id="ori2"><button type="button" data-v="cruzadas" aria-pressed="true">Cruzan el brazo</button><button type="button" data-v="largo" aria-pressed="false">A lo largo</button></div><label><input type="checkbox" id="rad2"> Radio en la base</label></div>
+        <div class="row"><button class="btn" id="go2" type="button">Encastrar</button></div>
+        <p class="msg" id="m2">Ajustá el brazo y probá.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La tapa del pastillero</h3>
+        <p>Un pastillero con tapa a presión: las trabas se parten al primer cierre. Estaban impresas paradas, con las capas cruzando el brazo, y la base era una esquina viva. Acostadas, más largas y con un radio en la base, cierran cientos de veces.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Que trabe sin romperse</h3>
+        <p>Que encastre, no se quiebre y quede retenido.</p><p class="msg" id="r2">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: snap fit</summary><div class="in">
+      <dl><dt>Partes</dt><dd>Brazo flexible, gancho, superficie de entrada, zona de retención y espacio para que el brazo se deforme.</dd>
+      <dt>Cuidado</dt><dd>Un brazo demasiado corto, con radio pequeño o impreso en una orientación débil puede romperse.</dd>
+      <dt>Material</dt><dd>La misma geometría no funciona igual en todos los materiales: ajustá espesor, largo del brazo, radios, holgura y deformación permitida.</dd></dl>
+      <p>Los números del simulador son de ejemplo: el snap fit justo se valida imprimiendo una prueba.</p></div></details>
+  </section>
+
+  <!-- 7.8 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Lección 7.8</p><h1>Bisagras <span class="en" lang="en">Hinges: pin, print-in-place &amp; living hinge</span></h1>
+      <p>Hay tres formas de hacer que algo abra y cierre. Con pasador: dos piezas y un eje, robusta y reparable. Impresa en una sola pieza: sale armada, pero pide buena calibración. Bisagra viva: una franja muy fina que se dobla.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>La de pasador es la bisagra de la puerta de tu casa. La impresa en una pieza es la del cortaúñas, que viene armado. La viva es la tapita del shampoo, que se dobla sobre una franja fina.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c3" class="cvT" role="img" aria-label="Caja con tapa abriendo y cerrando sobre una bisagra"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Bisagra</span><div class="chipset" id="typ3"><button type="button" data-v="viva" aria-pressed="true">Viva</button><button type="button" data-v="pieza" aria-pressed="false">En una pieza</button><button type="button" data-v="pasador" aria-pressed="false">Con pasador</button></div></div>
+        <div class="row"><span>Material</span><div class="chipset" id="mat3"><button type="button" data-v="PLA" aria-pressed="true">PLA</button><button type="button" data-v="PETG" aria-pressed="false">PETG</button></div></div>
+        <div class="row"><button class="btn" id="go3" type="button">Abrir y cerrar 50 veces</button></div>
+        <p class="msg" id="m3">Una caja de tornillos que se abre todos los días. Tu impresora no está muy bien calibrada.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La bisagra que salió soldada</h3>
+        <p>Una caja con bisagra impresa en una pieza, descargada de internet. En la impresora del autor sale perfecta; en otra con un poco de sobreextrusión, el eje queda pegado a su alojamiento y no gira. Por eso se valida primero una sección de 20 a 30 mm.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Cincuenta aperturas sin problemas</h3>
+        <p>Elegí bisagra y material para esta caja.</p><p class="msg" id="r3">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: bisagras</summary><div class="in">
+      <dl><dt>Con pasador</dt><dd>Resistente, reparable y fácil de diseñar. Hojas con cilindros alternados, holgura y un pasador metálico.</dd>
+      <dt>Impresa en una sola pieza</dt><dd>Print-in-place. Sale armada, pero requiere buena calibración y holgura suficiente.</dd>
+      <dt>Bisagra viva</dt><dd>Living hinge. Una sección muy fina y flexible. Funciona mejor con materiales más flexibles que el PLA.</dd></dl>
+      <p>Proyecto práctico de tu curso: hojas y cilindros alternados, holgura, pasador metálico y validar primero una sección de 20 a 30 mm.</p></div></details>
+  </section>
+
+  <!-- 7.9 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Lección 7.9</p><h1>Perfiles estructurales <span class="en" lang="en">Structural profiles</span></h1>
+      <p>No todo el plástico de una viga trabaja igual. Para que no se doble, rinde el material lejos del centro, arriba y abajo. Para que no se retuerza, rinde una forma cerrada, como un tubo. Elegir el perfil ahorra plástico y suma resistencia.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la regla de plástico: acostada se dobla con un dedo, de canto no se dobla nada. Mismo plástico, distinta posición. Y un sorbete se retuerce mucho menos que una tira plana.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c4" class="cvT" role="img" aria-label="Viga con su perfil en corte, doblándose o retorciéndose"></canvas>
+      <div class="simbody">
+        <p class="note" id="ask4"></p>
+        <div class="row"><span>Perfil</span><div class="chipset" id="pro4"><button type="button" data-v="macizo" aria-pressed="true">Macizo</button><button type="button" data-v="u" aria-pressed="false">En U</button><button type="button" data-v="tubo" aria-pressed="false">Tubular</button><button type="button" data-v="i" aria-pressed="false">En I</button></div></div>
+        <div class="row"><button class="btn" id="go4" type="button">Elegir este perfil</button></div>
+        <p class="msg" id="m4"></p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El estante que pesaba un kilo</h3>
+        <p>Una repisa larga impresa maciza: tarda una eternidad y pesa demasiado. Con un perfil en I, las alas arriba y abajo hacen el trabajo y el alma del medio solo las une. Pesa la mitad y se dobla menos.</p></div>
+      <div class="card"><span class="tag">Decisiones rápidas</span><h3>Qué perfil para qué</h3>
+        <p>Macizo: sencillo y pesado. En U: rígido y fácil de imprimir. Tubular: eficiente en torsión. En I: eficiente para flexión en una dirección.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: optimización de material</summary><div class="in">
+      <dl><dt>Recursos</dt><dd>Paredes en lugar de bloques, nervaduras, cavidades, perfiles en U, perfiles tubulares, cartabones y relleno localizado.</dd>
+      <dt>Regla</dt><dd>Alejar el material del centro de la sección suele mejorar la resistencia a la flexión.</dd>
+      <dt>Objetivo</dt><dd>No la pieza más pesada ni la más compleja: la más simple que cumpla su función de forma segura, resistente y reproducible.</dd></dl>
+      <p>Los valores del simulador son comparativos, para ver la diferencia entre perfiles con el mismo peso.</p></div></details>
+  </section>
+
+  <!-- 7.10 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Lección 7.10</p><h1>Decisiones rápidas <span class="en" lang="en">Design decision chart</span></h1>
+      <p>Con lo que viste en este módulo ya tenés una caja de herramientas. Cada necesidad tiene un recurso de diseño que la resuelve. Acá van ocho: elegí el recurso para cada una.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el cajón de herramientas del taller. No usás el martillo para todo: para cada problema hay una herramienta que lo resuelve mejor y más rápido.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c5" class="cv2" role="img" aria-label="Tarjeta con una necesidad de diseño"></canvas>
+      <div class="simbody">
+        <p class="note" id="ask5">¿Qué recurso de diseño usarías?</p>
+        <div class="chipset" id="opt5"></div>
+        <p class="msg" id="m5">Necesidad 1 de 8.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El soporte de pared, de punta a punta</h3>
+        <p>El proyecto práctico de tu curso: analizar la flexión, diseñar placa y brazo, sumar cartabones y radios, y orientar según la carga. Cada paso usa una decisión de esta tabla.</p></div>
+      <div class="card"><span class="tag">Errores frecuentes</span><h3>Lo que conviene evitar</h3>
+        <p>100 % de relleno como única solución, ignorar la dirección de capas, agujeros con medida exacta, esquinas internas agudas, paredes muy finas, tornillos sin acceso, PLA cerca del calor, snap fits cortos, imprimir todo sin probetas y dividir sin elementos de alineación.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: flujo completo de diseño funcional</summary><div class="in">
+      <ol><li>Definir la función.</li><li>Medir.</li><li>Identificar dimensiones críticas.</li><li>Identificar fuerzas.</li><li>Elegir material.</li><li>Elegir orientación.</li><li>Diseñar la geometría principal.</li><li>Agregar refuerzos.</li><li>Diseñar encastres.</li><li>Reducir soportes.</li><li>Crear probetas.</li><li>Imprimir un prototipo.</li><li>Evaluar.</li><li>Corregir una variable a la vez.</li><li>Imprimir la versión final.</li></ol>
+      <p>Para dividir piezas grandes: pernos, lengüeta y ranura, cola de milano, pasadores, tornillos, imanes o adhesivo. Los pasadores de alineación llevan chaflán, holgura y una distribución asimétrica para que no se puedan armar al revés.</p></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 7 · Repaso de la segunda parte</p><h1>Cinco preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en el capítulo 18 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea, no reproducen una máquina exacta.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var LES=['l1','l2','l3','l4','l5'],ORDER=LES.concat(['repaso']),cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m7b')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>7.6</b> Tornillos e insertos',l2:'<b>7.7</b> Snap fit',l3:'<b>7.8</b> Bisagras',l4:'<b>7.9</b> Perfiles estructurales',l5:'<b>7.10</b> Decisiones rápidas',repaso:'<b>Repaso</b> Cinco preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m7b',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- ayudas ----------
+  function pill(c,s,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(s).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(s,x,y+1)}
+  function txt(c,s,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(s,x,y)}
+  function chips(id,attr,fn){var box=$(id);box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(box.children,function(x){x.setAttribute('aria-pressed',String(x===b))});fn(b.dataset[attr],b)})}
+  function say(id,t,k){var m=$(id);m.className='msg'+(k?' '+k:'');m.textContent=t}
+  function num(v,d){return v.toFixed(d==null?1:d).replace('.',',')}
+  function sgn(v){return(v>0?'+':v<0?'−':'')+num(Math.abs(v),2)}
+  function rnd(i,k){var x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)}
+  function divider(c,w,h,vert){c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
+  function split(w,h){var v=w<520;return{v:v,A:v?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B:v?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h}}}
+  function bnc(t){var n=7.5625,d=2.75;if(t<1/d)return n*t*t;if(t<2/d){t-=1.5/d;return n*t*t+.75}if(t<2.5/d){t-=2.25/d;return n*t*t+.9375}t-=2.625/d;return n*t*t+.984375}
+  function hotMini(c,x,y,s){var g=c.createLinearGradient(0,y-7.4*s,0,y-3*s);g.addColorStop(0,'#93A1C4');g.addColorStop(1,'#66749A');c.fillStyle=g;for(var k=0;k<4;k++)rr(c,x-1.7*s,y-7.2*s+k*1.05*s,3.4*s,.7*s,.2*s);c.fillRect(x-.6*s,y-7.2*s,1.2*s,4.3*s);
+    g=c.createLinearGradient(0,y-3*s,0,y-1.4*s);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,x-1.9*s,y-3*s,3.8*s,1.7*s,.3*s);c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(x-1.1*s,y-2.15*s,.38*s,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(x-s,0,x+s,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(x-s,y-1.4*s);c.lineTo(x+s,y-1.4*s);c.lineTo(x+.3*s,y);c.lineTo(x-.3*s,y);c.closePath();c.fill()}
+  // tramo de linea de primera capa segun la distancia boquilla-cama (mm). 0,10 a 0,13 es lo justo en la escala del papel.
+  function flSeg(c,x1,x2,y,lw,gap,ref){var hi=ref+.035,lo=ref-.035,yy1=y,yy2=y;
+    if(gap>hi){var k=Math.min(1,(gap-hi)/.15),a=k*lw*.35;c.strokeStyle=rgb(FIL);c.lineWidth=lw*(.75-.4*k);c.beginPath();c.moveTo(x1,y+a*Math.sin(x1/6));c.lineTo(x2,y+a*Math.sin(x2/6));c.stroke();return}
+    if(gap>=lo){c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();return}
+    var q=Math.min(1,(lo-gap)/.1);c.strokeStyle=rgb(FIL,.85-.5*q);c.lineWidth=lw*(1+.25*q);c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();
+    c.strokeStyle=rgb(tone(FIL2,-.35),.4+.4*q);c.lineWidth=1.2;c.beginPath();c.moveTo(x1,y-lw*.55);c.lineTo(x2,y-lw*.55);c.moveTo(x1,y+lw*.55);c.lineTo(x2,y+lw*.55);c.stroke()}
+
+  function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+  function plate(c,x,y,w,col){var g=c.createLinearGradient(0,y,0,y+10);g.addColorStop(0,col||'#8C9AC0');g.addColorStop(1,'#5D6A8E');c.fillStyle=g;rr(c,x,y,w,10,4)}
+  function steel(c,x,y,w,h){var g=c.createLinearGradient(x,0,x+w,0);g.addColorStop(0,'#E6EBF5');g.addColorStop(.5,'#B7C1D9');g.addColorStop(1,'#7E8BAE');c.fillStyle=g;c.fillRect(x,y,w,h)}
+  function brass(c,x,y,w,h){var g=c.createLinearGradient(x,0,x+w,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.fillRect(x,y,w,h)}
+  function counter(c,x,y,n,tot,col){txt(c,n+' de '+tot,x,y,'right',col||C.soft,14,700)}
+
+  // ---------- 7.6 tornillos ----------
+  var T1={typ:'directo',t0:-1,res:null};
+  chips('typ1','v',function(v){T1.typ=v;T1.t0=-1;T1.res=null;say('m1',{directo:'Directo en plástico: el tornillo forma su propia rosca en el tetón.',tuerca:'Tuerca cautiva: un alojamiento hexagonal guarda una tuerca de metal.',inserto:'Inserto roscado: un buje de bronce con rosca, colocado con calor.'}[v])});
+  $('go1').addEventListener('click',function(){T1.t0=performance.now();T1.res=null;say('m1','Abriendo y cerrando…');setTimeout(function(){var d=T1.typ==='directo';T1.res=d?'gastado':'ok';
+    if(d){say('m1','A la cuarta apertura la rosca de plástico se gastó: el tornillo gira en falso y la tapa queda floja. Directo en plástico sirve para piezas que se arman una vez.','bad');if(!done.l1)say('r1','Todavía no.')}
+    else{say('m1','Diez aperturas y la rosca sigue firme: el tornillo muerde metal, no plástico. '+(T1.typ==='inserto'?'El inserto es lo más duradero para montajes repetidos.':'La tuerca cautiva es económica y se reemplaza fácil.'),'ok');say('r1','¡Rosca firme! Para abrir seguido, rosca de metal.','ok');mark('l1')}},6200)});
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,e=T1.t0<0?-1:clamp((now-T1.t0)/6000,0,1),cyc=e<0?0:Math.min(10,Math.floor(e*10)),ph=e<0?1:(e*10)%1,strip=T1.typ==='directo'&&cyc>=4,k,g;bg(c,w,h);
+    var cx=w*(w<520?.5:.42),by=h-30,bw=Math.min(w*.42,250),bh=h*.42,lidH=Math.max(12,h*.06),sw=Math.min(16,bw*.08),out=e<0?0:(ph<.5?eio(ph*2):eio((1-ph)*2)),up=out*h*.18,top=by-bh;plate(c,cx-bw/2-20,by,bw+40);
+    // tapa y cuerpo
+    g=c.createLinearGradient(cx-bw/2,0,cx+bw/2,0);g.addColorStop(0,rgb(tone(FIL,.15)));g.addColorStop(1,rgb(tone(FIL2,-.08)));c.fillStyle=g;c.fillRect(cx-bw/2,top,bw/2-sw*1.6,bh);c.fillRect(cx+sw*1.6,top,bw/2-sw*1.6,bh);c.fillRect(cx-bw/2,by-bh*.12,bw,bh*.12);
+    c.fillStyle='#1B2336';c.fillRect(cx-sw*1.6,top,sw*3.2,bh*.88);
+    var hole=sw*.55;c.fillStyle=rgb(FIL2);c.fillRect(cx-sw*1.6,top,sw*1.6-hole,bh*.88);c.fillRect(cx+hole,top,sw*1.6-hole,bh*.88);
+    if(T1.typ==='inserto'){brass(c,cx-hole-sw*.35,top,sw*.35,bh*.35);brass(c,cx+hole,top,sw*.35,bh*.35);c.strokeStyle='rgba(90,60,20,.5)';c.lineWidth=1;for(k=top+4;k<top+bh*.35;k+=5){c.beginPath();c.moveTo(cx-hole-sw*.35,k);c.lineTo(cx-hole,k+3);c.moveTo(cx+hole,k+3);c.lineTo(cx+hole+sw*.35,k);c.stroke()}}
+    if(T1.typ==='tuerca'){var ny=top+bh*.42;c.fillStyle='#1B2336';c.fillRect(cx-sw*1.6,ny-2,sw*3.2,sw*1.2+4);steel(c,cx-sw*1.5,ny,sw*3,sw*1.2);c.fillStyle='#1B2336';c.fillRect(cx-hole,ny,hole*2,sw*1.2)}
+    if(strip){c.fillStyle='rgba(255,243,214,.8)';for(k=0;k<14;k++){c.beginPath();c.arc(cx+(rnd(k,1)-.5)*sw*1.4,top+bh*.1+rnd(k,2)*bh*.6,1.5,0,7);c.fill()}}
+    var lidY=top-lidH-up;c.fillStyle=rgb(tone(FIL,.3));c.fillRect(cx-bw/2,lidY,bw/2-hole,lidH);c.fillRect(cx+hole,lidY,bw/2-hole,lidH);
+    // tornillo
+    var sl=bh*.62,sy=lidY-sw*.6,rot=e<0?0:(ph<.5?-1:1)*t*20;steel(c,cx-sw*1.2,sy-sw*.5,sw*2.4,sw*.8);steel(c,cx-hole*.85,sy+sw*.3,hole*1.7,sl);c.strokeStyle='rgba(30,40,60,.45)';c.lineWidth=1.2;
+    for(k=0;k<sl/5;k++){var yy=sy+sw*.3+k*5+((rot%5)+5)%5;if(yy<sy+sw*.3+sl-2){c.beginPath();c.moveTo(cx-hole*.85,yy);c.lineTo(cx+hole*.85,yy+3);c.stroke()}}
+    if(strip&&e>=0&&e<1&&Math.sin(t*8)>.6)pill(c,'gira en falso',cx+bw/2+60>w-20?cx:cx+bw/2+60,top+bh*.3,C.bad);
+    txt(c,'Tetón en corte',14,22,'left',C.soft,13,700);txt(c,'Aperturas: '+cyc+' de 10',w-14,22,'right',strip?C.bad:cyc>=10?C.pop:C.soft,13,700)}
+  START.l1=function(){loop(draw1)};
+
+  // ---------- 7.7 snap fit ----------
+  var P2={L:8,t:2.5,ori:'cruzadas',rad:false,t0:-1,res:null};
+  function calc2(){var e=P2.t/(P2.L*P2.L)*100,m=(P2.rad?.75:1)*(P2.ori==='cruzadas'?2.2:1);return{e:e,v:e*m}}
+  function lab2(){$('vlen2').textContent=P2.L+' mm';$('vthk2').textContent=num(P2.t,2).replace(/0$/,'')+' mm'}
+  $('len2').addEventListener('input',function(){P2.L=+this.value;lab2();P2.t0=-1});$('thk2').addEventListener('input',function(){P2.t=+this.value;lab2();P2.t0=-1});
+  chips('ori2','v',function(v){P2.ori=v;P2.t0=-1});$('rad2').addEventListener('change',function(){P2.rad=this.checked;P2.t0=-1});
+  $('go2').addEventListener('click',function(){var r=calc2();P2.res=r.v>1?'rompe':r.e<.4?'suelto':'ok';P2.t0=performance.now();say('m2','Empujando…');setTimeout(function(){
+    if(P2.res==='rompe')say('m2',(P2.ori==='cruzadas'?'Con las capas cruzando el brazo, ':'')+'el brazo tiene que doblarse más de lo que aguanta y se quiebra en la base. '+(P2.L<12?'Probá un brazo más largo o más fino.':P2.rad?'':'Un radio en la base reparte el esfuerzo.'),'bad');
+    else if(P2.res==='suelto')say('m2','Encastra, pero el brazo es tan blando que no retiene: con un tironcito se suelta. Un poco más grueso o más corto.','bad');
+    else{say('m2','¡Clic! El brazo se dobla, pasa el escalón y vuelve a su lugar trabando la pieza.','ok');say('r2','¡Trabado sin romperse! Brazo largo, capas a lo largo y radio en la base.','ok');mark('l2')}
+    if(P2.res!=='ok'&&!done.l2)say('r2','Todavía no.')},2100)});
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,e=P2.t0<0?0:clamp((now-P2.t0)/2000,0,1),r=P2.res,k,g;bg(c,w,h);
+    var sc=Math.min((w*.5)/20,(h*.5)/12),bx=w*.12,by=h*.3,bw=w*.14,Lp=P2.L*sc,Tp=P2.t*sc*1.2,hk=Math.max(10,sc*1.6),ay=by+h*.12,ax=bx+bw;
+    c.fillStyle=rgb(FIL2);c.fillRect(bx,by,bw,h*.5);
+    // pieza que entra
+    var cw2=Math.max(60,w*.22),ch2=h*.2,fx=ax+Lp-hk*.2,startX=w+10,cx0=startX+(fx-startX)*Math.min(1,e*1.35),cyT=ay+Tp+2;
+    var dfl=0;var rel=(cx0-(ax+Lp-hk))/(hk*1.4);if(e>0)dfl=rel>1?0:rel>0?(1-rel)*hk*.95:0;var broke=r==='rompe'&&e>.45,snapped=e>.75&&r!=='rompe';if(snapped)dfl=0;if(broke)dfl=hk*.9;
+    var loose=r==='suelto'&&e>.85?(e-.85)/.15*w*.12:0;
+    c.fillStyle='#9FC5FF';c.beginPath();c.moveTo(cx0+loose,cyT+hk);c.lineTo(cx0+loose+hk,cyT);c.lineTo(cx0+loose+cw2,cyT);c.lineTo(cx0+loose+cw2,cyT+ch2);c.lineTo(cx0+loose,cyT+ch2);c.closePath();c.fill();
+    // brazo
+    function Y(u){return ay-dfl*u*u*(3-u)/2}
+    c.save();if(broke){var a=clamp((e-.45)/.3,0,1);c.translate(ax+4,ay+Tp);c.rotate(-a*.35);c.translate(-(ax+4),-(ay+Tp))}
+    g=c.createLinearGradient(0,ay,0,ay+Tp);g.addColorStop(0,rgb(tone(FIL,.2)));g.addColorStop(1,rgb(FIL2));c.fillStyle=g;c.beginPath();c.moveTo(ax,Y(0));for(k=0;k<=24;k++)c.lineTo(ax+Lp*k/24,Y(k/24));c.lineTo(ax+Lp,Y(1)+Tp+hk);c.lineTo(ax+Lp-hk,Y(1)+Tp);for(k=24;k>=0;k--)c.lineTo(ax+Lp*k/24,Y(k/24)+Tp);c.closePath();c.fill();
+    c.strokeStyle='rgba(58,36,24,.25)';c.lineWidth=1;if(P2.ori==='largo'){for(k=1;k<4;k++){c.beginPath();for(var u=0;u<=1.001;u+=.05){var yy=Y(u)+Tp*k/4;if(u)c.lineTo(ax+Lp*u,yy);else c.moveTo(ax,yy)}c.stroke()}}else{for(var x=ax+5;x<ax+Lp;x+=5){var uu=(x-ax)/Lp;c.beginPath();c.moveTo(x,Y(uu));c.lineTo(x,Y(uu)+Tp);c.stroke()}}
+    c.restore();
+    if(P2.rad){c.fillStyle=rgb(FIL2);c.beginPath();c.moveTo(ax,ay+Tp);c.lineTo(ax+Tp*1.2,ay+Tp);c.quadraticCurveTo(ax,ay+Tp,ax,ay+Tp+Tp*1.2);c.closePath();c.fill()}
+    if(broke){c.strokeStyle='#141B2B';c.lineWidth=2.5;c.beginPath();c.moveTo(ax+2,ay-2);c.lineTo(ax+6,ay+Tp+2);c.stroke();pill(c,'se quebró en la base',ax+60,ay-30,C.bad)}
+    if(snapped&&r==='ok')pill(c,'clic: trabado',ax+Lp,ay-30,C.pop);if(r==='suelto'&&e>=1)pill(c,'no retiene',ax+Lp,ay-30,C.bad);
+    var cv=calc2();txt(c,'Esfuerzo en la base',14,h-36,'left',C.soft,12,700);var bw2=Math.min(220,w*.4);c.fillStyle=C.sunk;rr(c,14,h-24,bw2,10,5);c.fillStyle=cv.v>1?C.bad:cv.e<.4?C.ui:C.pop;rr(c,14,h-24,bw2*clamp(cv.v/2,0,1),10,5);c.fillStyle=C.ink;c.fillRect(14+bw2*.5-1,h-28,2,18);txt(c,'▲ límite al medio',14+bw2+10,h-15,'left',C.soft,11,500);
+    txt(c,'Snap fit de costado · capas '+(P2.ori==='largo'?'a lo largo':'cruzando el brazo'),14,22,'left',C.soft,13,700)}
+  START.l2=function(){lab2();loop(draw2)};
+
+  // ---------- 7.8 bisagras ----------
+  var B3={typ:'viva',mat:'PLA',t0:-1,res:null};
+  chips('typ3','v',function(v){B3.typ=v;B3.t0=-1});chips('mat3','v',function(v){B3.mat=v;B3.t0=-1});
+  $('go3').addEventListener('click',function(){B3.res=B3.typ==='pieza'?'soldada':B3.typ==='viva'&&B3.mat==='PLA'?'rota':'ok';B3.t0=performance.now();say('m3','Abriendo y cerrando…');setTimeout(function(){
+    if(B3.res==='soldada')say('m3','La bisagra salió soldada: con una impresora poco calibrada, el eje se pega a su alojamiento y no gira. Funciona en máquinas bien calibradas y con holgura suficiente.','bad');
+    else if(B3.res==='rota')say('m3','La bisagra viva de PLA se quebró a las 8 aperturas: el PLA es rígido y la franja fina se fatiga enseguida.','bad');
+    else{say('m3',B3.typ==='pasador'?'Cincuenta aperturas sin problemas. Con pasador metálico es robusta, y si algo se gasta, se cambia el pasador.':'Cincuenta aperturas: el PETG es más flexible y la franja fina aguanta el doblado.','ok');say('r3','¡Bisagra que dura! Elegiste según el uso, el material y tu impresora.','ok');mark('l3')}
+    if(B3.res!=='ok'&&!done.l3)say('r3','Todavía no.')},4300)});
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,e=B3.t0<0?-1:clamp((now-B3.t0)/4000,0,1),r=B3.res,k,g;bg(c,w,h);
+    var bw=Math.min(w*.5,320),bh=h*.3,bx=(w-bw)/2,by=h-34,top=by-bh,px=bx,py=top-4,n=e<0?0:Math.floor(e*50),ang=0;plate(c,bx-20,by,bw+40);
+    if(e>=0){var ph=(e*50)%1;ang=Math.sin(ph*Math.PI)*1.3;if(r==='soldada')ang=Math.sin(t*40)*.02;if(r==='rota'&&n>=8){ang=-.06;n=8}}
+    g=c.createLinearGradient(bx,0,bx+bw,0);g.addColorStop(0,rgb(tone(FIL,.15)));g.addColorStop(1,rgb(tone(FIL2,-.08)));c.fillStyle=g;c.fillRect(bx,top,bw,bh);c.fillStyle='#1B2336';c.fillRect(bx+8,top+8,bw-16,bh-8);
+    // tapa
+    c.save();c.translate(px,py);if(r==='rota'&&e>=0&&n>=8){c.translate(bw*.05,-2)}c.rotate(-ang);c.fillStyle=rgb(tone(FIL,.3));c.fillRect(0,-6,bw,12);c.restore();
+    // bisagra
+    if(B3.typ==='pasador'){c.fillStyle=rgb(FIL2);c.beginPath();c.arc(px,py,10,0,7);c.fill();c.fillStyle='#C9D2E6';c.beginPath();c.arc(px,py,4,0,7);c.fill()}
+    else if(B3.typ==='pieza'){c.fillStyle=rgb(FIL2);c.beginPath();c.arc(px,py,10,0,7);c.fill();c.fillStyle=r==='soldada'&&e>=0?rgb(FIL2):'#1B2336';c.beginPath();c.arc(px,py,5,0,7);c.fill();c.fillStyle=rgb(tone(FIL,.3));c.beginPath();c.arc(px,py,3.5,0,7);c.fill()}
+    else{c.strokeStyle=r==='rota'&&n>=8?C.bad:rgb(tone(FIL,.3));c.lineWidth=3;c.beginPath();c.arc(px,py,7,Math.PI*.5,Math.PI*1.5+(-ang));c.stroke()}
+    var zx=w-(w<520?110:150),zy=40,zr=w<520?44:58;c.fillStyle='#182031';c.beginPath();c.arc(zx,zy+zr,zr,0,7);c.fill();txt(c,'detalle',zx,zy+zr*2+16,'center',C.soft,11,700);
+    c.save();c.beginPath();c.arc(zx,zy+zr,zr-3,0,7);c.clip();c.translate(zx,zy+zr);
+    if(B3.typ==='pasador'){for(k=-2;k<=2;k++){c.fillStyle=k%2?rgb(FIL):rgb(FIL2);c.fillRect(-zr,k*12-5,zr*2,10)}steel(c,-3,-zr,6,zr*2)}
+    else if(B3.typ==='pieza'){c.fillStyle=rgb(FIL2);c.beginPath();c.arc(0,0,zr*.6,0,7);c.fill();c.fillStyle='#1B2336';c.beginPath();c.arc(0,0,zr*.38,0,7);c.fill();c.fillStyle=rgb(FIL);c.beginPath();c.arc(0,0,zr*(r==='soldada'&&e>=0?.38:.3),0,7);c.fill();txt(c,r==='soldada'&&e>=0?'sin juego':'juego',0,zr*.82,'center',C.soft,10,700)}
+    else{c.fillStyle=rgb(FIL);c.fillRect(-zr,-8,zr*.8,16);c.fillRect(zr*.2,-8,zr*.8,16);c.fillStyle=rgb(FIL2);c.fillRect(-zr*.2,-2,zr*.4,4);txt(c,'franja fina',0,22,'center',C.soft,10,700);if(r==='rota'&&n>=8){c.strokeStyle=C.bad;c.lineWidth=2;c.beginPath();c.moveTo(-2,-6);c.lineTo(3,6);c.stroke()}}
+    c.restore();
+    txt(c,'Caja con tapa, de costado',14,22,'left',C.soft,13,700);txt(c,'Aperturas: '+n+' de 50',14,42,'left',r&&r!=='ok'&&e>=0?C.bad:n>=50?C.pop:C.soft,13,700)}
+  START.l3=function(){loop(draw3)};
+
+  // ---------- 7.9 perfiles ----------
+  var REQ4=[['una repisa larga que carga libros: que se doble poco','flex','i'],['una manija que se retuerce al girarla: que no se tuerza','tors','tubo']],
+    PR4={macizo:{n:'macizo',flex:1,tors:1,g:20},u:{n:'en U',flex:1.5,tors:.25,g:10},tubo:{n:'tubular',flex:1.4,tors:1.6,g:10},i:{n:'en I',flex:2,tors:.3,g:10}},Q4={i:0,p:'macizo'};
+  function ask4(){$('ask4').textContent=Q4.i<2?'Pedido '+(Q4.i+1)+' de 2: '+REQ4[Q4.i][0]+'.':'¡Los dos pedidos resueltos!'}ask4();
+  chips('pro4','v',function(v){Q4.p=v;var p=PR4[v],ld=REQ4[Math.min(Q4.i,1)][1];say('m4','Perfil '+p.n+': '+p.g+' g. '+(ld==='flex'?'Rigidez a la flexión: ':'Rigidez a la torsión: ')+'×'+num(p[ld],1)+' respecto del macizo.')});
+  $('go4').addEventListener('click',function(){if(Q4.i>=2)return;var q=REQ4[Q4.i],p=PR4[Q4.p];
+    if(Q4.p===q[2]){say('m4','¡Bien! Para '+q[0].split(':')[0]+', el perfil '+p.n+' es el más eficiente: '+(q[1]==='flex'?'las alas lejos del centro trabajan a la flexión.':'la forma cerrada resiste la torsión.'),'ok');Q4.i++;ask4();if(Q4.i===2)mark('l4')}
+    else say('m4','El perfil '+p.n+' '+(Q4.p==='macizo'?'aguanta, pero pesa el doble. Hay uno más liviano y mejor.':q[1]==='tors'&&(Q4.p==='u'||Q4.p==='i')?'es abierto: se retuerce con facilidad.':'sirve, pero hay uno que rinde más con el mismo peso.'),Q4.p==='macizo'?'':'bad')});
+  function prof(c,cx,cy,s,p,col){c.fillStyle=col;var a=s,b=s*1.2,t=s*.22;c.beginPath();
+    if(p==='macizo'){c.rect(cx-a/2,cy-b/2,a,b)}else if(p==='u'){c.moveTo(cx-a/2,cy-b/2);c.lineTo(cx-a/2+t,cy-b/2);c.lineTo(cx-a/2+t,cy+b/2-t);c.lineTo(cx+a/2-t,cy+b/2-t);c.lineTo(cx+a/2-t,cy-b/2);c.lineTo(cx+a/2,cy-b/2);c.lineTo(cx+a/2,cy+b/2);c.lineTo(cx-a/2,cy+b/2);c.closePath()}
+    else if(p==='tubo'){c.rect(cx-a/2,cy-b/2,a,b);c.rect(cx+a/2-t,cy-b/2+t,-(a-2*t),b-2*t)}else{c.rect(cx-a/2,cy-b/2,a,t);c.rect(cx-t/2,cy-b/2,t,b);c.rect(cx-a/2,cy+b/2-t,a,t)}c.fill('evenodd')}
+  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,S=split(w,h),A=S.A,B=S.B,p=PR4[Q4.p],ld=REQ4[Math.min(Q4.i,1)][1],k;bg(c,w,h);
+    var s=Math.min(A.w,A.h)*.38;prof(c,A.x+A.w/2,A.y+A.h/2+8,s,Q4.p,rgb(FIL));txt(c,'Perfil '+p.n+' en corte',A.x+12,A.y+22,'left',C.soft,13,700);txt(c,p.g+' g',A.x+A.w/2,A.y+A.h-14,'center',p.g>10?C.bad:C.pop,15,700);
+    var L=B.w*.72,bx=B.x+(B.w-L)/2,yb=B.y+B.h*.45,th=Math.min(B.h*.16,30),st=p[ld],sw=(Math.sin(t*2)+1)/2;
+    if(ld==='flex'){var d=(.9/st)*B.h*.14*(.85+.15*sw);c.fillStyle='#7E8BAE';[bx,bx+L].forEach(function(x){c.beginPath();c.moveTo(x,yb+th);c.lineTo(x-10,yb+th+18);c.lineTo(x+10,yb+th+18);c.closePath();c.fill()});
+      c.fillStyle=rgb(FIL);c.beginPath();for(k=0;k<=30;k++){var u=k/30;c.lineTo(bx+L*u,yb+d*Math.sin(u*Math.PI))}for(k=30;k>=0;k--){var u2=k/30;c.lineTo(bx+L*u2,yb+th+d*Math.sin(u2*Math.PI))}c.closePath();c.fill();
+      for(k=0;k<5;k++){c.fillStyle='#7E8BAE';rr(c,bx+L*(.2+k*.15)-9,yb-16+d*Math.sin((.2+k*.15)*Math.PI),18,14,2)}txt(c,'se dobla ×'+num(1/st,1),B.x+B.w/2,B.y+B.h-14,'center',st>=1.9?C.pop:C.ui,14,700)}
+    else{var tw=(.5/st)*(.7+.3*sw);c.fillStyle=rgb(FIL);c.fillRect(bx,yb,L,th);c.strokeStyle=rgb(tone(FIL2,-.3),.8);c.lineWidth=2;for(k=1;k<10;k++){var u3=k/10,sk=tw*u3*th*1.4;c.beginPath();c.moveTo(bx+L*u3+sk,yb);c.lineTo(bx+L*u3-sk,yb+th);c.stroke()}
+      c.fillStyle='#4F5B7D';rr(c,bx-18,yb-th*.6,18,th*2.2,4);c.strokeStyle=C.ui;c.lineWidth=3;c.beginPath();c.ellipse(bx+L+12,yb+th/2,9,th*.9,0,-1.3,1.6);c.stroke();txt(c,'se tuerce ×'+num(1/st,1),B.x+B.w/2,B.y+B.h-14,'center',st>=1.5?C.pop:st<.5?C.bad:C.ui,14,700)}
+    txt(c,ld==='flex'?'Repisa con peso':'Manija que se gira',B.x+12,B.y+22,'left',C.soft,13,700);divider(c,w,h,S.v)}
+  START.l4=function(){if(!$('m4').textContent)say('m4','Mirá cómo se comporta cada perfil y tocá "Elegir este perfil" cuando tengas el mejor.');loop(draw4)};
+
+  // ---------- 7.10 decisiones ----------
+  var ND5=[['Más rigidez','Nervaduras y perfiles altos'],['Menos soportes','Chaflanes y dividir la pieza'],['Mejor encastre','Holgura y chaflán de entrada'],['Unión desmontable','Tornillos, insertos o tuercas'],['Alineación entre partes','Pasadores'],['Resistencia en una esquina','Radio o cartabón'],['Uso al aire libre','ASA u otro material compatible'],['Flexibilidad','TPU o geometría elástica']],
+    D5={i:0,t0:0};
+  function opts5(){var box=$('opt5');box.textContent='';if(D5.i>=ND5.length)return;var o=[ND5[D5.i][1]];for(var j=1;o.length<4;j++){var x=ND5[(D5.i+j*3)%ND5.length][1];if(o.indexOf(x)<0)o.push(x)}o.sort(function(a,b){return rnd(a.length,D5.i)-rnd(b.length,D5.i)});
+    o.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x;b.setAttribute('aria-pressed','false');box.appendChild(b)})}
+  opts5();
+  $('opt5').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;var nd=ND5[D5.i];
+    if(b.textContent===nd[1]){var fin=D5.i===ND5.length-1;say('m5','¡Sí! '+nd[0]+' → '+nd[1]+'.'+(fin?' Completaste la tabla de decisiones.':''),'ok');if(fin){mark('l5');$('ask5').textContent='¡Tabla completa!';[].forEach.call($('opt5').children,function(x){x.disabled=true})}
+      else setTimeout(function(){D5.i++;D5.t0=performance.now();opts5();say('m5','Necesidad '+(D5.i+1)+' de '+ND5.length+'.')},1300)}
+    else{b.disabled=true;say('m5','"'+b.textContent+'" resuelve otra cosa. Pensá qué pide "'+nd[0].toLowerCase()+'".','bad')}});
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,i=Math.min(D5.i,ND5.length-1),a=clamp((now-D5.t0)/450,0,1),k;bg(c,w,h);
+    var cw=Math.min(w*.7,460),ch=h*.56,cx=(w-cw)/2,cy=(h-ch)/2-6+(1-eio(a))*20;c.globalAlpha=a;c.fillStyle='rgba(0,0,0,.25)';rr(c,cx+5,cy+5,cw,ch,16);c.fillStyle='#FFF3D6';rr(c,cx,cy,cw,ch,16);
+    txt(c,'NECESIDAD',cx+22,cy+30,'left','#8A6A55',12,700);c.font='700 '+Math.min(30,cw/13)+'px "Fredoka",system-ui,sans-serif';c.fillStyle='#3A2418';c.textAlign='left';c.fillText(ND5[i][0],cx+22,cy+ch*.62);c.globalAlpha=1;
+    for(k=0;k<ND5.length;k++){c.fillStyle=k<D5.i||(k===D5.i&&done.l5)?C.pop:k===D5.i?C.ui:C.line;c.beginPath();c.arc(w/2+(k-(ND5.length-1)/2)*18,h-16,5,0,7);c.fill()}}
+  START.l5=function(){loop(draw5)};
+
+  // ---------- repaso ----------
+  (function(){var Q=[['La tapa de un control se abre seguido. ¿Cómo unís con tornillo?',['Directo en el plástico','Con inserto roscado o tuerca cautiva','Con pegamento'],1,'Rosca de metal para montajes repetidos. Lección 7.6.'],
+    ['Un snap fit se parte al primer cierre. ¿Qué probás?',['Brazo más largo, capas a lo largo y radio en la base','Brazo más corto y grueso','100 % de relleno'],0,'Más largo y con buena orientación se dobla sin quebrarse. Lección 7.7.'],
+    ['¿Qué bisagra elegís si tu impresora no está muy calibrada?',['Impresa en una sola pieza','Con pasador','Ninguna'],1,'La de pasador es robusta y reparable. Lección 7.8.'],
+    ['Para una pieza que se retuerce, ¿qué perfil rinde más?',['En U','En I','Tubular'],2,'Las formas cerradas resisten la torsión. Lección 7.9.'],
+    ['Necesitás que dos mitades de una pieza grande queden alineadas. ¿Qué usás?',['Pasadores','Más relleno','Chaflanes en las esquinas'],0,'Pasadores con chaflán y distribución asimétrica. Lección 7.10.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(tx,i){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var sc=$('score');sc.hidden=false;sc.textContent=good+' de 5. '+(good===5?'¡Módulo 7 dominado!':good>=3?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})})();
+
+  // ---------- audio: lee el comienzo de cada leccion con la voz del navegador ----------
+  var SY=window.speechSynthesis,speaking=null;
+  function stopAudio(){try{if(SY)SY.cancel()}catch(e){}if(speaking){speaking.textContent='▶ Escuchar';speaking.setAttribute('aria-pressed','false');speaking=null}}
+  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
+  if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
+      var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+        u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
+      hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
+  var show0=show;show=function(k,p){stopAudio();show0(k,p)};
+
+  // ---------- arranque ----------
+  setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+<!--fx--><script>
+(function(){
+  // ---------- misiones por modulo ----------
+  var MIS={
+  'cac-m1':{l1:'Mové el avance y compará cuánto material se desperdicia sumando y tallando. Después respondé el mini reto.',l2:'Tocá las etapas en el orden correcto, del archivo a la pieza.',l3:'Dibujá un cuadrado cerrado de 20 mm con el generador de G-code.',l4:'Mirá cómo trabajan FDM y resina, y después respondé el mini reto.',l5:'Ubicá los nueve objetos en la caja que corresponde.'},
+  'cac-m2':{l1:'Mové los ejes X, Y y Z hasta llevar la boquilla al anillo punteado.',l2:'Compará cómo se mueven la cama móvil y el CoreXY, y después respondé el mini reto.',l3:'Dejá el carro exactamente en 30 mm.',l4:'Dejá la correa en su punto justo: ni floja ni pasada de tensión.',l5:'Probá el homing y después respondé el mini reto.'},
+  'cac-m2b':{l1:'Compará Bowden y directo, y después respondé el mini reto.',l2:'Provocá un atasco en el hotend y después destrabalo.',l3:'Probá distintas boquillas y después respondé el mini reto.',l4:'Lográ que el PETG pegue bien y se suelte sin romper nada.',l5:'Recorré la electrónica y después respondé el mini reto.',l6:'Mirá cómo actúa la protección térmica y después respondé el mini reto.'},
+  'cac-m3':{l1:'Explorá los materiales y después adiviná cuál es por su etiqueta.',l2:'Elegí un material rígido que aguante el auto al sol.',l3:'Encontrá una buena temperatura para PETG.',l4:'Imprimí la caja de ABS sin que se levante.',l5:'Arruiná un nylon con humedad y después recuperalo.',l6:'Probá la refrigeración con cada material y después respondé el mini reto.',l7:'Explorá los materiales especiales y después respondé el mini reto.',l8:'Elegí el material para un soporte de celular en el tablero del auto.'},
+  'cac-m4a':{l1:'Recorré las capas hasta encontrar una con dos islas separadas.',l2:'Ubicá los nueve ajustes en el perfil donde se guardan.',l3:'Mirá qué guarda cada tipo de archivo y después respondé el mini reto.',l4:'Encontrá la orientación que aguanta toda la carga sin usar soportes.',l5:'Ajustá la altura de capa para dejarla lista para una miniatura.',l6:'Probá la altura de capa variable y después respondé el mini reto.'},
+  'cac-m4b':{l1:'Dejá el ancho de línea en el rango habitual para una boquilla de 0,4.',l2:'Reforzá la pieza sin tocar el relleno.',l3:'Cerrá la tapa con 1 mm de techo.',l4:'Elegí el relleno para una figura decorativa.',l5:'Lográ que un voladizo de 70° salga bien.',l6:'Cruzá un puente de 40 mm o más sin que cuelgue.'},
+  'cac-m4c':{l1:'Lográ que la torre aguante el empujón gastando poco plástico.',l2:'Limpiá las torres en Bowden con la menor retracción posible.',l3:'Dá una vuelta en menos de 1 segundo, con ondas apenas visibles.',l4:'Lográ una punta nítida en PLA.',l5:'Probá dónde cae la costura y después respondé el mini reto.',l6:'Revisá la vista previa de cada pieza, capa por capa, y encontrá qué problema tiene.'},
+  'cac-m5a':{l1:'Tocá las calibraciones en el orden en que conviene hacerlas.',l2:'Dejá las cuatro esquinas rozando el papel.',l3:'Medí la cama, probá la malla y después respondé el mini reto.',l4:'Dejá la primera capa justa.',l5:'Elegí la mejor temperatura para esta bobina de PLA.'},
+  'cac-m5b':{l1:'Pedí 100 mm, calculá el valor nuevo y hacé que 100 mm sean 100 mm.',l2:'Dejá la pared en 0,45 mm moviendo el flujo.',l3:'Encontrá el avance de presión que deja las esquinas limpias.',l4:'Elegí la menor distancia de retracción que deja la torre limpia.',l5:'Completá y guardá una ficha con, al menos, impresora y filamento.'},
+  'cac-m7b':{l1:'Elegí una unión y abrila y cerrala 10 veces sin que se gaste la rosca.',l2:'Ajustá largo, espesor, capas y radio para que el snap fit trabe sin romperse.',l3:'Elegí bisagra y material para una caja que se abre todos los días.',l4:'Elegí el perfil más eficiente para cada uno de los dos pedidos.',l5:'Elegí el recurso de diseño para cada una de las ocho necesidades.'},
+  'cac-m7a':{l1:'Mirá cómo se deforma la barra y reconocé las cinco fuerzas.',l2:'Cambiá la forma de la esquina para que la escuadra aguante 6 kg.',l3:'Lográ que el soporte se doble menos de 1 mm con menos de 25 g de plástico.',l4:'Rediseñá el agujero y el saliente para imprimirlos sin soportes.',l5:'Elegí la holgura justa para cada uno de los tres pedidos y probala.'},
+  'cac-m6b':{l1:'Dejá el frente limpio y sin hilos hacia la columnita.',l2:'Lográ que el voladizo de 60° y el puente salgan derechos, sin soporte.',l3:'Elegí la distancia del soporte y el juego del encastre, y probá: soporte limpio y perno justo.',l4:'Lográ dos horas de impresión sin atascos y sin fugas.',l5:'Diagnosticá cuatro piezas: qué defecto tienen y qué revisar primero.'},
+  'cac-m6a':{l1:'Dejá la prueba limpia cambiando una sola cosa por vez.',l2:'Lográ una base plana, sin esquinas levantadas ni pata de elefante.',l3:'Revisá de lo simple a lo complejo, encontrá el tapón y sacalo.',l4:'Dejá la torre sin capas corridas, sin bandas y sin ondas.',l5:'Lográ paredes sin grietas y un techo cerrado.'}};
+  var KEY=document.documentElement.getAttribute('data-cac')||'',M=MIS[KEY]||{};
+  function $q(s,r){return(r||document).querySelector(s)}
+  function $a(s,r){return[].slice.call((r||document).querySelectorAll(s))}
+
+  // ---------- sonido ----------
+  var snd=true;try{snd=localStorage.getItem('cac-sound')!=='0'}catch(e){}
+  var AC=null;function ac(){try{if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;AC=new A()}if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+  function tn(f,t0,d,ty,v){var a=ac();if(!a)return;var o=a.createOscillator(),g=a.createGain(),n=a.currentTime+t0;o.type=ty;o.frequency.setValueAtTime(f,n);g.gain.setValueAtTime(0.0001,n);g.gain.linearRampToValueAtTime(v,n+.012);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(a.destination);o.start(n);o.stop(n+d+.05)}
+  var lastS=0;function play(k){if(!snd)return;var n=performance.now();if(k!=='win'&&n-lastS<250)return;lastS=n;try{
+    if(k==='ok'){tn(880,0,.2,'sine',.12);tn(1320,.08,.3,'sine',.09)}
+    else if(k==='bad'){tn(240,0,.2,'triangle',.16);tn(170,.09,.28,'triangle',.14)}
+    else if(k==='win'){tn(784,0,.18,'sine',.11);tn(988,.11,.18,'sine',.11);tn(1319,.22,.5,'sine',.11);tn(1568,.22,.5,'sine',.05)}}catch(e){}}
+  (function(){var top=$q('header.top');if(!top)return;var b=document.createElement('button');b.type='button';b.className='snd';
+    function paint(){b.textContent=snd?'🔊':'🔇';b.setAttribute('aria-label',snd?'Sonido activado. Tocá para silenciar':'Sonido silenciado. Tocá para activar');b.setAttribute('aria-pressed',String(!snd))}
+    b.addEventListener('click',function(){snd=!snd;try{localStorage.setItem('cac-sound',snd?'1':'0')}catch(e){}paint();if(snd)play('ok')});paint();var pr=$q('.prog',top);(pr||top).appendChild(b)})();
+
+  // ---------- que fue el usuario ----------
+  var lastAct=0,lastType='';
+  ['pointerdown','keydown','input','change'].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;
+    if(t&&t.closest&&t.closest('#nav,.navrow,.modnav,.snd,details,.listen')){lastAct=0;return}lastAct=performance.now();lastType=(e.type==='input'&&t&&t.type==='range')?'slide':e.type},true)});
+  function user(){return performance.now()-lastAct<12000}
+
+  // ---------- misiones ----------
+  $a('section.lesson').forEach(function(sec){var tx=M[sec.id],sb=$q('.sim .simbody',sec)||$q('.sim .gside',sec);if(!tx||!sb)return;
+    var d=document.createElement('div');d.className='mision';d.innerHTML='<span class="ic" aria-hidden="true">🎯</span><div><b>Tu misión</b><p></p></div>';$q('p',d).textContent=tx;sb.insertBefore(d,sb.firstChild)});
+
+  // ---------- mensajes ----------
+  var ST=new WeakMap(),pend=[],sch=false;
+  function anim(el,c){el.classList.remove('fx-shake','fx-pop');void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},650)}
+  function proc(){sch=false;var now=performance.now(),list=pend;pend=[];var fired={};
+    list.forEach(function(m){if(m.__d)return;m.__d=1;var c=m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t=m.textContent,p=ST.get(m)||{c:'',t:'',at:0},go=false;
+      if(c&&!m.hidden){if(c!==p.c)go=true;else if((t!==p.t||m.__t)&&lastType!=='slide'&&now-p.at>700)go=true}
+      if(go&&user()){anim(m,c==='ok'?'fx-pop':'fx-shake');fired[c]=1;p.at=now}
+      p.c=c;p.t=t;ST.set(m,p)});
+    list.forEach(function(m){m.__d=0;m.__t=0});
+    if(fired.ok)play('ok');else if(fired.bad)play('bad')}
+  function msgOf(n){var e=n.nodeType===1?n:n.parentNode;return e&&e.closest?e.closest('.msg'):null}
+  function strip(v){return String(v||'').replace(/\s*fx-\S+/g,'').trim()}
+  var mo=new MutationObserver(function(rs){rs.forEach(function(r){var m=msgOf(r.target);if(!m)return;if(r.type==='attributes'&&r.attributeName==='class'){var o=r.oldValue||'',n=m.className;if(/fx-/.test(o+' '+n))return;if(o===n)m.__t=1}pend.push(m)});if(pend.length&&!sch){sch=true;Promise.resolve().then(proc)}});
+  $a('.msg').forEach(function(m){ST.set(m,{c:m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t:m.textContent,at:0})});
+  mo.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeOldValue:true,attributeFilter:['class','hidden']});
+
+  // ---------- repaso ----------
+  var qz=$q('#quiz');if(qz)qz.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setTimeout(function(){var q=b.closest('.q');if(b.classList.contains('wrong')){play('bad');if(q)anim(q,'fx-shake')}else if(b.classList.contains('right')){play('ok');if(q)anim(q,'fx-pop')}},0)});
+
+
+  // ---------- reiniciar ----------
+  function arm(b,lab,ask,fn){b.addEventListener('click',function(){if(b.dataset.arm){fn();return}b.dataset.arm='1';b.textContent=ask;b.classList.add('armed');setTimeout(function(){if(b.isConnected){delete b.dataset.arm;b.textContent=lab;b.classList.remove('armed')}},4000)})}
+  function wipe(k){try{if(k){var d=JSON.parse(localStorage.getItem(KEY)||'{}');delete d[k];localStorage.setItem(KEY,JSON.stringify(d))}else localStorage.removeItem(KEY)}catch(e){}}
+  function go(h){try{if(location.hash==='#'+h)location.reload();else{location.hash=h;location.reload()}}catch(e){location.reload()}}
+  $a('section.lesson').forEach(function(sec){var b=document.createElement('button');b.type='button';b.className='btn ghost rst';var lab='↺ Volver a hacer esta lección';b.textContent=lab;
+    var w=document.createElement('div');w.className='rstrow';w.appendChild(b);sec.appendChild(w);arm(b,lab,'¿Seguro? Tocá de nuevo para empezarla de cero',function(){wipe(sec.id);go(sec.id)})});
+  (function(){var pr=$q('header.top .prog');if(!pr||!KEY)return;var b=document.createElement('button');b.type='button';b.className='rstm';var lab='↺ Reiniciar';b.textContent=lab;b.setAttribute('aria-label','Reiniciar el progreso de este módulo');
+    pr.insertBefore(b,$q('.snd',pr));arm(b,lab,'¿Todo el módulo? Tocá otra vez',function(){wipe(null);go('l1')})})();
+
+  // ---------- navegacion clara al pie ----------
+  (function(){var nb=$a('#nav button'),nr=$q('.navrow'),nx=$q('#next'),top=$q('.modnav');if(!nb.length||!nr||!nx)return;
+    function tl(b){var a=b.getAttribute('aria-label')||'';var m=a.match(/^Lecci[oó]n\s+([\d.]+),\s*(.+)$/);return m?m[1]+' '+m[2]:a}
+    var mn=top&&$q('a.mn-next',top),nl=mn?(($q('.lg',mn)||mn).textContent.trim()):'',nh=mn?mn.getAttribute('href'):'index.html',
+      mod=(($q('#nav')||{}).getAttribute&&$q('#nav').getAttribute('aria-label')||'').replace(/^Lecciones del /,'');
+    var lab=document.createElement('span');lab.className='nxl';nx.textContent='';nx.appendChild(lab);
+    var go=document.createElement('a');go.className='btn nextmod';go.href=nh;go.textContent=mn?'Ir al '+nl+' →':'Volver al inicio →';go.hidden=true;nr.appendChild(go);
+    if(top){var bot=top.cloneNode(true);bot.classList.add('modbot');bot.setAttribute('aria-label','Módulos del manual, al pie');var ft=$q('footer');(ft&&ft.parentNode||nr.parentNode).insertBefore(bot,ft||null)}
+    var rp=document.getElementById('repaso');if(rp){var cd=document.createElement('div');cd.className='cierre';cd.innerHTML='<p class="eyebrow">Fin de esta parte</p><h2></h2><p class="cs"></p><div class="row"></div>';
+      var b1=document.createElement('a');b1.className='btn big';b1.href=nh;b1.textContent=mn?'Seguir con el '+nl+' →':'Volver al inicio →';var b2=document.createElement('a');b2.className='btn ghost';b2.href='index.html';b2.textContent='Volver al inicio';
+      $q('.row',cd).appendChild(b1);if(mn)$q('.row',cd).appendChild(b2);rp.appendChild(cd)}
+    function paint(){var cur=null;nb.forEach(function(b){var sec=document.getElementById(b.dataset.l);if(sec&&!sec.hidden)cur=b});if(!cur)return;var i=nb.indexOf(cur),last=i===nb.length-1;
+      var nt='Siguiente: '+tl(nb[last?i:i+1])+' →';if(!last&&lab.textContent!==nt)lab.textContent=nt;if(go.hidden!==!last)go.hidden=!last;if(nx.hidden!==last)nx.hidden=last;
+      if(rp&&last){var pt=($q('#prog-txt')||{}).textContent||'',sc=$q('#score'),fin=sc&&!sc.hidden,h=fin?'¡Terminaste el '+mod+'!':'Cuando termines el repaso, seguí por acá',cs=pt+(fin?' · repaso: '+sc.textContent.split('.')[0]:'')+(mn?'':' · el próximo módulo está en preparación');if($q('h2',cd).textContent!==h)$q('h2',cd).textContent=h;if($q('.cs',cd).textContent!==cs)$q('.cs',cd).textContent=cs}}
+    paint();new MutationObserver(paint).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});var pt=$q('#prog-txt');if(pt)new MutationObserver(paint).observe(pt,{childList:true,subtree:true,characterData:true})})();
+  // ---------- sello de reto cumplido ----------
+  function host(sec){var cs=$a('.card',sec).filter(function(c){var t=$q('.tag',c);return t&&/reto/i.test(t.textContent)});return cs[0]||$q('.sim',sec)}
+  function sync(animate){$a('#nav button').forEach(function(b){if(!b.classList.contains('done'))return;var sec=document.getElementById(b.dataset.l);if(!sec||sec.id==='repaso'||sec.__sello)return;sec.__sello=1;
+      var h=host(sec);if(h){h.classList.add('fxhost');var s=document.createElement('span');s.className='sello'+(animate?' anim':'');s.textContent='Reto cumplido';h.appendChild(s)}
+      var mi=$q('.mision',sec);if(mi){mi.classList.add('done');$q('b',mi).textContent='Misión cumplida';$q('.ic',mi).textContent='✔'}
+      if(animate){b.classList.remove('fx-nav');void b.offsetWidth;b.classList.add('fx-nav');setTimeout(function(){play('win')},180)}})}
+  sync(false);
+  var pt=$q('#prog-txt');if(pt)new MutationObserver(function(){sync(true)}).observe(pt,{childList:true,characterData:true,subtree:true});
+})();
+</script><!--/fx-->
+</body>
+</html>
