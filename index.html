@@ -3,106 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Capa a Capa Inicio</title>
+<title>Capa a Capa Manual</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
 [hidden]{display:none!important}
-/* Layout: portada del manual. Arriba el nombre y una entrada directa al modulo 1; debajo los diez modulos en orden, cada uno con sus partes y su avance. Un solo tema, oscuro suave, igual que las lecciones. */
+/* Portada del manual, tema Material 3 oscuro. Azul = se toca · ámbar = tu avance · verde = salió bien. */
 :root{
-  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
-  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
-  --fil:#FFB38A; --fil2:#F2976E; --pop:#8FE0CC;
+  --bg:#141A27; --surface:#1F273A; --low:#1A2131; --hi:#273147; --hi2:#313C55; --line:#3A455C; --outline:#56627D;
+  --ink:#E4E8F3; --ink-soft:#B9C2D8; --ui:#FFB95E; --ui-ink:#472A00; --pop:#86D9B5;
+  --pri:#A9C7FF; --on-pri:#08305E; --pri-c:#254777; --on-pri-c:#D6E3FF;
   --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
   --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
-  --r:18px; color-scheme:dark;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
-.wrap{max-width:980px;margin:0 auto;padding-block:22px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
-h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0;padding-left:96px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
 p{margin:0}
 a{color:inherit}
-a:focus-visible{outline:3px solid var(--pop);outline-offset:3px;border-radius:8px}
-.brand{font-family:var(--f-display);font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px;color:var(--ink-soft)}
-.brand i{display:inline-flex;flex-direction:column;gap:3px}
-.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
-.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:center}
-@media (max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}}
-.hero h1{font-size:clamp(46px,8vw,78px);letter-spacing:-.01em}
-.hero p{font-size:19px;color:var(--ink-soft);max-width:46ch}
-.hero .txt{display:flex;flex-direction:column;gap:14px}
-.cta{align-self:flex-start;display:inline-block;font-weight:700;font-size:16px;background:var(--ui);color:var(--ui-ink);border-radius:999px;padding:12px 22px;text-decoration:none;transition:transform .12s ease-out}
-.cta:hover{transform:translateY(-2px)}
-.stack{display:flex;flex-direction:column-reverse;gap:5px;align-items:center;padding:10px 0}
-.stack i{display:block;height:16px;border-radius:8px;background:linear-gradient(180deg,#FFC9AB,var(--fil) 45%,#D9845F);animation:drop .5s cubic-bezier(.34,1.56,.64,1) both}
-.stack i:nth-child(even){background:linear-gradient(180deg,#F6B08E,var(--fil2) 45%,#C9714C)}
-@keyframes drop{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
-@media (prefers-reduced-motion:reduce){.stack i{animation:none}}
-.how{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-@media (max-width:760px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.how div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
-.how b{display:block;font-size:14px;color:var(--pop);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-.how span{font-size:14px;color:var(--ink-soft)}
-.sec{display:flex;flex-direction:column;gap:14px}
-.sec h2{font-size:28px}
-.mods{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-@media (max-width:760px){.mods{grid-template-columns:minmax(0,1fr)}}
-.mod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
-.mod.soon{background:transparent;border-style:dashed}
-.mhead{display:flex;gap:14px;align-items:flex-start}
-.num{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:19px;background:var(--ui);color:var(--ui-ink)}
-.soon .num{background:transparent;border:2px solid var(--line);color:var(--ink-soft)}
-.mhead h3{font-size:21px}
-.mhead p{font-size:14px;color:var(--ink-soft)}
-.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:13px;color:var(--ink-soft)}
-.tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid currentColor}
-.tag.ok{color:var(--pop)}.tag.half{color:var(--ui)}.tag.no{color:var(--ink-soft)}
-.parts{display:flex;flex-direction:column;gap:6px}
-.part{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;background:var(--sunken);border-radius:12px;padding:9px 12px;transition:background .15s ease-out}
-.part:hover{background:#121928}
-.part .nm{font-weight:700;font-size:14px;flex:1;min-width:0}
-.part .nm small{display:block;font-weight:400;color:var(--ink-soft);font-size:12px}
-.part .go{font-family:var(--f-mono);font-size:13px;color:var(--ui);white-space:nowrap}
-.part.off{opacity:.55}
-.part.off .go{color:var(--ink-soft)}
-.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
-.bar i{display:block;height:100%;background:var(--pop);border-radius:3px}
-.note{font-size:13px;color:var(--ink-soft)}
-footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:16px}
-.mph{margin:-18px -18px 4px;height:150px;position:relative;overflow:hidden;border-radius:var(--r) var(--r) 0 0}.mph img{width:100%;height:100%;object-fit:cover;object-position:right 60%;display:block}.mph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,var(--surface) 0%,rgba(40,50,74,0) 70%)}</style>
-<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+a:focus-visible{outline:3px solid var(--ui);outline-offset:3px}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.m3rail{position:fixed;z-index:20;left:0;top:0;bottom:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 0;background:var(--bg)}
+.m3rail .lg{display:flex;flex-direction:column;gap:4px;align-items:flex-start;margin-bottom:22px}
+.m3rail .lg b{display:block;height:5px;border-radius:3px}
+.m3rail .lg b:nth-child(1){width:16px;background:#FFB95E}.m3rail .lg b:nth-child(2){width:24px;background:#FF9E70}.m3rail .lg b:nth-child(3){width:32px;background:#EE8455}
+.m3rail a{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:72px;padding:6px 0;text-decoration:none;color:var(--ink-soft);font:500 12px var(--f-body);border-radius:16px}
+.m3rail a span{display:grid;place-items:center;width:56px;height:32px;border-radius:16px;transition:background .15s ease-out}
+.m3rail a:hover span{background:var(--hi)}
+.m3rail a[aria-current="page"]{color:var(--ink);font-weight:700}
+.m3rail a[aria-current="page"] span{background:var(--pri-c);color:var(--on-pri-c)}
+.m3rail svg{width:22px;height:22px}
+@media (max-width:860px){
+  body{padding-left:0;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .m3rail{top:auto;right:0;width:auto;flex-direction:row;justify-content:space-around;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--low);border-top:1px solid var(--line)}
+  .m3rail .lg{display:none}
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:var(--surface);border-radius:32px;overflow:hidden;min-height:440px}
+.hero .txt{padding:48px 44px;display:flex;flex-direction:column;gap:20px;justify-content:center;align-items:flex-start}
+.kick{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ui)}
+.hero h1{font-size:clamp(48px,6.4vw,84px);line-height:1}
+.hero .lead{font-size:19px;color:var(--ink-soft);max-width:44ch}
+.acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.cta{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 28px;border-radius:26px;background:var(--pri);color:var(--on-pri);font-weight:700;text-decoration:none;transition:background .15s ease-out}
+.cta:hover{background:#C3D8FF}
+.cta svg{width:20px;height:20px;stroke-width:2.4}
+.cta.tonal{background:var(--hi2);color:var(--ink);padding:0 24px}
+.cta.tonal:hover{background:#3C4864}
+.note{font-size:14px;color:var(--ink-soft)}
+.hero .ph{position:relative;min-height:260px}
+.hero .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%;display:block}
+@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}.hero .txt{padding:32px 24px}.hero .ph{order:-1;min-height:200px}}
+
+.sec{display:flex;flex-direction:column;gap:16px;scroll-margin-top:20px}
+.sec h2{font-size:30px;line-height:1.15}
+.sec>p{color:var(--ink-soft);margin-top:-10px}
+.how{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+@media (max-width:1100px){.how{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.how li{background:var(--low);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.how .ic{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--pri-c);color:var(--on-pri-c)}
+.how .ic.reto{background:#5C3B08;color:#FFDDB5}
+.how .ic svg{width:22px;height:22px}
+.how small{font:400 13px var(--f-mono);color:var(--ink-soft)}
+.how b{font:700 19px var(--f-display);letter-spacing:-.01em}
+.how span.d{font-size:14px;color:var(--ink-soft)}
+
+.mods{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:1100px){.mods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.mods{grid-template-columns:minmax(0,1fr)}}
+.mod{background:var(--surface);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.mph{position:relative;height:168px}
+.mph img{width:100%;height:100%;object-fit:cover;object-position:70% 55%;display:block}
+.num{position:absolute;left:16px;bottom:-22px;display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--ui);color:var(--ui-ink);font:700 21px var(--f-display)}
+.mbody{padding:34px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.mbody h3{font-size:22px;line-height:1.15}
+.mbody>p{font-size:14px;color:var(--ink-soft);margin-top:-8px}
+.parts{display:flex;flex-direction:column;gap:8px}
+.part{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 8px 8px 16px;border-radius:18px;background:var(--hi);text-decoration:none;transition:background .15s ease-out}
+.part:hover{background:var(--hi2)}
+.part .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+.part .st{display:flex;align-items:center;gap:10px;font:400 12px var(--f-mono);color:var(--ink-soft);white-space:nowrap}
+.part .st.txt{font-family:var(--f-body);white-space:normal}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ui);border-radius:3px}
+.part.full .bar i{background:var(--pop)}
+.part .go{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:22px;background:var(--pri-c);color:var(--on-pri-c)}
+.part .go svg{width:20px;height:20px;stroke-width:2.4}
+.part.full .go{background:#12402F;color:var(--pop)}
+footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:18px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
 </head>
 <body>
+<nav class="m3rail" aria-label="Navegación principal">
+  <div class="lg" aria-hidden="true"><b></b><b></b><b></b></div>
+  <a href="index.html" aria-current="page"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>Inicio</a>
+  <a href="#modulos"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>Módulos</a>
+  <a href="capa-a-capa-glosario.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M9 9h6M9 13h4"/></svg></span>Glosario</a>
+</nav>
 
 <div class="wrap">
-  <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
-
   <section class="hero">
     <div class="txt">
+      <span class="kick">Manual interactivo · Impresión 3D FDM</span>
       <h1>Capa a Capa</h1>
-      <p>El manual interactivo de impresión 3D FDM de Quirón 3D. Cada idea se entiende tocando: un control, un simulador y la consecuencia a la vista.</p>
-      <a class="cta" href="capa-a-capa-modulo-1.html">Empezar por el módulo 1</a>
+      <p class="lead">El manual de Quirón 3D donde cada idea se entiende tocando: un control, un simulador y la consecuencia a la vista.</p>
+      <div class="acts">
+        <a class="cta" id="cta" href="capa-a-capa-modulo-1.html"><span id="cta-t">Empezar por el módulo 1</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="cta tonal" href="#modulos">Ver los diez módulos</a>
+      </div>
       <p class="note" id="prog-all"></p>
     </div>
-    <div class="stack" aria-hidden="true" id="stack"></div>
+    <div class="ph"><img src="img/m1.webp" alt="Un Benchy naranja imprimiéndose sobre la cama de una impresora 3D"></div>
   </section>
 
   <section class="sec">
     <h2>Cómo es cada lección</h2>
-    <div class="how">
-      <div><b>En criollo</b><span>Una analogía de todos los días.</span></div>
-      <div><b>Probalo</b><span>Un simulador con uno o dos controles.</span></div>
-      <div><b>Caso real</b><span>Una pieza donde esto importa.</span></div>
-      <div><b>Tu reto</b><span>Lo que tenés que lograr con el simulador.</span></div>
-      <div><b>Ficha</b><span>La definición del curso, para volver.</span></div>
-    </div>
+    <p>Siempre los mismos pasos, en el mismo orden.</p>
+    <ol class="how">
+      <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4V5z"/></svg></span><small>Paso 1</small><b>En criollo</b><span class="d">Una analogía de todos los días.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span><small>Paso 2</small><b>Probalo</b><span class="d">Un simulador con uno o dos controles.</span></li>
+      <li><span class="ic reto"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4M6 4h11l-2 4 2 4H6"/></svg></span><small>Paso 3</small><b>Tu reto</b><span class="d">Lo que tenés que lograr con el simulador.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span><small>Paso 4</small><b>Caso real</b><span class="d">Una pieza donde esto importa.</span></li>
+      <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h4"/></svg></span><small>Paso 5</small><b>Ficha</b><span class="d">La definición del curso, para volver.</span></li>
+    </ol>
   </section>
 
-  <section class="sec">
+  <section class="sec" id="modulos">
     <h2>Los diez módulos</h2>
+    <p>En orden, de cómo funciona la máquina a cómo vender lo que imprimís.</p>
     <ol class="mods" id="mods"></ol>
   </section>
 
@@ -122,20 +157,26 @@ footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     {n:8,t:'El taller',d:'Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora.',parts:[['capa-a-capa-modulo-8a.html','Parte 1 · lecciones 8.1 a 8.5','cac-m8a',5],['capa-a-capa-modulo-8b.html','Parte 2 · lecciones 8.6 a 8.10','cac-m8b',5]]},
     {n:9,t:'Del hobby al negocio',d:'Costos, márgenes, presupuestos, capacidad, modelos con IA y cómo vender.',parts:[['capa-a-capa-modulo-9a.html','Parte 1 · lecciones 9.1 a 9.5','cac-m9a',5],['capa-a-capa-modulo-9b.html','Parte 2 · lecciones 9.6 a 9.10','cac-m9b',5]]},
     {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];
+  var ARROW='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
-  var box=document.getElementById('mods'),TOT=0,DONE=0;
-  MODS.forEach(function(m){var li=document.createElement('li'),ready=m.parts&&m.parts.every(function(p){return p[0]}),some=m.parts&&m.parts.some(function(p){return p[0]});li.className='mod'+(some?'':' soon');var ph=document.createElement('div');ph.className='mph';var im=document.createElement('img');im.src='img/m'+m.n+'.webp';im.alt='';im.loading='lazy';ph.appendChild(im);li.appendChild(ph);
-    var hd=document.createElement('div');hd.className='mhead';var nm=document.createElement('span');nm.className='num';nm.textContent=m.n;var tx=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');h.textContent=m.t;p.textContent=m.d;tx.appendChild(h);tx.appendChild(p);hd.appendChild(nm);hd.appendChild(tx);li.appendChild(hd);
-    var meta=document.createElement('div');meta.className='meta';var tg=document.createElement('span');tg.className='tag '+(ready?'ok':some?'half':'no');tg.textContent=ready?'Listo':some?'En curso':'Próximamente';meta.appendChild(tg);li.appendChild(meta);
-    if(m.parts){var ps=document.createElement('div');ps.className='parts';m.parts.forEach(function(q){var a=document.createElement(q[0]?'a':'div');a.className='part'+(q[0]?'':' off');if(q[0])a.href=q[0];
-        var l=document.createElement('span');l.className='nm';l.textContent=q[1];var g=document.createElement('span');g.className='go';
-        if(q[0]&&!q[3]){var sm0=document.createElement('small');sm0.textContent='Fichas, lecciones y ajustes, en español y en inglés';l.appendChild(sm0);g.textContent='Abrir →'}else if(q[0]){var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;var sm=document.createElement('small');sm.textContent=c+' de '+q[3]+' retos';l.appendChild(sm);var br=document.createElement('div');br.className='bar';var bi=document.createElement('i');bi.style.width=(c/q[3]*100)+'%';br.appendChild(bi);l.appendChild(br);g.textContent=c===q[3]?'Repasar →':c?'Seguir →':'Abrir →'}else g.textContent='Pronto';
-        a.appendChild(l);a.appendChild(g);ps.appendChild(a)});li.appendChild(ps)}
-    box.appendChild(li)});
-  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos.':'Hay '+TOT+' lecciones listas en '+MODS.filter(function(m){return m.parts&&m.parts[0][3]}).length+' módulos.';
-  var st=document.getElementById('stack'),wd=[86,94,78,98,70,90,82];for(var i=0;i<7;i++){var b=document.createElement('i');b.style.width=wd[i]+'%';b.style.maxWidth='300px';b.style.animationDelay=(i*.09)+'s';st.appendChild(b)}
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  var box=document.getElementById('mods'),TOT=0,DONE=0,resume=null;
+  MODS.forEach(function(m){
+    var li=el('li','mod'),ph=el('div','mph'),im=el('img');im.src='img/m'+m.n+'.webp';im.alt='';im.loading='lazy';ph.appendChild(im);ph.appendChild(el('span','num',m.n));li.appendChild(ph);
+    var bd=el('div','mbody');bd.appendChild(el('h3',null,m.t));bd.appendChild(el('p',null,m.d));
+    var ps=el('div','parts');
+    m.parts.forEach(function(q){
+      var a=el('a','part');a.href=q[0];var l=el('span','nm',q[1]),g=el('span','go');
+      if(!q[3]){l.appendChild(el('span','st txt','Fichas, lecciones y ajustes, en español y en inglés'));g.innerHTML=ARROW;a.setAttribute('aria-label',q[1]+'. Abrir')}
+      else{var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;if(c&&c<q[3]&&!resume)resume={href:q[0],n:m.n};
+        var st=el('span','st'),br=el('span','bar'),bi=el('i');bi.style.width=(c/q[3]*100)+'%';br.appendChild(bi);st.appendChild(br);st.appendChild(el('span',null,c+' de '+q[3]+' retos'));l.appendChild(st);
+        if(c===q[3]){a.className+=' full';g.innerHTML=CHECK}else g.innerHTML=ARROW;
+        a.setAttribute('aria-label',q[1]+', '+c+' de '+q[3]+' retos. '+(c===q[3]?'Repasar':c?'Seguir':'Abrir'))}
+      a.appendChild(l);a.appendChild(g);ps.appendChild(a)});
+    bd.appendChild(ps);li.appendChild(bd);box.appendChild(li)});
+  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos. Tu avance se guarda en este navegador.':TOT+' lecciones en 9 módulos y un glosario. Tu avance se guarda en este navegador.';
+  if(resume){document.getElementById('cta').href=resume.href;document.getElementById('cta-t').textContent='Seguir con el módulo '+resume.n}
 })();
 </script>
-
 </body>
 </html>
