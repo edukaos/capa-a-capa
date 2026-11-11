@@ -185,6 +185,7 @@ footer a{color:var(--ui)}
 .modnav .mn-off{justify-self:end;opacity:.6}
 .modnav .sh{display:none}
 @media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
@@ -209,7 +210,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.1 -->
   <section class="lesson" id="l1">
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Calibración</p><h1>Por qué calibrar</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Calibración</p><h1>Por qué calibrar <span class="en" lang="en">Calibration</span></h1>
       <p>Calibrar es comparar lo que imprime la máquina con lo que debería imprimir, y corregir la diferencia. No se trata de tocar todo: se ajustan pocas cosas, de a una y en orden.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es afinar la guitarra. Se afina una cuerda por vez, empezando por la que sirve de referencia. Si girás tres clavijas juntas, no sabés cuál desafinó.</p></div>
     <div class="sim"><span class="tag">Probalo · Mini reto</span>
@@ -237,7 +238,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.2 -->
   <section class="lesson" id="l2" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.2</p><h1>Nivelar la cama</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.2</p><h1>Nivelar la cama <span class="en" lang="en">Bed leveling</span></h1>
       <p>Nivelar es dejar la boquilla a la misma distancia de la cama en toda la superficie. La cama tiene que quedar paralela al recorrido de la boquilla, no al piso.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la mesa del bar que cojea. No se arregla cambiando la mesa: se gira la patita del lado que baila hasta que apoya pareja. Acá cada esquina de la cama tiene su perilla.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -264,7 +265,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.3 -->
   <section class="lesson" id="l3" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.3</p><h1>Malla de nivelación</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.3</p><h1>Malla de nivelación <span class="en" lang="en">Bed mesh</span></h1>
       <p>Ninguna cama es perfectamente plana. Con un sensor, la impresora mide la altura en muchos puntos y arma un mapa. Después sube y baja la boquilla un poquito para seguirlo.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es pasar la mano por una mesa vieja antes de escribir encima. Ya sabés dónde está el pozo y dónde la loma, y vas acompañando con la lapicera.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -290,7 +291,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.4 -->
   <section class="lesson" id="l4" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.4</p><h1>Offset Z y primera capa</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.4</p><h1>Offset Z y primera capa <span class="en" lang="en">Z offset & first layer</span></h1>
       <p>El offset Z es el ajuste fino de cuánto se acerca la boquilla a la cama. Una diferencia de 0,05 mm, menos que el grosor de un pelo, cambia por completo la primera capa.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es untar dulce de leche. Con el cuchillo muy alto no se pega al pan. Muy bajo, raspás el pan y no queda nada. A la altura justa queda una capa pareja.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -321,7 +322,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.5 -->
   <section class="lesson" id="l5" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.5</p><h1>Torre de temperatura</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.5</p><h1>Torre de temperatura <span class="en" lang="en">Temperature tower</span></h1>
       <p>Cada bobina funde un poco distinto, aunque sea del mismo material. La torre de temperatura imprime la misma forma varias veces, cada piso a una temperatura, para comparar y elegir.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es probar el mate a distintas temperaturas hasta dar con la tuya. Muy caliente se quema; muy frío no tiene gusto. Y la que te gusta a vos no tiene por qué ser la del paquete.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -617,7 +618,7 @@ footer a{color:var(--ui)}
   function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
   if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
       var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
-      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').firstChild.textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
         u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
       hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
   var show0=show;show=function(k,p){stopAudio();show0(k,p)};

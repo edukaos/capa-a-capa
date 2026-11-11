@@ -167,6 +167,7 @@ footer a{color:var(--ui)}
 .modnav .mn-off{justify-self:end;opacity:.6}
 .modnav .sh{display:none}
 @media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
@@ -192,7 +193,7 @@ footer a{color:var(--ui)}
 
   <!-- 2.6 -->
   <section class="lesson" id="l1">
-    <div class="lhead"><p class="eyebrow">Módulo 2 · La máquina por dentro</p><h1>Extrusor: Bowden y directo</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · La máquina por dentro</p><h1>Extrusor: Bowden y directo <span class="en" lang="en">Direct drive</span></h1>
       <p>El extrusor es el motor con engranajes que empuja el filamento. Lo que cambia entre impresoras es a qué distancia del hotend está.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es empujar un fideo por una manguera. Si la manguera es cortita, el fideo sale apenas empujás. Si es larga, primero se acomoda adentro y recién después sale. Y si el fideo está cocido, en la manguera larga se arruga.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -249,7 +250,7 @@ footer a{color:var(--ui)}
 
   <!-- 2.8 -->
   <section class="lesson" id="l3" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.8</p><h1>Boquillas</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.8</p><h1>Boquillas <span class="en" lang="en">Nozzles</span></h1>
       <p>La boquilla es el último agujero por el que pasa el plástico. Su diámetro define el ancho de cada línea, y con eso el detalle y la velocidad.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la punta del marcador. Con una punta fina escribís letra chiquita pero tardás un siglo en pintar un cartel. Con una punta gruesa pintás rápido y la letra chica se vuelve un manchón.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -280,7 +281,7 @@ footer a{color:var(--ui)}
 
   <!-- 2.9 -->
   <section class="lesson" id="l4" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.9</p><h1>Cama y superficies</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.9</p><h1>Cama y superficies <span class="en" lang="en">Build plate</span></h1>
       <p>La cama tiene dos trabajos opuestos: agarrar la pieza con firmeza mientras se imprime y soltarla sin pelear cuando termina.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la sartén. Si no agarra nada, el huevo patina y se rompe. Si agarra de más, lo sacás a pedazos. La buena es la que cocina firme y suelta sola cuando se enfría.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -310,7 +311,7 @@ footer a{color:var(--ui)}
 
   <!-- 2.10 -->
   <section class="lesson" id="l5" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.10</p><h1>Electrónica</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.10</p><h1>Electrónica <span class="en" lang="en">Mainboard</span></h1>
       <p>La electrónica alimenta, controla y vigila toda la máquina. Decide qué motor se mueve, cuándo calentar y cuándo frenar todo ante una falla.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es un cuerpo. La placa es el cerebro, los drivers son los nervios que mueven cada músculo, los motores son los músculos, el termistor es el termómetro bajo el brazo y la fuente es el corazón que reparte energía.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -338,7 +339,7 @@ footer a{color:var(--ui)}
 
   <!-- 2.11 -->
   <section class="lesson" id="l6" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.11</p><h1>Protección térmica</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.11</p><h1>Protección térmica <span class="en" lang="en">Thermal runaway protection</span></h1>
       <p>El firmware vigila que la temperatura responda con lógica. Si calienta y la lectura no sube, o cae de golpe, apaga todo. Es la protección más importante de la máquina.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la pava eléctrica que corta sola. Si el sensor se rompe y nadie corta, sigue calentando hasta quemarse. El corte automático está para el día en que algo falla y no estás mirando.</p></div>
     <div class="sim"><span class="tag">Probalo</span>

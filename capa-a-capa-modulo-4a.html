@@ -177,6 +177,7 @@ footer a{color:var(--ui)}
 .modnav .mn-off{justify-self:end;opacity:.6}
 .modnav .sh{display:none}
 @media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
@@ -202,7 +203,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.1 -->
   <section class="lesson" id="l1">
-    <div class="lhead"><p class="eyebrow">Módulo 4 · El laminador</p><h1>Qué hace el laminador</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · El laminador</p><h1>Qué hace el laminador <span class="en" lang="en">Slicer</span></h1>
       <p>El laminador es el programa que convierte un modelo 3D en instrucciones para la impresora. Corta el objeto en capas y decide cómo dibujar cada una.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es cortar un pan lactal en rodajas. El pan entero es el modelo, cada rodaja es una capa, y el laminador decide además cómo untar cada rodaja: por dónde pasa el cuchillo y cuánta manteca lleva.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -227,7 +228,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.2 -->
   <section class="lesson" id="l2" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.2</p><h1>Perfiles</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.2</p><h1>Perfiles <span class="en" lang="en">Profiles</span></h1>
       <p>El laminador tiene cientos de ajustes. Para no perderse los guarda en tres grupos: uno describe la máquina, otro el material y otro cómo querés imprimir.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es el lavarropas. Hay cosas que dependen de la máquina, como cuántos kilos carga. Otras dependen de la tela, como la temperatura del agua. Y otras de lo que querés hoy, como lavado rápido o intenso.</p></div>
     <div class="sim"><span class="tag">Probalo · Mini reto</span>
@@ -253,7 +254,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.3 -->
   <section class="lesson" id="l3" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.3</p><h1>Tipos de archivo</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.3</p><h1>Tipos de archivo <span class="en" lang="en">File formats</span></h1>
       <p>No todos los archivos 3D guardan lo mismo. Algunos traen solo la forma, otros el proyecto entero, y uno solo es el que entiende la impresora.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>El STL es una foto de la pieza: se ve la forma y nada más. El 3MF es la carpeta del proyecto con todo adentro. El STEP es el plano del arquitecto, que se puede corregir. Y el G-code es la receta ya escrita para tu cocina.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -280,7 +281,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.4 -->
   <section class="lesson" id="l4" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.4</p><h1>Orientación</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.4</p><h1>Orientación <span class="en" lang="en">Orientation</span></h1>
       <p>Cómo apoyás la pieza en la cama cambia su resistencia, cuántos soportes necesita y cuánto tarda. La posición más intuitiva no siempre es la mejor.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Una pieza impresa es una pila de hojas pegadas. Si la apretás de arriba aguanta muchísimo. Si tirás para separar las hojas, se abre por donde están pegadas.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -310,7 +311,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.5 -->
   <section class="lesson" id="l5" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.5</p><h1>Altura de capa</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.5</p><h1>Altura de capa <span class="en" lang="en">Layer height</span></h1>
       <p>Es el grosor de cada piso de plástico. Es el ajuste que más cambia cómo se ve la pieza y cuánto tarda en salir.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es una escalera. Con escalones bajitos casi parece una rampa, pero subís muchos más. Con escalones altos llegás enseguida, y cada uno se nota.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -341,7 +342,7 @@ footer a{color:var(--ui)}
 
   <!-- 4.6 -->
   <section class="lesson" id="l6" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.6</p><h1>Altura de capa variable</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.6</p><h1>Altura de capa variable <span class="en" lang="en">Adaptive layer height</span></h1>
       <p>No hace falta elegir una sola altura para toda la pieza. El laminador puede usar capas finas donde se notan y gruesas donde no.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es hacer los escalones bajitos solo en la parte de la escalera que dobla, donde es fácil tropezar, y normales en el tramo recto.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -625,7 +626,7 @@ footer a{color:var(--ui)}
   function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
   if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
       var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
-      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').firstChild.textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
         u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
       hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
   var show0=show;show=function(k,p){stopAudio();show0(k,p)};

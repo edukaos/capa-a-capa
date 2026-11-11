@@ -193,6 +193,7 @@ footer a{color:var(--ui)}
 .numin:focus-visible,.fgrid input:focus-visible{outline:2px solid var(--ui);outline-offset:1px}
 .ftab td.l{text-align:left;font-weight:500;padding-right:10px;white-space:nowrap}
 .ftab .del{padding:4px 10px;font-size:13px;white-space:nowrap}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
 </head>
@@ -217,7 +218,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.6 -->
   <section class="lesson" id="l1">
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.6</p><h1>Pasos del extrusor</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.6</p><h1>Pasos del extrusor <span class="en" lang="en">E-steps</span></h1>
       <p>El motor del extrusor no sabe de milímetros: sabe de pasos. La impresora usa un número, los pasos por milímetro, para traducir "empujá 100 mm" en giros del motor. Si ese número está mal, todo lo que imprime sale con más o menos plástico.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la balanza de la verdulería. Si está mal calibrada, cada kilo que te cobran pesa 950 gramos. No importa cuánto pidas: siempre te dan un poco menos. Se arregla la balanza, no el pedido.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -243,7 +244,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.7 -->
   <section class="lesson" id="l2" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.7</p><h1>Flujo</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.7</p><h1>Flujo <span class="en" lang="en">Flow</span></h1>
       <p>Con el extrusor calibrado, cada bobina igual se comporta un poco distinto. El flujo es un porcentaje en el laminador que corrige esa diferencia: 100 % es lo calculado, 96 % es un poco menos.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la sal de una receta. La receta dice una cucharadita, pero cada sal sala distinto. Probás, y si quedó salado, la próxima ponés un poquito menos. No cambiás la receta entera.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -270,7 +271,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.8 -->
   <section class="lesson" id="l3" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.8</p><h1>Avance de presión</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.8</p><h1>Avance de presión <span class="en" lang="en">Pressure advance</span></h1>
       <p>Dentro de la boquilla el plástico está bajo presión, y la presión tarda en subir y en bajar. Cuando el cabezal frena para doblar una esquina, sigue saliendo plástico de más. El avance de presión se adelanta: afloja antes de frenar y empuja antes de arrancar.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la manguera del jardín. Si cerrás la canilla, el agua sigue saliendo un ratito. Para regar justo hasta el borde del cantero, cerrás un poco antes de llegar.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -297,7 +298,7 @@ footer a{color:var(--ui)}
 
   <!-- 5.9 -->
   <section class="lesson" id="l4" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.9</p><h1>Torre de retracción</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.9</p><h1>Torre de retracción <span class="en" lang="en">Retraction tower</span></h1>
       <p>Cuando el cabezal viaja sin imprimir, el plástico caliente tiende a gotear y deja hilos. La retracción tira el filamento un poco hacia atrás antes de viajar. La torre prueba distintas distancias, un piso por valor.</p></div>
     <div class="criollo"><span class="tag">En criollo</span><p>Es la manga de pastelería. Para pasar de una masita a la otra sin dejar un hilo de crema, aflojás la mano y tirás apenas hacia atrás. Si tirás de más, la próxima tarda en salir.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
@@ -696,7 +697,7 @@ footer a{color:var(--ui)}
   function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
   if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
       var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
-      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').firstChild.textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
         u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
       hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
   var show0=show;show=function(k,p){stopAudio();show0(k,p)};
