@@ -19,6 +19,7 @@ El avance de los retos se guarda en el navegador de cada persona.
 | 5. Calibración | `capa-a-capa-modulo-5a.html` (parte 1), `capa-a-capa-modulo-5b.html` (parte 2) |
 | 6. Errores y diagnóstico | `capa-a-capa-modulo-6a.html` (parte 1), `capa-a-capa-modulo-6b.html` (parte 2) |
 | 7. Diseño funcional | `capa-a-capa-modulo-7a.html` (parte 1), `capa-a-capa-modulo-7b.html` (parte 2) |
+| 8. El taller | `capa-a-capa-modulo-8a.html` (parte 1), `capa-a-capa-modulo-8b.html` (parte 2) |
 
 Próximamente: segunda parte de Calibración, Errores y diagnóstico, Diseño de piezas funcionales, El taller, Del hobby al negocio y Glosario.
 
