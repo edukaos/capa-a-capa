@@ -626,19 +626,20 @@ details.ficha .in{font-size:16px}
   var N3={d:.4,t0:0};
   chips('noz3','d',function(v){N3.d=+v;N3.t0=performance.now();var r=Math.pow(.4/N3.d,2);$('r3a').textContent=N3.d===.4?'igual que con 0,4':r>1?'unas '+Math.round(r)+' veces más':'cerca de '+(r>.4?'la mitad':'un cuarto');$('r3b').textContent='unos '+String(N3.d).replace('.',',')+' mm'});
   function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,d=N3.d,p=Math.min(1,(now-N3.t0)/2600),W3=w/3,pm=Math.min(W3/13,h/12.5),g,k;bg(c,w,h);
+    function hd(s,x){if(w>=560){txt(c,s.replace(' · en',' en'),x,22,'center',C.soft,13,700);return}var q=s.split(' · ');txt(c,q[0],x,20,'center',C.soft,12,700);if(q[1])txt(c,q[1],x,36,'center',C.soft,11,500)}
     // boquilla en corte
     var nx=W3/2,ns=Math.min(W3/9,h/11),ny=h*.56,bore=d*ns*2.2;g=c.createLinearGradient(nx-3.6*ns,0,nx+3.6*ns,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;
     c.beginPath();c.moveTo(nx-3.4*ns,ny-5.2*ns);c.lineTo(nx+3.4*ns,ny-5.2*ns);c.lineTo(nx+3.4*ns,ny-2.6*ns);c.lineTo(nx+1.1*ns,ny);c.lineTo(nx-1.1*ns,ny);c.lineTo(nx-3.4*ns,ny-2.6*ns);c.closePath();c.fill();
     c.fillStyle=rgb(HOT);c.beginPath();c.moveTo(nx-1.3*ns,ny-5.2*ns);c.lineTo(nx+1.3*ns,ny-5.2*ns);c.lineTo(nx+1.3*ns,ny-2.6*ns);c.lineTo(nx+bore/2,ny-1.1*ns);c.lineTo(nx+bore/2,ny);c.lineTo(nx-bore/2,ny);c.lineTo(nx-bore/2,ny-1.1*ns);c.lineTo(nx-1.3*ns,ny-2.6*ns);c.closePath();c.fill();
     c.strokeStyle=rgb(FIL);c.lineWidth=bore;c.lineCap='butt';c.beginPath();c.moveTo(nx,ny);c.lineTo(nx+Math.sin(now/400)*.2*ns,ny+2.4*ns);c.stroke();
-    txt(c,'Boquilla en corte',W3/2,22,'center',C.soft,13,700);pill(c,String(d).replace('.',',')+' mm',nx,ny+3.9*ns);
+    hd('Boquilla · en corte',W3/2);pill(c,String(d).replace('.',',')+' mm',nx,ny+3.9*ns);
     // peine: 7 dientes separados 1,2 mm
     var lw=Math.max(1.5,d*pm),ox=W3+W3/2-3.6*pm,oy=h*.78;c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.lineCap='round';c.lineJoin='round';
     c.beginPath();c.moveTo(ox-.4*pm,oy);c.lineTo(ox+7.6*pm,oy);c.stroke();var nf=Math.ceil(p*7);for(k=0;k<nf;k++){var fr=Math.min(1,p*7-k);c.beginPath();c.moveTo(ox+k*1.2*pm,oy);c.lineTo(ox+k*1.2*pm,oy-6*pm*fr);c.stroke()}
-    txt(c,'Peine · dientes cada 1,2 mm',W3*1.5,22,'center',C.soft,13,700);
+    hd('Peine · dientes cada 1,2 mm',W3*1.5);
     // espiral con paso de 1,1 mm
     var sx=W3*2.5,sy=h*.54,tm=2*Math.PI*4.2*p;c.beginPath();for(var th=0;th<=tm;th+=.08){var r=1.1/(2*Math.PI)*th*pm;if(th===0)c.moveTo(sx,sy);else c.lineTo(sx+Math.cos(th)*r,sy+Math.sin(th)*r)}c.stroke();
-    txt(c,'Espiral · vueltas cada 1,1 mm',sx,22,'center',C.soft,13,700);
+    hd('Espiral · vueltas cada 1,1 mm',sx);
     c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();c.moveTo(W3,10);c.lineTo(W3,h-10);c.moveTo(2*W3,10);c.lineTo(2*W3,h-10);c.stroke()}
   START.l3=function(){N3.t0=performance.now();loop(draw3)};
   mcq($('q3'),$('m3'),['0,2 mm','0,4 mm','0,8 mm'],2,'Bien. Sin detalle fino que cuidar, la línea ancha llena mucho más rápido.',
