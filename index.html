@@ -87,6 +87,8 @@ svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-lin
 .parts{display:flex;flex-direction:column;gap:8px}
 .part{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 8px 8px 16px;border-radius:18px;background:var(--hi);text-decoration:none;transition:background .15s ease-out}
 .part:hover{background:var(--hi2)}
+.part.soon{background:transparent;border:1.5px dashed var(--outline);cursor:default}
+.part.soon:hover{background:transparent}
 .part .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
 .part .st{display:flex;align-items:center;gap:10px;font:400 12px var(--f-mono);color:var(--ink-soft);white-space:nowrap}
 .part .st.txt{font-family:var(--f-body);white-space:normal}
@@ -207,8 +209,8 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     {n:5,t:'Calibración',d:'Nivelación, offset Z, temperatura, extrusor, flujo y retracción.',parts:[['capa-a-capa-modulo-5a.html','Parte 1 · lecciones 5.1 a 5.5','cac-m5a',5],['capa-a-capa-modulo-5b.html','Parte 2 · lecciones 5.6 a 5.10','cac-m5b',5]]},
     {n:6,t:'Errores y diagnóstico',d:'Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.',parts:[['capa-a-capa-modulo-6a.html','Parte 1 · lecciones 6.1 a 6.5','cac-m6a',5],['capa-a-capa-modulo-6b.html','Parte 2 · lecciones 6.6 a 6.10','cac-m6b',5]]},
     {n:7,t:'Diseño de piezas funcionales',d:'Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.',parts:[['capa-a-capa-modulo-7a.html','Parte 1 · lecciones 7.1 a 7.5','cac-m7a',5],['capa-a-capa-modulo-7b.html','Parte 2 · lecciones 7.6 a 7.10','cac-m7b',5]]},
-    {n:8,t:'El taller',d:'Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora.',parts:[['capa-a-capa-modulo-8a.html','Parte 1 · lecciones 8.1 a 8.5','cac-m8a',5],['capa-a-capa-modulo-8b.html','Parte 2 · lecciones 8.6 a 8.10','cac-m8b',5]]},
-    {n:9,t:'Del hobby al negocio',d:'Costos, márgenes, presupuestos, capacidad, modelos con IA y cómo vender.',parts:[['capa-a-capa-modulo-9a.html','Parte 1 · lecciones 9.1 a 9.5','cac-m9a',5],['capa-a-capa-modulo-9b.html','Parte 2 · lecciones 9.6 a 9.10','cac-m9b',5]]},
+    {n:8,t:'Impresoras de nueva generación',d:'CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3.',parts:[['capa-a-capa-modulo-8.html','Lecciones 8.1 a 8.6','cac-m8',6]]},
+    {n:9,t:'Multicolor y multimaterial',d:'Cambio de color por capa, AMS, torre de purga, multicabezal y piezas que mezclan materiales.',parts:[[null,'En preparación',null,0]]},
     {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];
   var ARROW='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
@@ -219,6 +221,7 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     var bd=el('div','mbody');bd.appendChild(el('h3',null,m.t));bd.appendChild(el('p',null,m.d));
     var ps=el('div','parts');
     m.parts.forEach(function(q){
+      if(!q[0]){var sn=el('div','part soon'),sl=el('span','nm',q[1]);sl.appendChild(el('span','st txt','Este módulo se está armando. Muy pronto vas a poder hacerlo.'));sn.appendChild(sl);ps.appendChild(sn);return}
       var a=el('a','part');a.href=q[0];var l=el('span','nm',q[1]),g=el('span','go');
       if(!q[3]){l.appendChild(el('span','st txt','Fichas, lecciones y ajustes, en español y en inglés'));g.innerHTML=ARROW;a.setAttribute('aria-label',q[1]+'. Abrir')}
       else{var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;if(c&&c<q[3]&&!resume)resume={href:q[0],n:m.n};
@@ -227,7 +230,7 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
         a.setAttribute('aria-label',q[1]+', '+c+' de '+q[3]+' retos. '+(c===q[3]?'Repasar':c?'Seguir':'Abrir'))}
       a.appendChild(l);a.appendChild(g);ps.appendChild(a)});
     bd.appendChild(ps);li.appendChild(bd);box.appendChild(li)});
-  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos. Tu avance se guarda en este navegador.':TOT+' lecciones en 9 módulos y un glosario. Tu avance se guarda en este navegador.';
+  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos. Tu avance se guarda en este navegador.':TOT+' lecciones en '+MODS.filter(function(m){return m.parts[0][3]}).length+' módulos y un glosario. Tu avance se guarda en este navegador.';
   if(resume){document.getElementById('cta').href=resume.href;document.getElementById('cta-t').textContent='Seguir con el módulo '+resume.n}
 })();
 

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m8b">
+<html lang="es" data-cac="cac-m8">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Capa a Capa Módulo 8B</title>
+<title>Capa a Capa Módulo 8</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
@@ -152,6 +152,13 @@ code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
 .navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
 footer{font-size:13px;color:var(--ink-soft)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.cv3{aspect-ratio:16/10}
+@media (max-width:600px){.cv3{aspect-ratio:4/5}}
+.sl{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr) 62px;gap:8px 12px;align-items:center}
+@media (max-width:560px){.sl{grid-template-columns:minmax(0,1fr) 62px}.sl label{grid-column:1/-1}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+#ax{accent-color:var(--ui)}#ay{accent-color:var(--pop)}#az{accent-color:var(--fil)}
+footer a{color:var(--ui)}
 .modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
 .modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
 .modnav a:hover{color:var(--ink);background:var(--surface)}
@@ -162,37 +169,6 @@ footer{font-size:13px;color:var(--ink-soft)}
 .modnav .mn-off{justify-self:end;opacity:.6}
 .modnav .sh{display:none}
 @media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
-.steps{max-width:660px}
-@media (max-width:440px){.steps{gap:3px}.steps button{width:30px;height:30px;font-size:13px;border-width:1.5px}.steps i{min-width:3px}}
-.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);min-width:62px}
-.wiz{display:flex;flex-direction:column;gap:10px}
-.wq{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--sunken);border-radius:12px;padding:10px 14px}
-.wq>span{flex:1;min-width:200px}
-.rec{background:var(--sunken);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
-.recm{font-family:var(--f-display);font-size:44px;line-height:1;color:var(--ui)}
-.listen{align-self:flex-start;padding:7px 14px;font-size:14px}
-.ftabw{overflow-x:auto}
-.ftab{width:100%;border-collapse:collapse;font-size:14px}
-.ftab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:7px 10px 7px 0;border-top:1px solid var(--line)}
-.ftab td{text-align:right;font-weight:700;padding:7px 0;border-top:1px solid var(--line)}
-.ftab td.y{color:var(--pop)}.ftab td.n{color:var(--ink-soft)}.ftab td.m{color:var(--ui)}
-.cvT{aspect-ratio:4/3}
-@media (max-width:600px){.cvT{aspect-ratio:3/4}}
-.knobs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-@media (max-width:560px){.knobs{grid-template-columns:minmax(0,1fr)}}
-.kn{background:var(--sunken);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.kn b{font-size:14px}.kn .st{font-size:13px;color:var(--ui)}.kn .st.ok{color:var(--pop)}.kn .st.bad{color:var(--bad)}
-.kn .btn{padding:7px 14px;font-size:14px}
-.chipset button.right{border-color:var(--pop);color:var(--pop)}
-footer a{color:var(--ui)}
-.numin{width:120px;font:500 16px var(--f-mono);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media (max-width:600px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.fgrid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink-soft);min-width:0}
-.fgrid input{font:500 16px var(--f-body);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0;width:100%;box-sizing:border-box}
-.numin:focus-visible,.fgrid input:focus-visible{outline:2px solid var(--ui);outline-offset:1px}
-.ftab td.l{text-align:left;font-weight:500;padding-right:10px;white-space:nowrap}
-.ftab .del{padding:4px 10px;font-size:13px;white-space:nowrap}
 h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
 /* lectura: textos un poco más grandes y nota ligada al simulador */
 .note{font-size:16px;color:var(--ink);line-height:1.55;border-left:3px solid var(--pop);padding:2px 0 2px 12px}
@@ -344,9 +320,9 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Capa a Capa">
-<meta property="og:title" content="Capa a Capa Módulo 8B">
+<meta property="og:title" content="Capa a Capa Módulo 8">
 <meta property="og:description" content="Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
-<meta property="og:url" content="https://edukaos.github.io/capa-a-capa/capa-a-capa-modulo-8b.html">
+<meta property="og:url" content="https://edukaos.github.io/capa-a-capa/capa-a-capa-modulo-8.html">
 <meta property="og:image" content="https://edukaos.github.io/capa-a-capa/img/compartir.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -368,179 +344,227 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 <div class="wrap">
   <header class="top">
     <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
-    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+    <div class="prog"><span id="prog-txt">0 de 6 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
   </header>
-  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-8a.html">← <span class="lg">Módulo 8 · parte 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-modulo-9a.html"><span class="lg">Módulo 9 · parte 1</span><span class="sh">Siguiente</span> →</a></nav>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-7b.html">← <span class="lg">Módulo 7 · parte 2</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-glosario.html"><span class="lg">Glosario</span><span class="sh">Siguiente</span> →</a></nav>
 
-  <nav class="steps" id="nav" aria-label="Lecciones del módulo 8, segunda parte">
-    <button type="button" data-l="l1" aria-label="Lección 8.6, Señales de alerta">6</button><i></i>
-    <button type="button" data-l="l2" aria-label="Lección 8.7, Aire y emisiones">7</button><i></i>
-    <button type="button" data-l="l3" aria-label="Lección 8.8, Mejoras con criterio">8</button><i></i>
-    <button type="button" data-l="l4" aria-label="Lección 8.9, Tu primera impresora">9</button><i></i>
-    <button type="button" data-l="l5" aria-label="Lección 8.10, Comprar usada">10</button><i></i>
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 8">
+    <button type="button" data-l="l1" aria-label="Lección 8.1, De la Ender 3 a la nueva generación">1</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 8.2, CoreXY y velocidad real">2</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 8.3, Input shaping">3</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 8.4, Calibración automática">4</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 8.5, Hotends de alto flujo">5</button><i></i>
+    <button type="button" data-l="l6" aria-label="Lección 8.6, Cámara y detección de fallas">6</button><i></i>
     <button type="button" data-l="repaso" aria-label="Repaso">?</button>
   </nav>
   <p class="stepcap" id="stepcap"></p>
 
-  <!-- 8.6 -->
+  <!-- 8.1 -->
   <section class="lesson" id="l1">
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.6</p><h1>Señales de alerta <span class="en" lang="en">Warning signs &amp; emergency stop</span></h1>
-      <p>La mayoría de las cosas raras que hace una impresora son ajustes pendientes. Pero algunas señales piden cortar la energía en el momento, sin esperar a ver qué pasa. Saber distinguirlas es la regla de seguridad más importante.</p></div>
-    <div class="criollo"><span class="tag">En criollo</span><p>Es la luz del tablero del auto. Si se prende la del combustible, seguís hasta la estación. Si se prende la de temperatura del motor, parás ya, aunque falte poco para llegar.</p></div>
-    <div class="sim"><span class="tag">Probalo · Mini reto</span>
-      <canvas id="c1" class="cvT" role="img" aria-label="Impresora mostrando una situación"></canvas>
-      <div class="simbody">
-        <p class="note" id="ask1"></p>
-        <div class="chipset" id="opt1"><button type="button" data-v="apagar" aria-pressed="false">Apagar ya</button><button type="button" data-v="revisar" aria-pressed="false">Revisar al terminar</button><button type="button" data-v="normal" aria-pressed="false">Es normal</button></div>
-        <p class="msg" id="m1">¿Qué hacés?</p>
-      </div>
-    </div>
-    <div class="duo">
-      <div class="card"><span class="tag">Qué hacer ante humo</span><h3>En este orden</h3>
-        <p>1. Cortar la alimentación si es seguro. 2. No tocar la impresora. 3. Alejarse y avisar. 4. Usar el extintor adecuado solo si sabés hacerlo. 5. Evacuar si el fuego no se controla. 6. No volver a conectar la máquina. Nunca agua sobre un equipo eléctrico conectado.</p></div>
-      <div class="card"><span class="tag">Error térmico</span><h3>Heating failed, Thermal runaway, MINTEMP, MAXTEMP</h3>
-        <p>Detener la impresión, apagar y desconectar, esperar a que enfríe, revisar sensor, cables y calentador, y no reiniciar hasta encontrar la causa. Nunca desactives la protección térmica para que deje de avisar.</p></div>
-    </div>
-    <details class="ficha"><summary>Ficha: cuándo apagar inmediatamente</summary><div class="in">
-      <dl><dt>Apagar ya</dt><dd>Humo, chispas u olor a quemado. Conector derretido o cable muy caliente. Temperatura fuera de control. Motor bloqueado o ruido eléctrico. Ventilador detenido. Cartucho calefactor suelto.</dd>
-      <dt>Supervisión</dt><dd>Mirá especialmente el calentamiento y la primera capa, el primer uso de un material y la primera prueba después de una reparación. No imprimir en el dormitorio.</dd>
-      <dt>Monitoreo remoto</dt><dd>Cámaras, OctoPrint, Klipper y alertas ayudan, pero ver la impresora a distancia no garantiza poder actuar a tiempo. Un enchufe inteligente no debe ser la única protección.</dd>
-      <dt>Parada de emergencia</dt><dd>Un botón, un interruptor accesible o un sistema de corte. El interruptor y el enchufe tienen que estar libres y a mano.</dd></dl></div></details>
-  </section>
-
-  <!-- 8.7 -->
-  <section class="lesson" id="l2" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.7</p><h1>Aire y emisiones <span class="en" lang="en">Ventilation &amp; filament emissions</span></h1>
-      <p>Al imprimir se liberan olores, partículas ultrafinas y compuestos volátiles. Cuánto depende del material, la temperatura, los aditivos y las horas. Poco olor no significa que no haya emisiones.</p></div>
-    <div class="criollo"><span class="tag">En criollo</span><p>Es cocinar con la ventana cerrada: aunque no huela fuerte, el aire se carga. Con la ventana abierta y el extractor prendido, la casa queda bien.</p></div>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Impresoras de nueva generación</p><h1>De la Ender 3 a la nueva generación <span class="en" lang="en">Next-gen printers</span></h1>
+      <p>Todo el curso usó como base la impresora clásica de cama móvil, como la Ender 3. Las máquinas nuevas hacen lo mismo, capa por capa, pero cambiaron varias piezas a la vez, y por eso imprimen cinco veces más rápido.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es como pasar de un auto viejo a uno moderno: no alcanza con un motor más grande. Para ir rápido y seguro hacen falta también buenos frenos, una suspensión que no rebote y neumáticos que agarren.</p></div>
     <div class="sim"><span class="tag">Probalo</span>
-      <canvas id="c2" class="cvT" role="img" aria-label="Ambiente con la impresora y la nube de emisiones"></canvas>
+      <canvas id="c1" class="cv3" role="img" aria-label="Una impresora clásica y otra armada con las mejoras elegidas, imprimiendo el mismo Benchy al mismo tiempo"></canvas>
       <div class="simbody">
-        <div class="row"><span>Material</span><div class="chipset" id="mat2"><button type="button" data-v="PLA" aria-pressed="false">PLA</button><button type="button" data-v="PETG" aria-pressed="false">PETG</button><button type="button" data-v="ABS" aria-pressed="true">ABS</button></div></div>
-        <div class="row"><span>Lugar</span><div class="chipset" id="lug2"><button type="button" data-v="dormitorio" aria-pressed="true">Dormitorio cerrado</button><button type="button" data-v="living" aria-pressed="false">Ambiente ventilado</button><button type="button" data-v="taller" aria-pressed="false">Cerramiento y extracción</button></div></div>
-        <p class="msg" id="m2"></p>
+        <div class="row"><span>Mejoras de tu máquina</span><div class="chipset" id="up1" role="group" aria-label="Mejoras de tu máquina"></div></div>
+        <dl class="reads">
+          <div><dt>Ender 3 de siempre</dt><dd id="r1a">1 h 45 min</dd></div>
+          <div><dt>Tu máquina</dt><dd id="r1b">1 h 45 min</dd></div>
+        </dl>
+        <p class="msg" id="m1">Sumá mejoras y mirá cuánto tarda tu máquina en imprimir el mismo Benchy.</p>
+        <p class="note">Los tiempos son típicos para un Benchy con perfil normal, no los de una máquina en particular. La nivelación automática y la cámara no aceleran nada: te ahorran trabajo y sustos.</p>
       </div>
     </div>
     <div class="duo">
-      <div class="card"><span class="tag">Caso real</span><h3>Las piezas de ABS en el cuarto</h3>
-        <p>Por falta de lugar, una impresora de ABS va al dormitorio. Las piezas salen bien, pero el olor queda toda la noche. Mudándola a un ambiente ventilado, con cerramiento y un extractor hacia afuera, el problema desaparece.</p></div>
-      <div class="card"><span class="tag">Mini reto</span><h3>ABS sin cargar el aire</h3>
-        <p>Elegí dónde y cómo imprimir ABS de forma responsable.</p><p class="msg" id="r2">Todavía no.</p></div>
+      <div class="card"><span class="tag">Caso real</span><h3>La misma pieza, dos tardes distintas</h3>
+        <p>Un llavero que en una Ender 3 tardaba 40 minutos, en una Bambu Lab P1S o una Prusa Core One sale en menos de 10. No es magia: la cabeza pesa menos, la máquina compensa sus vibraciones y el hotend funde el plástico más rápido.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Bajá de 20 minutos</h3>
+        <p>Elegí las mejoras justas para que tu máquina imprima el Benchy en menos de 20 minutos.</p></div>
     </div>
-    <details class="ficha"><summary>Ficha: ventilación, materiales y uso responsable</summary><div class="in">
-      <dl><dt>Ventilación</dt><dd>Habitación ventilada, nada de dormitorios ni ambientes chicos cerrados, lejos de la zona de comida, y extracción o filtración cuando haga falta.</dd>
-      <dt>PLA</dt><dd>Suele dar menos olor, pero igual pide ventilación.</dd>
-      <dt>PETG</dt><dd>No sobrecalentarlo y mantener el área ventilada.</dd>
-      <dt>ABS y ASA</dt><dd>Cerramiento, extracción y buena ventilación; evitar espacios habitados.</dd>
-      <dt>Filtros</dt><dd>Extractor de aire, filtro de carbón activado para olores y compuestos, filtro HEPA para partículas.</dd>
-      <dt>Alimentos</dt><dd>Una pieza impresa no es apta para alimentos por ser de PLA o PETG: las líneas de capa retienen humedad y residuos. Hay que evaluar material certificado, aditivos, colorantes y boquilla.</dd>
-      <dt>Piezas críticas</dt><dd>Médicas, cascos, mosquetones, soportes de carga o piezas de freno no deberían usarse sin diseño, validación, pruebas y certificación.</dd></dl></div></details>
+    <details class="ficha"><summary>Ficha: impresoras de nueva generación</summary><div class="in">
+      <dl><dt>Clásica</dt><dd>Cama móvil, sin cerramiento, nivelación manual o con sensor, unos 50 a 80 mm/s. Ejemplos: Ender 3, Anet A8, Prusa MK3 en sus versiones originales.</dd>
+      <dt>Nueva generación</dt><dd>Next-gen. Suma mecánica liviana o CoreXY, input shaping, calibraciones automáticas, hotend de alto flujo, cámara y control desde el celular. Ejemplos: Bambu Lab A1, P1S y X1, Prusa MK4 y Core One, Creality K1 y K2, Elegoo Centauri.</dd>
+      <dt>Cuello de botella</dt><dd>Bottleneck. La parte más lenta del sistema define la velocidad de todo. Mejorar solo una pieza no alcanza.</dd>
+      <dt>Lo que no cambia</dt><dd>Filamentos, capas, paredes, relleno, soportes y diagnóstico de fallas funcionan igual. Todo lo que viste en el curso sigue valiendo.</dd></dl></div></details>
   </section>
 
-  <!-- 8.8 -->
+  <!-- 8.2 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.2</p><h1>CoreXY y velocidad real <span class="en" lang="en">Speed vs. acceleration</span></h1>
+      <p>Las cajas dicen "500 mm/s", pero una capa real está llena de tramos cortos y esquinas. En cada uno la impresora frena y vuelve a acelerar, así que casi nunca llega a esa velocidad.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es manejar en el centro: el auto puede ir a 200, pero entre semáforo y semáforo no pasás de 50. Lo que te hace llegar antes no es la velocidad máxima, sino arrancar rápido. CoreXY es lo que permite ese arranque, porque mueve una cabeza liviana en lugar de toda la cama.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c2" class="cv3" role="img" aria-label="Recorrido de una capa vista desde arriba y gráfico de la velocidad a lo largo del recorrido"></canvas>
+      <div class="simbody">
+        <div class="sl">
+          <label for="v2">Velocidad máxima (mm/s)</label><input id="v2" type="range" min="50" max="600" step="10" value="150"><span class="val" id="vv2">150</span>
+          <label for="a2">Aceleración (mm/s²)</label><input id="a2" type="range" min="500" max="20000" step="500" value="1500"><span class="val" id="va2">1500</span>
+        </div>
+        <dl class="reads">
+          <div><dt>Velocidad que dice la caja</dt><dd id="r2a">150 mm/s</dd></div>
+          <div><dt>Velocidad real promedio en esta capa</dt><dd id="r2b">0 mm/s</dd></div>
+        </dl>
+        <p class="msg" id="m2">Probá subir solo la velocidad máxima y mirá cuánto cambia la real.</p>
+        <p class="note">La aceleración se mide en mm/s²: cuántos mm/s gana la cabeza en cada segundo. Una Ender 3 de fábrica usa unos 500; una CoreXY moderna, entre 10.000 y 20.000.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Subirle la velocidad a la Ender 3</h3>
+        <p>Mucha gente pone 150 mm/s en el laminador de su Ender 3 y la pieza tarda casi lo mismo. Con la aceleración de fábrica, la cabeza no llega a esa velocidad en los tramos cortos. Y si sube la aceleración, la cama pesada empieza a sacudir la pieza.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Pasá los 150 mm/s reales</h3>
+        <p>Lográ que la velocidad real promedio de esta capa supere los 150 mm/s.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: velocidad, aceleración y CoreXY</summary><div class="in">
+      <dl><dt>Velocidad máxima</dt><dd>Max speed. El tope que la cabeza puede alcanzar en un tramo largo, en mm/s.</dd>
+      <dt>Aceleración</dt><dd>Acceleration. Qué tan rápido gana o pierde velocidad, en mm/s². En piezas reales pesa más que la velocidad máxima.</dd>
+      <dt>CoreXY</dt><dd>La cama solo baja en Z y la cabeza se mueve en X e Y con dos motores y correas cruzadas. Al mover poca masa admite aceleraciones muy altas.</dd>
+      <dt>Velocidad real</dt><dd>Average speed. Largo total del recorrido dividido por el tiempo que tarda. Es la que define cuánto dura la impresión.</dd></dl>
+      <p>Las de cama móvil modernas, como la Bambu Lab A1, también aceleran mucho gracias a camas livianas y al input shaping, pero las piezas altas sufren más que en una CoreXY.</p></div></details>
+  </section>
+
+  <!-- 8.3 -->
   <section class="lesson" id="l3" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.8</p><h1>Mejoras con criterio <span class="en" lang="en">Upgrades &amp; accessories</span></h1>
-      <p>Hay cientos de mejoras para comprar. La regla de tu curso: no reemplaces piezas solo porque una mejora está de moda. Primero identificá el problema; después elegí la mejora que lo resuelve.</p></div>
-    <div class="criollo"><span class="tag">En criollo</span><p>Es ponerle llantas deportivas al auto porque se ven lindas, cuando lo que hacía ruido era el amortiguador. Gastaste y el ruido sigue.</p></div>
-    <div class="sim"><span class="tag">Probalo · Mini reto</span>
-      <canvas id="c3" class="cv2" role="img" aria-label="Problema a resolver y la parte de la impresora que cambia"></canvas>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.3</p><h1>Input shaping <span class="en" lang="en">Input shaping</span></h1>
+      <p>Al acelerar fuerte, cada frenazo hace vibrar la máquina y esas vibraciones quedan dibujadas en la pared como ondas. El input shaping mide cómo vibra tu impresora y ajusta cada movimiento para cancelarlas.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es llevar una bandeja con vasos llenos: si frenás de golpe, el agua sigue de largo y se derrama. El mozo con experiencia frena en dos tiempos y el agua no se mueve. El input shaping le enseña a la impresora a frenar como ese mozo.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c3" class="cv3" role="img" aria-label="Pared de una pieza vista de frente con las ondas de vibración, y gráfico de la resonancia de la máquina"></canvas>
       <div class="simbody">
-        <p class="note" id="ask3"></p>
-        <div class="chipset" id="opt3"></div>
-        <p class="msg" id="m3">¿Qué mejora resuelve este problema?</p>
+        <div class="row"><button class="btn" id="meas3" type="button">Medir resonancia</button><div class="chipset" id="sh3" role="group" aria-label="Input shaping"><button type="button" aria-pressed="false" disabled>Input shaping apagado</button></div></div>
+        <div class="row"><label for="a3">Aceleración (mm/s²)</label><input id="a3" type="range" min="1000" max="20000" step="500" value="5000"><span class="val" id="va3">5000</span></div>
+        <p class="msg" id="m3">A 5000 mm/s² ya se ven ondas al lado de cada letra. Primero medí cómo vibra la máquina.</p>
+        <p class="note">Las impresoras nuevas hacen esta medición solas al encenderlas o antes de imprimir, con un acelerómetro en la cabeza. A las clásicas se les puede sumar con Klipper y un sensor.</p>
       </div>
     </div>
     <div class="duo">
-      <div class="card"><span class="tag">Caso real</span><h3>Guías lineales para nada</h3>
-        <p>Alguien instala guías lineales para sacar las ondas de sus piezas. Siguen igual: la correa estaba floja. Una guía económica mal instalada puede funcionar peor que unas buenas ruedas bien ajustadas.</p></div>
-      <div class="card"><span class="tag">Para arrancar bien</span><h3>Caja seca y secador</h3>
-        <p>Una caja seca conserva el filamento seco; un secador recupera el que ya está húmedo. Y no se seca todo a la misma temperatura: cada material tiene la suya.</p></div>
+      <div class="card"><span class="tag">Caso real</span><h3>Las sombras al lado del logo</h3>
+        <p>En una caja con letras en relieve aparecen "fantasmas" repetidos a la derecha de cada letra, como un eco. Eso es ghosting o ringing. Antes se arreglaba bajando la aceleración y tardando más. Con input shaping se imprime rápido y la pared sale lisa.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>A 10.000 sin ondas</h3>
+        <p>Medí la resonancia, activá el input shaping y subí la aceleración a 10.000 mm/s² o más con la pared lisa.</p></div>
     </div>
-    <details class="ficha"><summary>Ficha: accesorios y mejoras</summary><div class="in">
-      <dl><dt>Filamento</dt><dd>Secador, caja seca, higrómetro, soporte y rodillos para bobina, guía de filamento, sensores de fin y de movimiento de filamento.</dd>
-      <dt>Supervisión</dt><dd>Cámara, OctoPrint, Klipper, pantalla externa, iluminación.</dd>
-      <dt>Ambiente</dt><dd>Cerramiento, cámara calefaccionada, extractor, filtros de carbón activado y HEPA, purificador y sensor ambiental.</dd>
-      <dt>Calibración avanzada</dt><dd>Acelerómetro e input shaping; no corrigen correas flojas, ruedas dañadas ni una estructura inestable.</dd>
-      <dt>Mecánica</dt><dd>Doble eje Z, correa de sincronización Z, guías lineales, rodamientos mejorados.</dd>
-      <dt>Extrusión</dt><dd>Extrusor de doble engranaje, extrusor directo, hotend all-metal o de alto flujo, boquilla mayor o endurecida.</dd>
-      <dt>Cama</dt><dd>Sensor de nivelación, cama flexible magnética, separadores de silicona, ruedas de nivelación grandes, aislamiento.</dd>
-      <dt>Eléctrica</dt><dd>MOSFET externo, UPS dimensionada según el consumo real y protector de tensión.</dd></dl></div></details>
+    <details class="ficha"><summary>Ficha: resonancia e input shaping</summary><div class="in">
+      <dl><dt>Resonancia</dt><dd>Resonance. Cada máquina tiene frecuencias en las que vibra más, como una copa que suena al golpearla. En impresoras suelen estar entre 30 y 80 Hz.</dd>
+      <dt>Ringing o ghosting</dt><dd>Ondas o ecos repetidos en la pared después de una esquina o un relieve.</dd>
+      <dt>Input shaping</dt><dd>Filtro que divide cada movimiento en impulsos calculados para que las vibraciones se anulen entre sí. Se configura con la frecuencia medida de cada eje.</dd>
+      <dt>Acelerómetro</dt><dd>Accelerometer. Sensor que mide la vibración. Las máquinas nuevas lo traen en la cabeza o en la cama y calibran solas.</dd></dl></div></details>
   </section>
 
-  <!-- 8.9 -->
+  <!-- 8.4 -->
   <section class="lesson" id="l4" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.9</p><h1>Tu primera impresora <span class="en" lang="en">Choosing your first 3D printer</span></h1>
-      <p>Antes de mirar marcas y velocidades, definí qué querés imprimir, con qué materiales y cuánto querés ajustar. La mejor impresora no es la más cara: es la que encaja con tu uso.</p></div>
-    <div class="criollo"><span class="tag">En criollo</span><p>Es elegir una bici. Para ir al trabajo no necesitás una de carrera, y para la montaña una de paseo te deja a pie. Primero el camino, después la bici.</p></div>
-    <div class="sim"><span class="tag">Probalo · Mini reto</span>
-      <canvas id="c4" class="cvT" role="img" aria-label="Impresora recomendada según tus respuestas"></canvas>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.4</p><h1>Calibración automática <span class="en" lang="en">Auto calibration</span></h1>
+      <p>En la impresora clásica nivelabas con un papel y las perillas. Las nuevas miden la cama solas antes de imprimir, guardan un mapa de sus desniveles y mueven la boquilla para seguirlo.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es como planchar una camisa sobre una mesa despareja: si sabés dónde están los pozos, aflojás la mano ahí. La impresora toca la cama en varios puntos, arma el mapa y en cada pozo baja un poquito la boquilla.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c4" class="cv3" role="img" aria-label="Mapa de alturas de la cama visto desde arriba y la primera capa impresa encima"></canvas>
       <div class="simbody">
-        <div class="row"><span>¿Qué vas a imprimir?</span><div class="chipset" id="q4a"><button type="button" data-v="deco" aria-pressed="false">Decoración</button><button type="button" data-v="func" aria-pressed="false">Piezas útiles</button><button type="button" data-v="tec" aria-pressed="false">Piezas técnicas</button></div></div>
-        <div class="row"><span>¿Qué materiales?</span><div class="chipset" id="q4b"><button type="button" data-v="pla" aria-pressed="false">PLA y PETG</button><button type="button" data-v="tec" aria-pressed="false">ABS, ASA o nylon</button><button type="button" data-v="tpu" aria-pressed="false">También TPU</button></div></div>
-        <div class="row"><span>¿Querés aprender a ajustarla?</span><div class="chipset" id="q4c"><button type="button" data-v="aprender" aria-pressed="false">Sí, quiero aprender</button><button type="button" data-v="usar" aria-pressed="false">No, solo imprimir</button></div></div>
-        <p class="msg" id="m4">Respondé las tres preguntas.</p>
+        <div class="row"><span>Puntos a medir</span><div class="chipset" id="g4" role="group" aria-label="Cantidad de puntos a medir"></div><button class="btn" id="go4" type="button">Medir la cama</button></div>
+        <dl class="reads">
+          <div><dt>Tiempo de medición</dt><dd id="r4a">0 s</dd></div>
+          <div><dt>Primera capa pareja</dt><dd id="r4b">0 %</dd></div>
+        </dl>
+        <p class="msg" id="m4">Sin medir, la boquilla va a la misma altura en toda la cama. Mirá la primera capa: en los pozos queda flaca y en las lomas, aplastada.</p>
+        <p class="note">Rojo es la boquilla demasiado lejos: el plástico no pega. Ámbar es demasiado cerca: se aplasta. Verde es la altura justa. Las desviaciones están exageradas para que se vean.</p>
       </div>
     </div>
     <div class="duo">
-      <div class="card"><span class="tag">Caso real</span><h3>La de doble extrusor que nunca usó</h3>
-        <p>Alguien compra una impresora con doble extrusor y cámara con IA para empezar. Imprime todo en un color, pasa horas calibrando la purga y la cámara no la abre nunca. Una buena cama y un buen hotend valían más que veinte funciones sin usar.</p></div>
-      <div class="card"><span class="tag">Funciones</span><h3>Útiles y no esenciales</h3>
-        <p>Útiles: nivelación automática, PEI flexible, extrusor directo, sensor de filamento, perfiles y repuestos disponibles. No esenciales para empezar: cámara integrada, RGB, IA, nube, guías lineales, doble extrusor o cambio automático de color.</p></div>
+      <div class="card"><span class="tag">Caso real</span><h3>La cama que se curva al calentarse</h3>
+        <p>Una cama de aluminio a 60 °C puede combarse unas décimas de milímetro, más que la altura de la primera capa. Por eso las máquinas nuevas miden con la cama ya caliente. Algunas, como la Bambu Lab A1 o la Prusa MK4, usan la misma boquilla como sensor: sienten cuándo toca la cama.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Primera capa pareja</h3>
+        <p>Hacé que la impresora mida la cama y lográ una primera capa pareja en al menos el 95 % de la superficie.</p></div>
     </div>
-    <details class="ficha"><summary>Ficha: preguntas antes de comprar</summary><div class="in">
-      <ol><li>¿Qué voy a imprimir?</li><li>¿Qué materiales necesito?</li><li>¿Qué tamaño real necesito?</li><li>¿Cuánto espacio tengo?</li><li>¿Quiero aprender a ajustar o solo imprimir?</li><li>¿Se consiguen repuestos?</li><li>¿Existe comunidad?</li><li>¿Qué laminadores acepta?</li><li>¿Tiene protecciones térmicas?</li><li>¿Cuánto cuestan sus repuestos?</li><li>¿Qué garantía ofrece?</li><li>¿Necesito cerramiento?</li><li>¿Qué nivel de ruido tolero?</li><li>¿Necesito monitoreo?</li><li>¿Cuál es el costo total?</li></ol>
-      <p>Boquilla para empezar: 0,4 mm. Para producción suele convenir varias máquinas sencillas y estandarizadas antes que una sola compleja.</p></div></details>
+    <details class="ficha"><summary>Ficha: calibraciones automáticas</summary><div class="in">
+      <dl><dt>Malla de nivelación</dt><dd>Bed mesh. Mapa de alturas medidas en una grilla de puntos. La impresora compensa entre punto y punto.</dd>
+      <dt>Sensor de la boquilla</dt><dd>Nozzle probe o load cell. La boquilla misma detecta el contacto con la cama; no hace falta ajustar un offset Z a mano.</dd>
+      <dt>Otras calibraciones</dt><dd>Muchas máquinas también calibran solas el flujo, el avance de presión y las vibraciones antes de imprimir.</dd>
+      <dt>Lo que no reemplaza</dt><dd>Una cama sucia o una pieza mal orientada siguen fallando. La calibración automática corrige la altura, no la limpieza ni el diseño.</dd></dl></div></details>
   </section>
 
-  <!-- 8.10 -->
+  <!-- 8.5 -->
   <section class="lesson" id="l5" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.10</p><h1>Comprar usada <span class="en" lang="en">Buying a used printer</span></h1>
-      <p>Una usada puede ser una gran compra o una caja de problemas. La diferencia está en probarla antes de pagar y en saber leer las señales de alerta.</p></div>
-    <div class="criollo"><span class="tag">En criollo</span><p>Es comprar un auto usado: lo arrancás, lo manejás, mirás debajo del capó. Que esté lavado y brillante no dice nada del motor.</p></div>
-    <div class="sim"><span class="tag">Probalo · Mini reto</span>
-      <canvas id="c5" class="cvT" role="img" aria-label="Impresora usada con el detalle de lo que encontraste"></canvas>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.5</p><h1>Hotends de alto flujo <span class="en" lang="en">High-flow hotend</span></h1>
+      <p>Moverse rápido no sirve si el hotend no llega a fundir el plástico a tiempo. La cantidad de plástico que puede derretir por segundo se llama flujo, y es el límite que más se nota a altas velocidades.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es una canilla y un balde: por más rápido que corras con el balde, si la canilla larga poco, llegás con el balde medio vacío. Un hotend de alto flujo es una canilla más grande: tiene una zona caliente más larga para fundir más plástico por segundo.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c5" class="cv3" role="img" aria-label="Corte del hotend fundiendo filamento y la línea que deja sobre la cama"></canvas>
       <div class="simbody">
-        <p class="note">Fuiste a ver una usada. Marcá lo que es una señal de alerta y tocá "Decidir".</p>
-        <div class="chipset" id="opt5"></div>
-        <div class="row"><button class="btn" id="go5" type="button">Decidir</button></div>
+        <div class="row"><span>Hotend</span><div class="chipset" id="h5" role="group" aria-label="Tipo de hotend"></div></div>
+        <div class="row"><span>Altura de capa</span><div class="chipset" id="lh5" role="group" aria-label="Altura de capa"></div></div>
+        <div class="row"><label for="v5">Velocidad</label><input id="v5" type="range" min="50" max="400" step="10" value="150"><span class="val" id="vv5">150 mm/s</span></div>
+        <dl class="reads">
+          <div><dt>Plástico que pedís</dt><dd id="r5a">0 mm³/s</dd></div>
+          <div><dt>Lo que el hotend puede fundir</dt><dd id="r5b">0 mm³/s</dd></div>
+        </dl>
         <p class="msg" id="m5"></p>
+        <p class="note">El flujo pedido es ancho de línea × altura de capa × velocidad. Acá el ancho de línea queda fijo en 0,45 mm. Los topes de cada hotend son valores típicos para PLA.</p>
       </div>
     </div>
     <div class="duo">
-      <div class="card"><span class="tag">Prueba antes de comprar</span><h3>En este orden</h3>
-        <p>1. Encender. 2. Hacer homing. 3. Calentar hotend y cama. 4. Mover todos los ejes. 5. Extruir filamento. 6. Imprimir una pieza chica. 7. Ver que la temperatura se mantenga estable. 8. Leer la tarjeta o la conexión.</p></div>
-      <div class="card"><span class="tag">Para arrancar bien</span><h3>Nueva, usada o modificada</h3>
-        <p>Una modificada puede rendir más, pero también puede tener cambios sin documentar. Preguntá qué le cambiaron y si conserva las piezas originales.</p></div>
+      <div class="card"><span class="tag">Caso real</span><h3>Paredes con huecos a toda velocidad</h3>
+        <p>Subís la velocidad y las paredes salen finas, opacas y con huequitos, aunque la máquina se mueve bien. Es subextrusión por falta de flujo: el plástico sale sin terminar de fundirse. Las máquinas nuevas traen hotends que funden el doble o el triple que uno clásico.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>300 mm/s sin que falte plástico</h3>
+        <p>Imprimí a 300 mm/s con capas de 0,20 mm sin subextrusión.</p></div>
     </div>
-    <details class="ficha"><summary>Ficha: señales de alerta en una usada</summary><div class="in">
-      <dl><dt>Eléctricas</dt><dd>Conectores oscurecidos, olor a quemado o cables empalmados. Fuente ruidosa.</dd>
-      <dt>Mecánicas</dt><dd>Cama con juego, ejes duros, correas deshilachadas.</dd>
-      <dt>Térmicas</dt><dd>Hotend cubierto de plástico, ventiladores detenidos, errores térmicos.</dd>
-      <dt>Otras</dt><dd>Piezas originales faltantes.</dd></dl></div></details>
+    <details class="ficha"><summary>Ficha: flujo volumétrico y hotends</summary><div class="in">
+      <dl><dt>Flujo volumétrico</dt><dd>Volumetric flow. Cuánto plástico pasa por la boquilla por segundo, en mm³/s.</dd>
+      <dt>Hotend estándar</dt><dd>Del estilo del de la Ender 3 o un V6: unos 10 a 15 mm³/s con PLA.</dd>
+      <dt>Hotend de alto flujo</dt><dd>High-flow. Zona caliente más larga o con más superficie de contacto: unos 25 a 40 mm³/s. Ejemplos: Volcano, CHT, Revo High Flow y los hotends de las Bambu Lab y Creality K1.</dd>
+      <dt>Cuidado</dt><dd>Más flujo también pide más ventilación de capa: el plástico llega más caliente y tiene menos tiempo para enfriarse.</dd></dl></div></details>
+  </section>
+
+  <!-- 8.6 -->
+  <section class="lesson" id="l6" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Lección 8.6</p><h1>Cámara y detección de fallas <span class="en" lang="en">Remote monitoring</span></h1>
+      <p>Las impresoras nuevas traen cámara y se manejan desde el celular. Algunas, además, miran la impresión con inteligencia artificial: si la pieza se despega y empieza a salir un nido de hilos, pausan solas y te avisan.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la cámara para mirar al bebé desde la cocina, pero con un ayudante que, si ve que se cae algo, corta la luz y te manda un mensaje. Vos no tenés que estar mirando la pantalla todo el tiempo.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c6" class="cv3" role="img" aria-label="La impresión vista desde la cámara de la impresora en la pantalla de un celular"></canvas>
+      <div class="simbody">
+        <div class="row"><div class="chipset" id="ai6" role="group" aria-label="Detección de fallas"><button type="button" aria-pressed="false">Detección de fallas apagada</button></div><button class="btn" id="go6" type="button">Imprimir otra vez</button></div>
+        <dl class="reads">
+          <div><dt>Plástico tirado</dt><dd id="r6a">0 g</dd></div>
+          <div><dt>Tiempo perdido</dt><dd id="r6b">0 min</dd></div>
+        </dl>
+        <p class="msg" id="m6">En esta impresión la pieza se despega a mitad de camino. Mirá qué pasa si nadie la está mirando.</p>
+        <p class="note">La detección con IA viene en máquinas como las Bambu Lab con cámara y se puede sumar a otras con servicios como Obico. No es infalible: conviene revisar igual la primera capa.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La impresión de toda la noche</h3>
+        <p>Dejás una pieza de 8 horas y te vas a dormir. A la hora se despega y la impresora sigue tirando plástico al aire hasta la mañana: medio rollo hecho un nido. Con detección de fallas, se pausa a los pocos minutos y te llega una notificación al celular.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Atajala a tiempo</h3>
+        <p>Activá la detección de fallas e imprimí otra vez: la máquina tiene que pausar sola antes de tirar 5 g de plástico.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: control remoto y detección de fallas</summary><div class="in">
+      <dl><dt>Control remoto</dt><dd>Remote control. Mandar archivos, mirar la cámara, pausar o cambiar la temperatura desde el celular o la computadora.</dd>
+      <dt>Detección de fallas</dt><dd>Failure detection o spaghetti detection. Un programa mira las imágenes de la cámara y reconoce los nidos de hilos que aparecen cuando la pieza se despega.</dd>
+      <dt>Otros sensores</dt><dd>Sensor de fin de filamento, de atasco y de puerta abierta. Avisan o pausan antes de que se arruine la pieza.</dd>
+      <dt>Cuidado</dt><dd>La impresora sigue siendo una máquina con partes calientes. Control remoto no quiere decir dejarla sin revisar nunca.</dd></dl></div></details>
   </section>
 
   <!-- Repaso -->
   <section class="lesson" id="repaso" hidden>
-    <div class="lhead"><p class="eyebrow">Módulo 8 · Repaso de la segunda parte</p><h1>Cinco preguntas</h1>
+    <div class="lhead"><p class="eyebrow">Módulo 8 · Repaso</p><h1>Seis preguntas</h1>
       <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
     <div class="card" id="quiz"></div>
     <p class="score" id="score" hidden></p>
   </section>
 
   <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
-  <footer>Contenido basado en los capítulos 8, 12 y 13 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea, no reproducen una máquina exacta.</footer>
+  <footer>Módulo nuevo de Capa a Capa sobre las impresoras de nueva generación. Los simuladores son esquemas para entender la idea; los tiempos, velocidades y flujos son valores típicos, no los de una máquina en particular.</footer>
 </div>
+
 
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)};
   var C={fil:'#FF9E70',fil2:'#EE8455',plate:'#7C8AAE',ink:'#E4E8F3',soft:'#B9C2D8',ui:'#FFB95E',pop:'#86D9B5',surf:'#1F273A',sunk:'#171E2D',line:'#3A455C',bad:'#FFB4AB'};
   var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
-  var LES=['l1','l2','l3','l4','l5'],ORDER=LES.concat(['repaso']),cur='l1',raf=0;
+  var ORDER=['l1','l2','l3','l4','l5','l6','repaso'],cur='l1',raf=0;
   var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
-  var done={};try{done=JSON.parse(localStorage.getItem('cac-m8b')||'{}')||{}}catch(e){}
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m8')||'{}')||{}}catch(e){}
 
-  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>8.6</b> Señales de alerta',l2:'<b>8.7</b> Aire y emisiones',l3:'<b>8.8</b> Mejoras con criterio',l4:'<b>8.9</b> Tu primera impresora',l5:'<b>8.10</b> Comprar usada',repaso:'<b>Repaso</b> Cinco preguntas'};
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>8.1</b> De la Ender 3 a la nueva generación',l2:'<b>8.2</b> CoreXY y velocidad real',l3:'<b>8.3</b> Input shaping',l4:'<b>8.4</b> Calibración automática',l5:'<b>8.5</b> Hotends de alto flujo',l6:'<b>8.6</b> Cámara y detección de fallas',repaso:'<b>Repaso</b> Seis preguntas'};
   function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
     if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
   function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
@@ -610,10 +634,10 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
   function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
-  function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
-    $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
+  function paintProg(){var n=0;['l1','l2','l3','l4','l5','l6'].forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de 6 retos';$('prog-bar').style.width=(n/6*100)+'%';
     [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
-  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m8b',JSON.stringify(done))}catch(e){}paintProg()}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m8',JSON.stringify(done))}catch(e){}paintProg()}
   function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
     ORDER.forEach(function(id){$(id).hidden=id!==k});
     [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
@@ -632,158 +656,254 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 
   var START={};
 
-  // ---------- ayudas ----------
-  function pill(c,s,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(s).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(s,x,y+1)}
-  function txt(c,s,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(s,x,y)}
-  function chips(id,attr,fn){var box=$(id);box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(box.children,function(x){x.setAttribute('aria-pressed',String(x===b))});fn(b.dataset[attr],b)})}
-  function say(id,t,k){var m=$(id);m.className='msg'+(k?' '+k:'');m.textContent=t}
-  function num(v,d){return v.toFixed(d==null?1:d).replace('.',',')}
-  function sgn(v){return(v>0?'+':v<0?'−':'')+num(Math.abs(v),2)}
-  function rnd(i,k){var x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)}
-  function divider(c,w,h,vert){c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
-  function split(w,h){var v=w<520;return{v:v,A:v?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B:v?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h}}}
-  function bnc(t){var n=7.5625,d=2.75;if(t<1/d)return n*t*t;if(t<2/d){t-=1.5/d;return n*t*t+.75}if(t<2.5/d){t-=2.25/d;return n*t*t+.9375}t-=2.625/d;return n*t*t+.984375}
-  function hotMini(c,x,y,s){var g=c.createLinearGradient(0,y-7.4*s,0,y-3*s);g.addColorStop(0,'#93A1C4');g.addColorStop(1,'#66749A');c.fillStyle=g;for(var k=0;k<4;k++)rr(c,x-1.7*s,y-7.2*s+k*1.05*s,3.4*s,.7*s,.2*s);c.fillRect(x-.6*s,y-7.2*s,1.2*s,4.3*s);
-    g=c.createLinearGradient(0,y-3*s,0,y-1.4*s);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,x-1.9*s,y-3*s,3.8*s,1.7*s,.3*s);c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(x-1.1*s,y-2.15*s,.38*s,0,7);c.fill();c.shadowBlur=0;
-    g=c.createLinearGradient(x-s,0,x+s,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(x-s,y-1.4*s);c.lineTo(x+s,y-1.4*s);c.lineTo(x+.3*s,y);c.lineTo(x-.3*s,y);c.closePath();c.fill()}
-  // tramo de linea de primera capa segun la distancia boquilla-cama (mm). 0,10 a 0,13 es lo justo en la escala del papel.
-  function flSeg(c,x1,x2,y,lw,gap,ref){var hi=ref+.035,lo=ref-.035,yy1=y,yy2=y;
-    if(gap>hi){var k=Math.min(1,(gap-hi)/.15),a=k*lw*.35;c.strokeStyle=rgb(FIL);c.lineWidth=lw*(.75-.4*k);c.beginPath();c.moveTo(x1,y+a*Math.sin(x1/6));c.lineTo(x2,y+a*Math.sin(x2/6));c.stroke();return}
-    if(gap>=lo){c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();return}
-    var q=Math.min(1,(lo-gap)/.1);c.strokeStyle=rgb(FIL,.85-.5*q);c.lineWidth=lw*(1+.25*q);c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();
-    c.strokeStyle=rgb(tone(FIL2,-.35),.4+.4*q);c.lineWidth=1.2;c.beginPath();c.moveTo(x1,y-lw*.55);c.lineTo(x2,y-lw*.55);c.moveTo(x1,y+lw*.55);c.lineTo(x2,y+lw*.55);c.stroke()}
-
-  function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  // ---------- ayudas de dibujo del modulo 8 ----------
+  function pill(c,txt,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(txt).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(txt,x,y+1)}
+  function txt(c,t,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function mono(c,t,x,y,al,col,sz){c.fillStyle=col||C.ink;c.font='500 '+(sz||12)+'px "DM Mono",ui-monospace,monospace';c.textAlign=al||'left';c.fillText(t,x,y)}
   function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
-  function chipsList(id,items,attr){var box=$(id);box.textContent='';items.forEach(function(it){var b=document.createElement('button');b.type='button';b.textContent=it[1];b.dataset[attr||'v']=it[0];b.setAttribute('aria-pressed','false');box.appendChild(b)})}
-  function note(c,x,y,w,h,txt0,col,fs){c.fillStyle='rgba(0,0,0,.25)';rr(c,x+3,y+3,w,h,8);c.fillStyle=col||'#FFF3D6';rr(c,x,y,w,h,8);c.fillStyle='#3A2418';c.font='600 '+(fs||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign='left';
-    var words=txt0.split(' '),line='',ly=y+(fs||12)+6;words.forEach(function(wd){var t2=line?line+' '+wd:wd;if(c.measureText(t2).width>w-14&&line){c.fillText(line,x+7,ly);line=wd;ly+=(fs||12)+3}else line=t2});c.fillText(line,x+7,ly)}
-  function quiz(Q,fin){var box=$('quiz'),ans=0,good=0;Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
-      q[1].forEach(function(tx,i){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
-        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var sc=$('score');sc.hidden=false;sc.textContent=good+' de '+Q.length+'. '+(good===Q.length?fin:good>=3?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
-      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})}
+  function fmin(m){m=Math.round(m);if(m<60)return m+' min';var h=Math.floor(m/60),r=m%60;return h+' h'+(r?' '+r+' min':'')}
+  function nfmt(v,d){return v.toFixed(d||0).replace('.',',')}
+  function chips(box,items,sel,multi,onch){box.innerHTML='';items.forEach(function(it,i){var b=document.createElement('button');b.type='button';b.textContent=it;b.setAttribute('aria-pressed',String(multi?!!sel[i]:sel===i));
+    b.addEventListener('click',function(){if(multi){sel[i]=!sel[i];b.setAttribute('aria-pressed',String(sel[i]))}else{sel=i;[].forEach.call(box.children,function(x,j){x.setAttribute('aria-pressed',String(j===i))})}onch(multi?sel:i)});box.appendChild(b)})}
+  // caja de una CoreXY cerrada: marco, puerta de vidrio y riel de la cabeza
+  function boxFrame(c,ox,oy,s,top){var x0=ox-19.6*s,x1=ox+19.6*s,y1=oy+2.3*s;c.fillStyle='rgba(0,0,0,.25)';rr(c,x0+3,top+5,x1-x0,y1-top,1.4*s);
+    var g=c.createLinearGradient(x0,0,x1,0);g.addColorStop(0,'#3A4766');g.addColorStop(.5,'#4C5A7E');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,x0,top,x1-x0,y1-top,1.4*s);
+    c.fillStyle='#1B2333';rr(c,x0+1.2*s,top+1.2*s,x1-x0-2.4*s,y1-top-2.4*s,.9*s);
+    c.fillStyle='rgba(169,199,255,.05)';rr(c,x0+1.2*s,top+1.2*s,x1-x0-2.4*s,y1-top-2.4*s,.9*s);
+    c.strokeStyle='rgba(214,227,255,.10)';c.lineWidth=Math.max(2,.9*s);c.beginPath();c.moveTo(x0+5*s,top+3*s);c.lineTo(x0+12*s,top+3*s);c.moveTo(x0+5*s,top+5*s);c.lineTo(x0+8*s,top+5*s);c.stroke()}
+  // cabeza compacta de una maquina nueva (vista de frente)
+  function fastHead(c,px,py,u,t,x0,x1){var g;if(x0!=null){g=c.createLinearGradient(0,py-7.4*u,0,py-6.3*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-7.4*u,x1-x0,1.1*u,.5*u)}
+    g=c.createLinearGradient(px-3.4*u,0,px+3.4*u,0);g.addColorStop(0,'#E4E8F3');g.addColorStop(1,'#9AA6C4');c.fillStyle=g;rr(c,px-3.4*u,py-8.6*u,6.8*u,6*u,1.6*u);
+    c.fillStyle='#1A2133';rr(c,px-2.6*u,py-7.6*u,5.2*u,1.4*u,.7*u);c.fillStyle=rgb(hex('#FFB95E'),.9);rr(c,px-2.1*u,py-7.3*u,1.6*u,.8*u,.4*u);
+    c.fillStyle='#2A3348';rr(c,px-2.4*u,py-2.8*u,4.8*u,1.2*u,.4*u);
+    g=c.createLinearGradient(px-.8*u,0,px+.8*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.85*u,py-1.6*u);c.lineTo(px+.85*u,py-1.6*u);c.lineTo(px+.28*u,py);c.lineTo(px-.28*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.8*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.8*u,0,7);c.fill()}
+  function camIcon(c,x,y,col){c.fillStyle=col;rr(c,x-9,y-6,14,12,3);c.beginPath();c.moveTo(x+5,y-2);c.lineTo(x+10,y-5);c.lineTo(x+10,y+5);c.lineTo(x+5,y+2);c.closePath();c.fill()}
 
-  function printer(c,x,y,w,h,o){o=o||{};var t=o.t||0,g;c.fillStyle='#55628A';c.fillRect(x,y,w*.05,h);c.fillRect(x+w*.95,y,w*.05,h);c.fillRect(x,y,w,h*.05);
-    g=c.createLinearGradient(0,y+h*.85,0,y+h);g.addColorStop(0,'#3A4566');g.addColorStop(1,'#2A3350');c.fillStyle=g;c.fillRect(x-w*.05,y+h*.9,w*1.1,h*.1);
-    var bed=o.bed||0;c.fillStyle='#7C8AAE';c.fillRect(x+w*.15+bed,y+h*.82,w*.7,h*.05);c.fillStyle=rgb(FIL);c.fillRect(x+w*.38+bed,y+h*.68,w*.24,h*.14);
-    var hx=x+w*(.3+(o.hx==null?.2:o.hx)),hy=y+h*.2;c.fillStyle='#7E8BAE';c.fillRect(x+w*.05,hy-h*.02,w*.9,h*.03);hotMini(c,hx,y+h*.52,Math.max(3,h*.045));
-    if(o.fan!=null){var fx=hx+h*.12,fy=y+h*.38,fr=h*.06;c.save();c.translate(fx,fy);c.fillStyle='#3A4566';rr(c,-fr,-fr,fr*2,fr*2,4);c.rotate(o.fan?t*14:0);c.fillStyle=o.fan?'#C9D2E6':'#6B7697';for(var k=0;k<4;k++){c.rotate(Math.PI/2);c.beginPath();c.ellipse(fr*.42,0,fr*.48,fr*.2,0,0,7);c.fill()}c.restore()}
-    return{hx:hx,hy:y+h*.52}}
-  function smoke(c,x,y,t,n,col){for(var k=0;k<n;k++){var ph=(t*.35+k/n)%1;c.fillStyle='rgba('+(col||'200,205,215')+','+(.35*(1-ph))+')';c.beginPath();c.arc(x+Math.sin(k*3+t)*20*ph,y-ph*90,8+ph*20,0,7);c.fill()}}
+  // ---------- 8.1 de la Ender 3 a la nueva generacion ----------
+  var UP1=['CoreXY liviana','Input shaping','Hotend de alto flujo','Nivelación automática','Cámara y control remoto'],SEL1=[false,false,false,false,false],T0_1=0,BASE1=105;
+  function caps1(){return{m:SEL1[0]?5.6:1,v:SEL1[1]?5.6:1.3,f:SEL1[2]?5.6:1.6}}
+  function time1(){var k=caps1();return BASE1/Math.min(k.m,k.v,k.f)}
+  function limit1(){var k=caps1(),mn=Math.min(k.m,k.v,k.f);if(mn>=5.6)return '';return k.m===mn?'la mecánica: la cama pesada no deja acelerar':k.v===mn?'las vibraciones: sin input shaping, acelerar deja ondas':'el hotend: no llega a fundir el plástico a esa velocidad'}
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,vert=w<520;bg(c,w,h);if(!T0_1)T0_1=now;
+    var el=(now-T0_1)/1000,K=24,pA=Math.min(1,el/K),sp=BASE1/time1(),pB=Math.min(1,el*sp/K);if(el>K+2.5)T0_1=now;
+    var P=vert?[{x:0,y:0,w:w,h:h/2},{x:0,y:h/2,w:w,h:h/2}]:[{x:0,y:0,w:w/2,h:h},{x:w/2,y:0,w:w/2,h:h}];
+    [0,1].forEach(function(i){var A=P[i],s=Math.min(A.w/44,(A.h-34)/30),ox=A.x+A.w/2,oy=A.y+A.h-4*s,p=i?pB:pA,core=i&&SEL1[0];
+      if(core)boxFrame(c,ox,oy,s,oy-27*s);else posts(c,ox,oy,s,oy-27*s);
+      var shift=(!core)?Math.sin(t*(i?6:3))*(i&&p<1?.6:.3)*s:0;
+      bed(c,ox+shift,oy,s,15.5);
+      if(i&&SEL1[3]){c.fillStyle=rgb(MINT,.8);for(var q=-2;q<=2;q++)c.fillRect(ox+shift+q*6*s-1.5,oy+.25*s,3,3)}
+      var pos=layers(c,ox+shift,oy,s,1,p*20,false)||[ox+shift+10*s,oy-20*s-1];
+      var u=s*.55;if(core)fastHead(c,pos[0],pos[1],u,t,ox-17.6*s,ox+17.6*s);else toolhead(c,pos[0],pos[1],u,t,ox-17.4*s,ox+17.4*s);
+      txt(c,i?'Tu máquina':'Ender 3 de siempre',A.x+14,A.y+22,'left',C.ink,13,700);
+      if(i&&SEL1[4]){camIcon(c,A.x+A.w-22,A.y+18,C.pop)}
+      var tt=i?time1():BASE1,done1=p>=1;pill(c,done1?'¡Listo! '+fmin(tt):fmin(tt*p)+' de '+fmin(tt),ox,A.y+44,done1?C.pop:C.ink)});
+    c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
+  function upd1(){var tm=time1(),m=$('m1');$('r1b').textContent=fmin(tm);T0_1=0;
+    if(tm<20){m.className='msg ok';m.textContent='¡Bajaste a '+fmin(tm)+'! Hicieron falta las tres juntas: mecánica liviana, control de vibraciones y un hotend que funda rápido.';mark('l1')}
+    else if(!done.l1){var any=SEL1[0]||SEL1[1]||SEL1[2],extra=SEL1[3]||SEL1[4];m.className='msg';m.textContent=!any&&!extra?'Tocá las mejoras para sumarlas a tu máquina y mirá cuánto tarda en imprimir el mismo Benchy.':(any?'Tu máquina tarda '+fmin(tm)+'. ':'La nivelación automática y la cámara no cambian el tiempo. ')+'Lo que te frena ahora es '+limit1()+'.'}}
+  chips($('up1'),UP1,SEL1,true,upd1);
+  START.l1=function(){T0_1=0;loop(draw1)};
 
-  // ---------- 8.6 señales ----------
-  var SI1=[['Olor a quemado que sale de la impresora','apagar','smoke','Olor a quemado es apagar ya, sin esperar.'],['Un hilo finito entre dos piezas','normal','string','Es un ajuste pendiente (retracción, temperatura, humedad), no una emergencia.'],['Un conector se ve marrón y algo derretido','apagar','conn','Conector derretido: apagar, desconectar y no volver a encender hasta reemplazarlo.'],['La temperatura de la boquilla sube y no para','apagar','temp','Temperatura fuera de control: cortar ya. La protección térmica nunca se desactiva.'],['Un ruido nuevo y suave en el eje Y','revisar','noise','No es urgente, pero no lo ignores: revisá ruedas, correa y tornillos al terminar.'],['El ventilador del hotend dejó de girar','apagar','fan','Ventilador detenido: el calor sube por el hotend. Apagar.'],['Olor suave a PLA en un ambiente ventilado','normal','odor','El PLA tiene un olor suave. Con ventilación, es normal.'],['El motor tiembla y zumba, pero el eje no se mueve','apagar','motor','Motor bloqueado: apagar para que no se fuerce y revisar el eje a mano con la máquina apagada.']],G1={i:0,t0:0};
-  function ask1(){$('ask1').textContent=G1.i<SI1.length?'Situación '+(G1.i+1)+' de '+SI1.length+': '+SI1[G1.i][0]+'.':'¡Listo!'}ask1();
-  $('opt1').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||G1.i>=SI1.length)return;var s=SI1[G1.i];
-    if(b.dataset.v===s[1]){var fin=G1.i===SI1.length-1;say('m1','¡Bien! '+s[3]+(fin?' Reconociste todas las señales.':''),'ok');if(fin){mark('l1');G1.i++;ask1()}else setTimeout(function(){G1.i++;G1.t0=performance.now();ask1();say('m1','¿Qué hacés?')},1500)}
-    else say('m1',s[1]==='apagar'?'Esta no se deja para después: es una señal de apagar ya.':s[1]==='normal'?'Tranquilo: esto no es una emergencia.':'No hace falta cortar la energía, pero tampoco ignorarlo.','bad')});
-  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,s=SI1[Math.min(G1.i,SI1.length-1)][2],k;bg(c,w,h);
-    var pw=Math.min(w*.5,300),ph=h*.78,px=(w-pw)/2,py=h*.12,shake=s==='motor'?Math.sin(t*60)*1.2:0,P=printer(c,px+shake,py,pw,ph,{t:t,fan:s==='fan'?0:1,hx:.25+.15*Math.sin(t*(s==='motor'?0:1))});
-    if(s==='smoke')smoke(c,P.hx,P.hy-20,t,7);
-    if(s==='conn'){var cx=px+pw*.9,cy=py+ph*.7;c.fillStyle='#6B4A2F';rr(c,cx-10,cy-8,20,16,3);c.save();c.globalAlpha=.4+.3*Math.sin(t*4);c.fillStyle='#FF8A5C';c.beginPath();c.arc(cx,cy,16,0,7);c.fill();c.restore();pill(c,'conector',cx,cy+30,C.bad)}
-    if(s==='temp'){var T=210+((t*20)%80);pill(c,Math.round(T)+' °C ↑',px+pw+50>w-40?w-50:px+pw+50,py+ph*.45,C.bad)}
-    if(s==='noise'){c.strokeStyle='rgba(255,185,94,.6)';c.lineWidth=2;for(k=0;k<3;k++){var r=12+((t*30+k*12)%36);c.beginPath();c.arc(px+pw*.5,py+ph*.86,r,Math.PI*1.1,Math.PI*1.9);c.stroke()}}
-    if(s==='string'){c.strokeStyle=rgb(FIL,.8);c.lineWidth=1;c.beginPath();c.moveTo(px+pw*.42,py+ph*.7);c.quadraticCurveTo(px+pw*.5,py+ph*.74,px+pw*.58,py+ph*.7);c.stroke()}
-    if(s==='odor'){c.strokeStyle='rgba(169,200,255,.4)';c.lineWidth=2;for(k=0;k<3;k++){var yy=py+ph*.4-((t*20+k*20)%60);c.beginPath();c.moveTo(px+pw+10,yy);c.quadraticCurveTo(px+pw+20,yy-6,px+pw+30,yy);c.stroke()}}
-    if(s==='motor')pill(c,'zzz',px+pw*.15,py+ph*.15,C.bad);
-    txt(c,'Situación '+(Math.min(G1.i,SI1.length-1)+1)+' de '+SI1.length,14,22,'left',C.soft,13,700)}
-  START.l1=function(){loop(draw1)};
+  // ---------- 8.2 CoreXY y velocidad real ----------
+  // recorrido de una capa: el contorno del casco (tramos cortos) y un relleno en zigzag (tramos largos)
+  var PATH2=(function(){var p=[],i,x,y=6;for(i=0;i<=16;i++){x=60*i/16;p.push([x-30,beam(x,y)])}for(i=16;i>=0;i--){x=60*i/16;p.push([x-30,-beam(x,y)])}
+    for(i=0;i<9;i++){var xx=-22+i*5.2,b1=beam(xx+30,y)*.8,b2=beam(xx+32.6,y)*.8,sg=i%2?1:-1;p.push([xx,-sg*b1]);p.push([xx+2.6,sg*b2])}return p})();
+  function profile2(v,a){var vj=8,segs=[],T=0,L=0;for(var i=1;i<PATH2.length;i++){var dx=PATH2[i][0]-PATH2[i-1][0],dy=PATH2[i][1]-PATH2[i-1][1],len=Math.sqrt(dx*dx+dy*dy)*1.6;if(len<.01)continue;
+      var d1=(v*v-vj*vj)/(2*a),t,vp;if(2*d1<=len){vp=v;t=2*(v-vj)/a+(len-2*d1)/v}else{vp=Math.sqrt(vj*vj+a*len);t=2*(vp-vj)/a}segs.push({i:i,len:len,t:t,vp:vp,t0:T});T+=t;L+=len}
+    return{segs:segs,T:T,L:L,avg:L/T,vj:vj}}
+  function speedAt2(sg,tt,a,vj){var tu=(sg.vp-vj)/a;if(tt<tu)return vj+a*tt;if(tt>sg.t-tu)return vj+a*(sg.t-tt);return sg.vp}
+  var T2s=0;
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,vert=w<520;bg(c,w,h);var v=+$('v2').value,a=+$('a2').value,pr=profile2(v,a);if(!T2s)T2s=now;
+    var dur=3.2+pr.T*1.6,tt=((now-T2s)/1000%dur)/dur*pr.T,sg=pr.segs[0];for(var k=0;k<pr.segs.length;k++)if(pr.segs[k].t0<=tt)sg=pr.segs[k];var loc=tt-sg.t0,frac=Math.min(1,loc/sg.t);
+    var A=vert?{x:0,y:0,w:w,h:h*.46}:{x:0,y:0,w:w*.42,h:h},B=vert?{x:0,y:h*.46,w:w,h:h*.54}:{x:w*.42,y:0,w:w*.58,h:h};
+    // vista desde arriba
+    var s=Math.min((A.w-40)/66,(A.h-50)/34),ox=A.x+A.w/2,oy=A.y+A.h/2+10;txt(c,'Una capa, vista desde arriba',A.x+14,A.y+22,'left',C.ink,13,700);
+    c.lineWidth=2.2;c.lineCap='round';c.lineJoin='round';for(var i=1;i<PATH2.length;i++){var p0=PATH2[i-1],p1=PATH2[i];c.strokeStyle=i<=17*2?'rgba(255,158,112,.85)':'rgba(255,185,94,.55)';c.beginPath();c.moveTo(ox+p0[0]*s,oy+p0[1]*s);c.lineTo(ox+p1[0]*s,oy+p1[1]*s);c.stroke()}
+    var q0=PATH2[sg.i-1],q1=PATH2[sg.i],hx=ox+(q0[0]+(q1[0]-q0[0])*frac)*s,hy=oy+(q0[1]+(q1[1]-q0[1])*frac)*s;c.shadowColor=C.ui;c.shadowBlur=12;c.fillStyle=C.ui;c.beginPath();c.arc(hx,hy,5,0,7);c.fill();c.shadowBlur=0;
+    // grafico de velocidad
+    var gx=B.x+52,gy=B.y+40,gw=B.w-72,gh=B.h-80,vmax=620;txt(c,'Velocidad a lo largo de la capa',B.x+14,B.y+22,'left',C.ink,13,700);
+    c.fillStyle='#171E2D';rr(c,gx-6,gy-6,gw+12,gh+12,10);c.strokeStyle='rgba(185,194,216,.12)';c.lineWidth=1;
+    [0,200,400,600].forEach(function(vv){var yy=gy+gh-vv/vmax*gh;c.beginPath();c.moveTo(gx,yy);c.lineTo(gx+gw,yy);c.stroke();mono(c,vv+'',gx-10,yy+4,'right',C.soft,11)});
+    c.beginPath();var N=Math.max(80,Math.floor(gw));for(var j=0;j<=N;j++){var ts=pr.T*j/N,sj=pr.segs[0];for(var k2=0;k2<pr.segs.length;k2++)if(pr.segs[k2].t0<=ts)sj=pr.segs[k2];var vv=speedAt2(sj,ts-sj.t0,a,pr.vj),xx=gx+gw*j/N,yy2=gy+gh-vv/vmax*gh;if(j)c.lineTo(xx,yy2);else c.moveTo(xx,yy2)}
+    c.lineTo(gx+gw,gy+gh);c.lineTo(gx,gy+gh);c.closePath();var g=c.createLinearGradient(0,gy,0,gy+gh);g.addColorStop(0,'rgba(255,185,94,.55)');g.addColorStop(1,'rgba(255,185,94,.08)');c.fillStyle=g;c.fill();
+    c.save();c.setLineDash([6,5]);c.strokeStyle=C.soft;c.lineWidth=1.5;var yv=gy+gh-v/vmax*gh;c.beginPath();c.moveTo(gx,yv);c.lineTo(gx+gw,yv);c.stroke();c.restore();mono(c,'la caja: '+v,gx+gw-4,yv-6,'right',C.soft,11);
+    var ya=gy+gh-pr.avg/vmax*gh;c.strokeStyle=C.pop;c.lineWidth=2.5;c.beginPath();c.moveTo(gx,ya);c.lineTo(gx+gw,ya);c.stroke();mono(c,'real: '+Math.round(pr.avg),gx+6,ya-6,'left',C.pop,12);
+    var cx=gx+gw*tt/pr.T;c.strokeStyle='rgba(255,255,255,.5)';c.lineWidth=1;c.beginPath();c.moveTo(cx,gy);c.lineTo(cx,gy+gh);c.stroke();
+    txt(c,'Capa completa en '+nfmt(pr.T,1)+' s',gx+gw,gy+gh+24,'right',C.soft,12,500)}
+  function upd2(){var v=+$('v2').value,a=+$('a2').value,pr=profile2(v,a),avg=pr.avg,m=$('m2');$('vv2').textContent=v;$('va2').textContent=String(a).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    $('r2a').textContent=v+' mm/s';$('r2b').textContent=Math.round(avg)+' mm/s';T2s=0;
+    if(avg>=150){m.className='msg ok';m.textContent='¡'+Math.round(avg)+' mm/s reales! La clave fue la aceleración: en tramos cortos, la cabeza llega a su velocidad solo si arranca y frena rápido.';mark('l2')}
+    else if(!done.l2){m.className='msg';m.textContent=a<6000?'La caja dice '+v+' mm/s, pero en esta capa promediás '+Math.round(avg)+'. Con '+String(a).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' mm/s² la cabeza no llega a acelerar en los tramos cortos.':'Vas mejor: '+Math.round(avg)+' mm/s reales. Ahora que acelera fuerte, quizás le falte velocidad máxima.'}}
+  ['v2','a2'].forEach(function(id){$(id).addEventListener('input',upd2)});
+  START.l2=function(){T2s=0;loop(draw2)};
 
-  // ---------- 8.7 aire ----------
-  var A2={m:'ABS',l:'dormitorio'},BM2={PLA:.3,PETG:.45,ABS:1},BL2={dormitorio:1,living:.4,taller:.1};
-  function upd2(){var d=BM2[A2.m]*BL2[A2.l],m;
-    if(A2.l==='dormitorio')m='Un dormitorio cerrado es justo el lugar a evitar: dormís horas respirando ese aire, imprima lo que imprima.';
-    else if(A2.m==='ABS'&&A2.l==='living')m='Mejor que el dormitorio, pero el ABS pide cerramiento y extracción, y evitar espacios donde vive gente.';
-    else if(A2.l==='living')m=A2.m+' en un ambiente ventilado: bien. Igual, no te quedes horas al lado de la máquina sin necesidad.';
-    else m=A2.m==='ABS'?'Cerramiento con extracción hacia afuera: el ABS se imprime sin cargar el ambiente.':'Con cerramiento y extracción, '+A2.m+' queda más que cubierto.';
-    var ok=A2.m==='ABS'&&A2.l==='taller';say('m2',m,A2.l==='dormitorio'||(A2.m==='ABS'&&A2.l==='living')?'bad':'ok');if(ok){say('r2','¡ABS responsable! Cerramiento, extracción y fuera de los espacios donde se vive.','ok');mark('l2')}else if(!done.l2)say('r2','Todavía no.')}
-  chips('mat2','v',function(v){A2.m=v;upd2()});chips('lug2','v',function(v){A2.l=v;upd2()});
-  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,k,d=BM2[A2.m]*BL2[A2.l];bg(c,w,h);
-    var rx=w*.08,ry=h*.12,rw=w*.84,rh=h*.8;c.strokeStyle='#7E8BAE';c.lineWidth=3;c.strokeRect(rx,ry,rw,rh);
-    if(A2.l==='dormitorio'){c.fillStyle='#4F5B7D';rr(c,rx+rw*.62,ry+rh*.62,rw*.34,rh*.3,8);c.fillStyle='#E3ECFF';rr(c,rx+rw*.64,ry+rh*.58,rw*.1,rh*.08,6);txt(c,'cama',rx+rw*.79,ry+rh*.8,'center','#C9D2E6',12,700)}
-    if(A2.l==='living'){c.fillStyle='#4F6A9A';c.fillRect(rx+rw-4,ry+rh*.15,8,rh*.4);c.strokeStyle='rgba(169,200,255,.6)';c.lineWidth=2;for(k=0;k<3;k++){var ph=(t*.6+k/3)%1;c.globalAlpha=1-ph;c.beginPath();c.moveTo(rx+rw-30+ph*40,ry+rh*(.22+k*.1));c.lineTo(rx+rw-10+ph*40,ry+rh*(.22+k*.1));c.stroke()}c.globalAlpha=1;txt(c,'ventana abierta',rx+rw-14,ry+rh*.12,'right','#9FC5FF',11,700)}
-    var pw=Math.min(rw*.32,200),ph2=rh*.5,px=rx+rw*.12,py=ry+rh*.42;printer(c,px,py,pw,ph2,{t:t,hx:.2+.25*Math.sin(t)});
-    if(A2.l==='taller'){c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=2;c.strokeRect(px-12,py-14,pw+24,ph2+18);c.fillStyle='#55628A';c.fillRect(px+pw*.4,py-14-rh*.2,pw*.2,rh*.2);c.fillRect(px+pw*.4,ry-6,pw*.2,8);txt(c,'extracción hacia afuera',px+pw*.5,ry-12,'center','#9FC5FF',11,700)}
-    var n=Math.round(d*90);for(k=0;k<n;k++){var a=(t*.15+rnd(k,1))%1,x0=px+pw*.5,spread=A2.l==='taller'?.1:1,xx=x0+(rnd(k,2)-.5)*rw*.9*a*spread,yy=py+ph2*.4-a*rh*(A2.l==='taller'?.5:.45);if(A2.l==='taller'){xx=x0+(rnd(k,2)-.5)*pw*.3;yy=py-a*rh*.5}
-      c.fillStyle='rgba(200,190,170,'+(.55*(1-a))+')';c.beginPath();c.arc(xx,yy,2+rnd(k,3)*2.5,0,7);c.fill()}
-    var lv=d>.6?'alta':d>.2?'media':'baja';pill(c,'Emisiones en el ambiente: '+lv,w/2,h-12,d>.6?C.bad:d>.2?C.ui:C.pop);txt(c,A2.m,14,22,'left',C.soft,13,700)}
-  START.l2=function(){upd2();loop(draw2)};
-
-  // ---------- 8.8 mejoras ----------
-  var UP3=[['El filamento hace chasquidos y burbujas al imprimir','Secador de filamento','filament'],['Querés imprimir TPU bien blando','Extrusor directo','extruder'],['Vas a imprimir PLA con fibra de carbono','Boquilla endurecida','nozzle'],['Nivelar a mano te lleva media hora cada vez','Sensor de nivelación','bed'],['Imprimís ABS en un ambiente con corrientes de aire','Cerramiento','enclosure'],['Hay ondas aunque correas y ruedas están bien','Acelerómetro e input shaping','frame']],
-    POOL3=['Secador de filamento','Extrusor directo','Boquilla endurecida','Sensor de nivelación','Cerramiento','Acelerómetro e input shaping','Iluminación LED','Guías lineales','Hotend de alto flujo'],G3={i:0,t0:0,ok:false};
-  function opts3(){var box=$('opt3');box.textContent='';if(G3.i>=UP3.length){$('ask3').textContent='¡Listo!';return}var o=[UP3[G3.i][1]];for(var j=1;o.length<4;j++){var x=POOL3[(G3.i*2+j*4)%POOL3.length];if(o.indexOf(x)<0)o.push(x)}o.sort(function(a,b){return rnd(a.length,G3.i)-rnd(b.length,G3.i)});
-    o.forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x;b.setAttribute('aria-pressed','false');box.appendChild(b)});$('ask3').textContent='Problema '+(G3.i+1)+' de '+UP3.length+': '+UP3[G3.i][0]+'.'}
-  opts3();
-  $('opt3').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled)return;var u=UP3[G3.i];
-    if(b.textContent===u[1]){G3.ok=true;G3.t0=performance.now();var fin=G3.i===UP3.length-1;say('m3','¡Sí! '+u[1]+'.'+(fin?' Seis problemas, seis mejoras con criterio.':''),'ok');if(fin)mark('l3');setTimeout(function(){G3.i++;G3.ok=false;opts3();if(!fin)say('m3','¿Qué mejora resuelve este problema?')},1500)}
-    else{b.disabled=true;say('m3',b.textContent+' no resuelve esto. '+(['Iluminación LED','Guías lineales','Hotend de alto flujo'].indexOf(b.textContent)>=0?'Es de las mejoras que se compran por moda.':'Resuelve otro problema.'),'bad')}});
-  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,u=UP3[Math.min(G3.i,UP3.length-1)],V=w<520;bg(c,w,h);
-    var pw=V?w*.42:Math.min(w*.3,200),ph=h*.78,px=V?w*.54:w*.62,py=h*.12,P=printer(c,px,py,pw,ph,{t:t,hx:.25});
-    if(G3.ok){var a=clamp((now-G3.t0)/400,0,1),Z={filament:[px-16,py+ph*.25,24],extruder:[P.hx,P.hy-ph*.18,22],nozzle:[P.hx,P.hy,16],bed:[px+pw*.5,py+ph*.85,40],enclosure:[px+pw*.5,py+ph*.5,pw*.62],frame:[px+pw*.5,py+ph*.2,32]}[u[2]];c.save();c.globalAlpha=a;c.shadowColor=C.pop;c.shadowBlur=14;c.strokeStyle=C.pop;c.lineWidth=3;c.beginPath();c.arc(Z[0],Z[1],Z[2],0,7);c.stroke();c.restore()}
-    if(u[2]==='filament'||true){c.fillStyle='#3A4766';c.beginPath();c.arc(px-16,py+ph*.25,18,0,7);c.fill();c.fillStyle=rgb(FIL2);c.beginPath();c.arc(px-16,py+ph*.25,13,0,7);c.fill()}
-    note(c,14,h*.2,(V?w*.48:w*.5),h*.5,u[0],'#FFF3D6',V?12:16);txt(c,'Problema',14,h*.2-8,'left',C.soft,12,700)}
+  // ---------- 8.3 input shaping ----------
+  var S3={meas:0,measT:0,on:false},F3=47;
+  function ripple3(){var a=+$('a3').value,amp=Math.max(0,(a-1500)/18500);return S3.on?amp*.06:amp}
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,vert=w<520;bg(c,w,h);
+    var A=vert?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w*.56,h:h},B=vert?{x:0,y:h/2,w:w,h:h/2}:{x:w*.56,y:0,w:w*.44,h:h};
+    // pared vista de frente, con letras en relieve y las ondas que dejan
+    var px=A.x+18,py=A.y+40,pw=A.w-36,ph=A.h-64,amp=ripple3();txt(c,'Pared de la pieza, de frente',A.x+14,A.y+22,'left',C.ink,13,700);
+    var g=c.createLinearGradient(0,py,0,py+ph);g.addColorStop(0,'#FF9E70');g.addColorStop(1,'#E07F55');c.fillStyle=g;rr(c,px,py,pw,ph,10);
+    c.save();c.beginPath();if(c.roundRect)c.roundRect(px,py,pw,ph,10);else c.rect(px,py,pw,ph);c.clip();
+    for(var yy=py;yy<py+ph;yy+=4){c.fillStyle='rgba(0,0,0,.07)';c.fillRect(px,yy,pw,1.2)}
+    var letters=[.2,.5,.8],lw=pw*.1,lh=ph*.42,ly=py+ph*.29;
+    letters.forEach(function(lx){var x0=px+pw*lx-lw/2;
+      for(var k=1;k<=7;k++){var d=k*pw*.032,al=amp*.55*Math.exp(-k*.38)*(k%2?1:.65);if(al<.01)continue;c.fillStyle='rgba(60,20,8,'+al.toFixed(3)+')';c.fillRect(x0+lw+d-1.5,ly,2.6,lh);c.fillStyle='rgba(255,230,210,'+(al*.7).toFixed(3)+')';c.fillRect(x0+lw+d+1.3,ly,1.4,lh)}
+      var lg=c.createLinearGradient(x0,0,x0+lw,0);lg.addColorStop(0,'#FFC7A6');lg.addColorStop(1,'#F08A5C');c.fillStyle=lg;rr(c,x0,ly,lw,lh,4);c.fillStyle='rgba(0,0,0,.18)';c.fillRect(x0+lw-3,ly+3,3,lh-3)});
+    c.restore();pill(c,amp>.12?'Se ven ondas al lado de cada relieve':amp>.04?'Ondas apenas visibles':'Pared lisa',A.x+A.w/2,py+ph+16,amp>.12?C.bad:amp>.04?C.ui:C.pop);
+    // grafico de resonancia
+    var gx=B.x+24,gy=B.y+44,gw=B.w-44,gh=B.h-92;txt(c,'Cómo vibra la máquina',B.x+14,B.y+22,'left',C.ink,13,700);c.fillStyle='#171E2D';rr(c,gx-6,gy-6,gw+12,gh+12,10);
+    var mp=S3.meas===1?Math.min(1,(now-S3.measT)/2200):S3.meas===2?1:0;if(S3.meas===1&&mp>=1){S3.meas=2;afterMeas3()}
+    if(S3.meas===1){var sh=Math.sin(t*60)*4;c.save();c.translate(gx+gw/2+sh,gy+gh/2);c.fillStyle='#2A3348';rr(c,-26,-18,52,36,8);c.fillStyle=C.pop;rr(c,-9,-6,18,12,3);c.restore();txt(c,'Sacudiendo la cabeza y midiendo…',gx+gw/2,gy+gh-10,'center',C.soft,12,500)}
+    function curve(fn,col,width,fill){c.beginPath();for(var j=0;j<=120;j++){var hz=10+j/120*110,x=gx+gw*j/120,y=gy+gh-fn(hz)*gh*.9;if(j)c.lineTo(x,y);else c.moveTo(x,y)}
+      if(fill){c.lineTo(gx+gw,gy+gh);c.lineTo(gx,gy+gh);c.closePath();c.fillStyle=fill;c.fill()}else{c.strokeStyle=col;c.lineWidth=width;c.stroke()}}
+    function res(hz){return 1/(1+Math.pow((hz-F3)/5.5,2))*.95+.04*Math.exp(-Math.pow((hz-88)/9,2))}
+    if(S3.meas===2){curve(res,null,0,'rgba(255,180,171,.18)');curve(res,C.bad,2.2);
+      var fx=gx+gw*(F3-10)/110;c.save();c.setLineDash([4,4]);c.strokeStyle=C.soft;c.lineWidth=1;c.beginPath();c.moveTo(fx,gy);c.lineTo(fx,gy+gh);c.stroke();c.restore();mono(c,F3+' Hz',fx+6,gy+14,'left',C.bad,12);
+      if(S3.on){curve(function(hz){return res(hz)*(1-.94*Math.exp(-Math.pow((hz-F3)/11,2)))},C.pop,2.6);txt(c,'Con input shaping',gx+gw-4,gy+gh-10,'right',C.pop,12,700)}}
+    else if(S3.meas===0){txt(c,'Todavía sin medir',gx+gw/2,gy+gh/2+4,'center',C.soft,13,600)}
+    mono(c,'10 Hz',gx,gy+gh+20,'left',C.soft,11);mono(c,'120 Hz',gx+gw,gy+gh+20,'right',C.soft,11)}
+  function shBtn3(){var b=$('sh3').firstElementChild;b.disabled=S3.meas!==2;b.setAttribute('aria-pressed',String(S3.on));b.textContent=S3.on?'Input shaping activado':'Input shaping apagado'}
+  function afterMeas3(){$('meas3').disabled=false;$('meas3').textContent='Medir otra vez';shBtn3();upd3()}
+  $('meas3').addEventListener('click',function(){S3.meas=1;S3.measT=performance.now();$('meas3').disabled=true;upd3()});
+  $('sh3').firstElementChild.addEventListener('click',function(){if(S3.meas!==2)return;S3.on=!S3.on;shBtn3();upd3()});
+  function upd3(){var a=+$('a3').value,m=$('m3'),amp=ripple3();$('va3').textContent=String(a).replace(/\B(?=(\d{3})+(?!\d))/g,'.');
+    if(S3.meas===2&&S3.on&&a>=10000){m.className='msg ok';m.textContent='¡Pared lisa a '+String(a).replace(/\B(?=(\d{3})+(?!\d))/g,'.')+' mm/s²! El filtro reparte cada movimiento para que la vibración de '+F3+' Hz se anule sola.';mark('l3');return}
+    if(done.l3)return;m.className='msg';
+    if(S3.meas===1)m.textContent='Midiendo: la cabeza se sacude a distintas frecuencias y el acelerómetro anota cuánto vibra en cada una.';
+    else if(S3.meas===0)m.textContent=amp>.12?'A esta aceleración ya se ven ondas al lado de cada letra. Primero medí cómo vibra la máquina.':'Con poca aceleración casi no hay ondas, pero la impresión tarda más. Medí la resonancia para poder acelerar.';
+    else if(!S3.on)m.textContent='La máquina resuena a '+F3+' Hz: ese pico es el que dibuja las ondas. Activá el input shaping.';
+    else m.textContent='Input shaping activo. Subí la aceleración hasta 10.000 mm/s² o más y fijate la pared.'}
+  $('a3').addEventListener('input',upd3);
   START.l3=function(){loop(draw3)};
 
-  // ---------- 8.9 primera impresora ----------
-  var Q4={a:null,b:null,c:null};
-  ['q4a','q4b','q4c'].forEach(function(id,i){chips(id,'v',function(v){Q4['abc'[i]]=v;upd4()})});
-  function rec4(){var cl=Q4.b==='tec'||Q4.a==='tec',dir=Q4.b==='tpu'||Q4.a==='func'||cl,list=[];
-    list.push(cl?'Cerrada, con hotend all-metal y buen control térmico':'Abierta de cama móvil o CoreXY, sin necesidad de cerramiento');
-    list.push(dir?'Extrusor directo':'Extrusor directo o Bowden: los dos sirven para PLA');
-    list.push(Q4.c==='usar'?'Lista para usar: montaje completo, nivelación automática, perfiles probados y buen soporte':'Piezas estándar, comunidad grande y documentación para aprender');
-    list.push('Cama de PEI flexible y repuestos fáciles de conseguir');list.push('Boquilla de 0,4 mm para empezar');return{cl:cl,list:list}}
-  function upd4(){if(!Q4.a||!Q4.b||!Q4.c){say('m4','Respondé las tres preguntas.');return}var r=rec4();
-    var lc=function(x){return x.charAt(0).toLowerCase()+x.slice(1)};say('m4','Para vos: '+lc(r.list[0])+'; '+lc(r.list[1])+'; '+lc(r.list[2])+'. Lo que no hace falta para empezar: doble extrusor, cámara con IA, RGB.','ok');mark('l4')}
-  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,V=w<520,k;bg(c,w,h);
-    var all=Q4.a&&Q4.b&&Q4.c,r=rec4(),pw=V?w*.5:Math.min(w*.3,220),ph=h*(V?.5:.7),px=V?(w-pw)/2:w*.1,py=h*.16;
-    printer(c,px,py,pw,ph,{t:t,hx:.2+.25*Math.sin(t),bed:r.cl?0:Math.sin(t*1.2)*pw*.06});
-    if(r.cl){c.strokeStyle='rgba(238,241,247,.55)';c.lineWidth=3;c.strokeRect(px-10,py-12,pw+20,ph+14);c.fillStyle='rgba(159,197,255,.08)';c.fillRect(px-10,py-12,pw+20,ph+14)}
-    if(!all){var qx=V?14:px+pw+40,qy=V?py+ph+28:h*.3,ql=V?22:Math.min(40,h*.16);txt(c,'Respondé y armamos tu impresora ideal',qx,qy,'left',C.ui,V?13:16,700);[['Qué vas a imprimir',Q4.a],['Qué materiales',Q4.b],['Si querés aprender a ajustarla',Q4.c]].forEach(function(q,i){var yy=qy+(i+1)*ql,ok=!!q[1];c.strokeStyle=ok?C.pop:C.line;c.lineWidth=2;c.beginPath();c.arc(qx+7,yy-5,7,0,7);c.stroke();if(ok){c.fillStyle=C.pop;c.beginPath();c.arc(qx+7,yy-5,3.5,0,7);c.fill()}txt(c,q[0],qx+22,yy,'left',ok?C.ink:C.soft,V?12:15,600)});return}
-    var lx=V?14:px+pw+36,ly=V?py+ph+30:h*.2,lh=V?18:Math.min(30,h*.13);r.list.forEach(function(s,i){c.fillStyle=C.pop;c.beginPath();c.arc(lx+5,ly+i*lh-4,4,0,7);c.fill();c.font='600 '+(V?11:14)+'px "DM Sans",sans-serif';c.fillStyle=C.ink;c.textAlign='left';var tt=s;var mw=w-lx-30;while(c.measureText(tt).width>mw&&tt.length>4)tt=tt.slice(0,-2);if(tt!==s)tt+='…';c.fillText(tt,lx+16,ly+i*lh)});
-    txt(c,'Tu impresora ideal',14,22,'left',C.soft,13,700)}
+  // ---------- 8.4 calibracion automatica ----------
+  var G4=[3,5,7],GI4=0,S4={state:0,t0:0,grid:3,mesh:null};
+  function zf4(x,y){return .16*Math.sin(x*2.6+.4)*Math.cos(y*2.1-.3)+.11*(x*x-.25)+.07*Math.sin(x*6.4+y*5.1)*Math.exp(-((x-.6)*(x-.6)+(y-.35)*(y-.35))*6)}
+  function interp4(mesh,n,x,y){var fx=x*(n-1),fy=y*(n-1),i=Math.min(n-2,Math.floor(fx)),j=Math.min(n-2,Math.floor(fy)),u=fx-i,v=fy-j;
+    return mesh[j][i]*(1-u)*(1-v)+mesh[j][i+1]*u*(1-v)+mesh[j+1][i]*(1-u)*v+mesh[j+1][i+1]*u*v}
+  function resid4(x,y){var z=zf4(x,y);return S4.state===2&&S4.mesh?z-interp4(S4.mesh,S4.grid,x,y):z}
+  function uniform4(){var ok=0,N=40;for(var j=0;j<N;j++)for(var i=0;i<N;i++){if(Math.abs(resid4((i+.5)/N,(j+.5)/N))<=.04)ok++}return ok/(N*N)}
+  function col4(r){var a=Math.abs(r);if(a<=.04)return[134,217,181];var k=Math.min(1,(a-.04)/.14);return r<0?mixA([255,190,150],[255,120,110],k):mixA([255,215,140],[255,170,70],k)}
+  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,vert=w<520;bg(c,w,h);
+    var A=vert?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B=vert?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h};
+    var L=Math.min(A.w-56,A.h-74),x0=A.x+(A.w-L)/2,y0=A.y+40;txt(c,'La cama, vista desde arriba',A.x+14,A.y+22,'left',C.ink,13,700);
+    var N=40,cs=L/N;c.save();c.beginPath();if(c.roundRect)c.roundRect(x0,y0,L,L,8);else c.rect(x0,y0,L,L);c.clip();for(var j=0;j<N;j++)for(var i=0;i<N;i++){var z=zf4((i+.5)/N,(j+.5)/N),k=clamp((z+.24)/.44,0,1);c.fillStyle=rgb(k<.5?mixA([30,52,96],[70,82,110],k*2):mixA([70,82,110],[255,185,94],(k-.5)*2));c.fillRect(Math.floor(x0+i*cs),Math.floor(y0+j*cs),Math.ceil(cs)+1,Math.ceil(cs)+1)}c.restore()
+    c.strokeStyle='rgba(255,255,255,.15)';c.lineWidth=1;c.strokeRect(x0,y0,L,L);
+    var n=S4.grid,tot=n*n,shown=S4.state===1?Math.min(tot,Math.floor((now-S4.t0)/(2400/tot))):S4.state===2?tot:0;
+    if(S4.state===1&&shown>=tot){S4.state=2;S4.mesh=[];for(var jj=0;jj<n;jj++){S4.mesh.push([]);for(var ii=0;ii<n;ii++)S4.mesh[jj].push(zf4(ii/(n-1),jj/(n-1)))}done4()}
+    for(var q=0;q<shown;q++){var gi=q%n,gj=Math.floor(q/n),gx=x0+L*gi/(n-1),gy=y0+L*gj/(n-1);if(gj%2)gx=x0+L*(n-1-gi)/(n-1);c.fillStyle='#E4E8F3';c.beginPath();c.arc(gx,gy,4,0,7);c.fill();c.strokeStyle='#141A27';c.lineWidth=1.5;c.stroke()}
+    if(S4.state===1&&shown<tot){var nq=shown,ngi=nq%n,ngj=Math.floor(nq/n),nx=x0+L*(ngj%2?n-1-ngi:ngi)/(n-1),ny=y0+L*ngj/(n-1);c.strokeStyle=C.ui;c.lineWidth=2.5;c.beginPath();c.arc(nx,ny,9,0,7);c.stroke()}
+    txt(c,'Pozo',x0,y0+L+18,'left',C.soft,11,600);txt(c,'Loma',x0+L,y0+L+18,'right',C.soft,11,600);
+    var lg=c.createLinearGradient(x0+40,0,x0+L-40,0);lg.addColorStop(0,'rgb(30,52,96)');lg.addColorStop(.5,'rgb(70,82,110)');lg.addColorStop(1,'rgb(255,185,94)');c.fillStyle=lg;rr(c,x0+40,y0+L+10,L-80,8,4);
+    // primera capa
+    var L2=Math.min(B.w-56,B.h-74),bx=B.x+(B.w-L2)/2,by=B.y+40,lines=18;txt(c,S4.state===2?'Primera capa, con la malla':'Primera capa, sin medir',B.x+14,B.y+22,'left',C.ink,13,700);
+    c.fillStyle='#171E2D';rr(c,bx-6,by-6,L2+12,L2+12,10);
+    for(var li=0;li<lines;li++){var yy=by+(li+.5)*L2/lines;for(var sx=0;sx<40;sx++){var xx=(sx+.5)/40,r=resid4(xx,(li+.5)/lines),cc=col4(r),th=clamp(L2/lines*.62*(1+r*2.6),1,L2/lines*.95);c.fillStyle=rgb(cc,r<-.12?.45:1);c.fillRect(bx+sx*L2/40,yy-th/2,L2/40+.6,th)}}
+    var u=uniform4();pill(c,'Pareja: '+Math.round(u*100)+' %',bx+L2/2,by+L2+18,u>=.95?C.pop:u>=.8?C.ui:C.bad)}
+  function done4(){$('go4').disabled=false;$('go4').textContent='Medir otra vez';upd4()}
+  function upd4(){var m=$('m4'),u=uniform4(),n=G4[GI4];$('r4a').textContent=(S4.state?S4.grid*S4.grid*3:0)+' s';$('r4b').textContent=Math.round(u*100)+' %';
+    if(S4.state===2&&u>=.95){m.className='msg ok';m.textContent='¡Primera capa pareja en el '+Math.round(u*100)+' % de la cama! Con '+S4.grid*S4.grid+' puntos el mapa sigue bien los pozos y las lomas.';mark('l4');return}
+    if(done.l4)return;m.className='msg';
+    if(S4.state===1)m.textContent='Midiendo: la boquilla toca la cama en cada punto de la grilla y anota la altura.';
+    else if(S4.state===2)m.textContent='Con '+S4.grid*S4.grid+' puntos el mapa es muy grueso: entre punto y punto quedan pozos sin ver. Probá con más puntos y medí otra vez.';
+    else m.textContent='Elegí cuántos puntos medir y tocá Medir la cama. Más puntos ven mejor la forma, pero tardan más.'}
+  chips($('g4'),['3 × 3','5 × 5','7 × 7'],0,false,function(i){GI4=i;if(S4.state!==1){S4.state=0;S4.mesh=null;S4.grid=G4[i];$('go4').textContent='Medir la cama'}upd4()});
+  $('go4').addEventListener('click',function(){S4.grid=G4[GI4];S4.state=1;S4.t0=performance.now();S4.mesh=null;$('go4').disabled=true;upd4()});
   START.l4=function(){loop(draw4)};
 
-  // ---------- 8.10 usada ----------
-  var IT5=[['conn','Conectores oscurecidos en la placa',1],['cama','La cama se mueve con la mano: tiene juego',1],['corr','Correas deshilachadas',1],['hot','Hotend cubierto de plástico',1],['fan','El ventilador del hotend no gira',1],['caja','Trae la caja original',0],['pei','Le cambiaron la superficie por PEI',0],['bob','Viene con una bobina de regalo',0],['prueba','El vendedor deja probarla imprimiendo',0]],G5={on:{}};
-  (function(){var box=$('opt5');IT5.forEach(function(it){var b=document.createElement('button');b.type='button';b.dataset.v=it[0];b.textContent=it[1];b.setAttribute('aria-pressed','false');box.appendChild(b)});
-    box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;G5.on[b.dataset.v]=!G5.on[b.dataset.v];b.setAttribute('aria-pressed',String(!!G5.on[b.dataset.v]))})})();
-  say('m5','Marcá las señales de alerta.');
-  $('go5').addEventListener('click',function(){var miss=IT5.filter(function(x){return x[2]&&!G5.on[x[0]]}),wrong=IT5.filter(function(x){return!x[2]&&G5.on[x[0]]});
-    if(!miss.length&&!wrong.length){say('m5','¡Bien visto! Cinco señales: eléctrica, mecánicas y térmicas. Con tanto para revisar, o no la comprás o negociás sabiendo cuánto cuesta repararla. Lo bueno: que deje probarla imprimiendo es lo primero que hay que pedir.','ok');mark('l5')}
-    else say('m5',(miss.length?'Te faltó: '+miss.map(function(x){return x[1]}).join('; ')+'. ':'')+(wrong.length?'Esto no es alerta: '+wrong.map(function(x){return x[1]}).join('; ')+'.':''),'bad')});
-  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,k;bg(c,w,h);
-    var pw=Math.min(w*.46,300),ph=h*.78,px=(w-pw)/2,py=h*.12,P=printer(c,px,py,pw,ph,{t:t,fan:G5.on.fan?0:1,hx:.25});
-    c.fillStyle='rgba(255,179,138,.55)';c.beginPath();c.ellipse(P.hx,P.hy-ph*.04,ph*.06,ph*.05,0,0,7);c.fill();
-    c.strokeStyle='#5D4A3A';c.lineWidth=2;c.beginPath();c.moveTo(px+pw*.08,py+ph*.3);for(k=0;k<6;k++)c.lineTo(px+pw*.08+(k%2?4:-4),py+ph*(.32+k*.03));c.stroke();
-    c.fillStyle='#6B4A2F';rr(c,px+pw*.85,py+ph*.92,18,10,2);
-    var M={conn:[px+pw*.88,py+ph*.95],cama:[px+pw*.5,py+ph*.85],corr:[px+pw*.08,py+ph*.4],hot:[P.hx,P.hy-ph*.04],fan:[P.hx+ph*.12,py+ph*.38]};
-    Object.keys(M).forEach(function(k2){if(!G5.on[k2])return;var p=M[k2];c.strokeStyle=C.bad;c.lineWidth=3;c.beginPath();c.arc(p[0],p[1],16,0,7);c.stroke();c.beginPath();c.moveTo(p[0]-6,p[1]-6);c.lineTo(p[0]+6,p[1]+6);c.moveTo(p[0]+6,p[1]-6);c.lineTo(p[0]-6,p[1]+6);c.stroke()});
-    txt(c,'La usada que fuiste a ver',14,22,'left',C.soft,13,700)}
-  START.l5=function(){loop(draw5)};
+  // ---------- 8.5 hotends de alto flujo ----------
+  var HT5=[{n:'Estándar · 15 mm³/s',cap:15,zone:.5},{n:'Alto flujo · 35 mm³/s',cap:35,zone:1}],HI5=0,LH5=[.12,.2,.28],LI5=1,X5=0,T5=0;
+  function dem5(){return .45*LH5[LI5]*(+$('v5').value)}
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,vert=w<520;bg(c,w,h);var dt=T5?Math.min(.05,(now-T5)/1000):0;T5=now;
+    var v=+$('v5').value,d=dem5(),cap=HT5[HI5].cap,ratio=Math.min(1,cap/d),under=d>cap;
+    var A=vert?{x:0,y:0,w:w,h:h*.55}:{x:0,y:0,w:w*.42,h:h},B=vert?{x:0,y:h*.55,w:w,h:h*.45}:{x:w*.42,y:0,w:w*.58,h:h};
+    // corte del hotend
+    var s=Math.min(A.w/15,(A.h-60)/24),cx=A.x+A.w/2-1.5*s,zone=HT5[HI5].zone,top=A.y+40+Math.max(0,(A.h-60-(15+5*zone)*s)/2)+6*s;txt(c,'Corte del hotend',A.x+14,A.y+22,'left',C.ink,13,700);
+    var bh=(4+5*zone)*s,by=top+7*s;
+    c.fillStyle='#3A4766';rr(c,cx-3.2*s,top,6.4*s,7*s,.6*s);for(var k=0;k<5;k++){c.fillStyle='#56627D';c.fillRect(cx-4.6*s,top+.6*s+k*1.3*s,9.2*s,.7*s)}
+    var g=c.createLinearGradient(cx-4*s,0,cx+4*s,0);g.addColorStop(0,'#C9D2E6');g.addColorStop(1,'#7C89AA');c.fillStyle=g;rr(c,cx-4*s,by,8*s,bh,.8*s);
+    c.fillStyle='rgba(255,122,77,'+(.35+.15*Math.sin(t*4)).toFixed(2)+')';rr(c,cx-4*s,by,8*s,bh,.8*s);
+    var fy0=top-6*s,fy1=by+bh;c.fillStyle='#FF9E70';c.fillRect(cx-.9*s,fy0,1.8*s,by-fy0+.6*s);
+    var mg=c.createLinearGradient(0,by,0,fy1);var melt=Math.min(1,ratio);mg.addColorStop(0,'#FF9E70');mg.addColorStop(clamp(.75*melt,.05,.95),'#FFE2A8');mg.addColorStop(1,under?'#FFB98E':'#FFF0B8');c.fillStyle=mg;c.fillRect(cx-.9*s,by,1.8*s,bh);
+    if(under){c.fillStyle='rgba(255,158,112,.9)';for(var q=0;q<3;q++){var yy=by+bh*(.55+q*.14);c.fillRect(cx-.5*s,yy,1*s,.7*s)}}
+    var flowY=((t*v/40)%1);c.fillStyle='rgba(255,255,255,.55)';for(var q2=0;q2<4;q2++){var yq=fy0+((flowY+q2/4)%1)*(fy1-fy0);c.beginPath();c.arc(cx,yq,.35*s,0,7);c.fill()}
+    var ng=c.createLinearGradient(cx-1.4*s,0,cx+1.4*s,0);ng.addColorStop(0,'#F4DA95');ng.addColorStop(1,'#B5873A');c.fillStyle=ng;c.beginPath();c.moveTo(cx-1.6*s,fy1);c.lineTo(cx+1.6*s,fy1);c.lineTo(cx+.4*s,fy1+2*s);c.lineTo(cx-.4*s,fy1+2*s);c.closePath();c.fill();
+    txt(c,'Zona caliente',cx+4.8*s,by+bh/2+4,'left',C.soft,11,600);c.strokeStyle=C.soft;c.lineWidth=1;c.beginPath();c.moveTo(cx+4.5*s,by);c.lineTo(cx+4.5*s,by+bh);c.stroke();
+    // linea sobre la cama
+    X5+=dt*v/3;var lx=B.x+24,lw=B.w-48,lhh=Math.max(10,LH5[LI5]*95),ly=B.y+Math.max(66,B.h*.3-lhh/2);txt(c,'La línea que queda sobre la cama',B.x+14,B.y+22,'left',C.ink,13,700);
+    c.fillStyle='#171E2D';rr(c,lx-6,ly-20,lw+12,lhh+40,10);
+    var seg=lw/60;for(var i2=0;i2<60;i2++){var xx=lx+i2*seg,ph=(i2*seg+X5)%40,gap=under&&((i2*7+Math.floor(X5/seg))%Math.max(2,Math.round(8*ratio)))===0,thin=under?lhh*(.45+.5*ratio):lhh;
+      if(gap)continue;var lg=c.createLinearGradient(0,ly+(lhh-thin)/2,0,ly+(lhh+thin)/2);lg.addColorStop(0,under?'#FFD9C2':'#FFC2A0');lg.addColorStop(.5,under?'#F2B596':'#FF9E70');lg.addColorStop(1,under?'#D99A7C':'#D9744A');c.fillStyle=lg;c.fillRect(xx,ly+(lhh-thin)/2,seg+.8,thin)}
+    // medidor
+    var mx=B.x+24,mw=B.w-48,my=Math.max(ly+lhh+60,B.y+B.h*.62),full=45;txt(c,'Flujo en mm³/s',mx,my-8,'left',C.soft,12,600);c.fillStyle='#2A3348';rr(c,mx,my,mw,14,7);
+    c.fillStyle=under?C.bad:C.pop;rr(c,mx,my,mw*Math.min(1,d/full),14,7);var cxp=mx+mw*Math.min(1,cap/full);c.fillStyle=C.ink;c.fillRect(cxp-1.5,my-6,3,26);
+    mono(c,'tope '+cap,cxp,my+36,'center',C.ink,11);mono(c,'pedís '+nfmt(d,1),mx,my+36,'left',under?C.bad:C.pop,11);
+    pill(c,under?'Falta plástico: subextrusión':'Funde todo lo que pedís',B.x+B.w/2,B.y+B.h-14,under?C.bad:C.pop)}
+  function upd5(){var v=+$('v5').value,d=dem5(),cap=HT5[HI5].cap,m=$('m5');$('vv5').textContent=v+' mm/s';$('r5a').textContent=nfmt(d,1)+' mm³/s';$('r5b').textContent=cap+' mm³/s';
+    if(v>=300&&LI5===1&&d<=cap){m.className='msg ok';m.textContent='¡300 mm/s sin subextrusión! Pedís '+nfmt(d,1)+' mm³/s y el hotend de alto flujo funde hasta '+cap+'.';mark('l5');return}
+    if(done.l5)return;m.className=d>cap?'msg bad':'msg';
+    m.textContent=d>cap?'Pedís '+nfmt(d,1)+' mm³/s y el hotend funde '+cap+' como mucho. El plástico sale sin terminar de fundirse y la línea queda flaca y con huecos.':v<300?'Funde bien a '+v+' mm/s. Subí a 300 mm/s con capas de 0,20 mm y fijate qué pasa.':'Elegí capas de 0,20 mm para cumplir el reto.'}
+  chips($('h5'),HT5.map(function(x){return x.n}),0,false,function(i){HI5=i;upd5()});
+  chips($('lh5'),['0,12 mm','0,20 mm','0,28 mm'],1,false,function(i){LI5=i;upd5()});
+  $('v5').addEventListener('input',upd5);
+  START.l5=function(){T5=0;loop(draw5)};
 
-  quiz([['La temperatura de la boquilla sube y no para. ¿Qué hacés?',['Espero a ver si baja','Apago y desconecto','Bajo el ventilador'],1,'Temperatura fuera de control: apagar ya. Lección 8.6.'],
-    ['¿Dónde imprimís ABS?',['En el dormitorio, con la puerta cerrada','En la cocina, cerca de la comida','Con cerramiento, extracción y lejos de donde se vive'],2,'Ventilación y extracción. Lección 8.7.'],
-    ['Hay ondas en las piezas. ¿Qué hacés primero?',['Compro guías lineales','Reviso correas, ruedas y tornillos','Compro un hotend de alto flujo'],1,'Primero el problema, después la mejora. Lección 8.8.'],
-    ['¿Qué boquilla conviene para empezar?',['0,4 mm','0,2 mm','0,8 mm'],0,'0,4 mm para empezar. Lección 8.9.'],
-    ['Vas a ver una usada. ¿Qué es lo primero que pedís?',['La caja original','Probarla imprimiendo una pieza chica','Una bobina de regalo'],1,'Encender, homing, calentar, mover, extruir e imprimir. Lección 8.10.']],'¡Módulo 8 dominado!');
+  // ---------- 8.6 camara y deteccion de fallas ----------
+  var S6={t0:0,ai:false,ended:false,caught:false,result:null},DUR6=11,FAIL6=.38;
+  function spag6(c,cx,by,s,k,t){c.strokeStyle='rgba(255,179,138,.9)';c.lineWidth=Math.max(1,.25*s);c.lineCap='round';var n=Math.floor(6+k*90);
+    for(var i=0;i<n;i++){var a=i*2.399,r=(.6+((i*37)%17)/17)*(2+k*9)*s,x=cx+Math.cos(a)*r,y=by-Math.abs(Math.sin(a*1.7))*r*.55-.4*s;c.beginPath();c.moveTo(x,y);c.bezierCurveTo(x+3*s*Math.sin(i),y-2*s,x-2*s,y-3*s*Math.cos(i),x+Math.sin(i*1.3)*4*s,y-Math.abs(Math.cos(i))*2*s);c.stroke()}}
+  function draw6(now){var f=fit($('c6'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000;bg(c,w,h);if(!S6.t0)S6.t0=now;
+    var el=(now-S6.t0)/1000,p=Math.min(1,el/DUR6),failed=p>FAIL6,det=S6.ai&&failed&&el>(FAIL6*DUR6+1.2),stopP=S6.ai?Math.min(p,FAIL6+1.2/DUR6):p;
+    if(det&&!S6.caught){S6.caught=true;finish6(true)}if(!S6.ai&&p>=1&&!S6.ended){S6.ended=true;finish6(false)}
+    var ph=Math.min(h-24,(w-32)*1.95),pw=ph/1.95;if(pw>w*.5){pw=w*.5;ph=pw*1.95}var fx=w/2-pw/2,fy=(h-ph)/2;
+    c.fillStyle='#0B0F18';rr(c,fx,fy,pw,ph,pw*.14);c.fillStyle='#232B3D';rr(c,fx+3,fy+3,pw-6,ph-6,pw*.12);
+    var sx=fx+pw*.06,sy=fy+pw*.12,sw=pw*.88,sh2=ph-pw*.24;c.fillStyle='#10151F';rr(c,sx,sy,sw,sh2,pw*.08);
+    txt(c,'Impresora del taller',sx+12,sy+24,'left',C.ink,Math.max(11,pw*.055),700);
+    var stat=det?'En pausa':p>=1?(failed?'Terminó':'Terminó'):'Imprimiendo';txt(c,stat,sx+12,sy+24+Math.max(14,pw*.07),'left',det?C.ui:C.soft,Math.max(10,pw*.048),600);
+    var vx=sx+10,vy=sy+pw*.26,vw=sw-20,vh=vw*.78;c.fillStyle='#1B2333';rr(c,vx,vy,vw,vh,10);
+    c.save();c.beginPath();if(c.roundRect)c.roundRect(vx,vy,vw,vh,10);else c.rect(vx,vy,vw,vh);c.clip();
+    var s=vw/40,ox=vx+vw/2,oy=vy+vh-5*s;bed(c,ox,oy,s,16);
+    var bp=Math.min(stopP,FAIL6)/1*20;var pos=layers(c,ox,oy,s,1.25,Math.min(bp,FAIL6*20),true)||[ox,oy-8*s];
+    if(failed){var k=(stopP-FAIL6)/(1-FAIL6);spag6(c,ox+4*s,oy,s,Math.max(0,k),t)}
+    var hy=failed?oy-(FAIL6*20+(stopP-FAIL6)*6)*s:pos[1],hx=failed?ox+4*s+Math.sin(t*5)*(det?0:6*s):pos[0];if(det)hx=ox+4*s;fastHead(c,hx,hy-2*s,s*.5,t,vx+2,vx+vw-2);
+    c.fillStyle='rgba(255,90,90,.9)';c.beginPath();c.arc(vx+12,vy+12,4,0,7);c.fill();mono(c,'EN VIVO',vx+20,vy+16,'left',C.ink,Math.max(9,pw*.04));
+    if(det){c.strokeStyle=C.ui;c.lineWidth=2.5;c.strokeRect(ox-9*s,oy-12*s,22*s,13*s);mono(c,'falla',ox-9*s,oy-12.8*s,'left',C.ui,Math.max(9,pw*.045))}
+    c.restore();
+    var by2=vy+vh+14;c.fillStyle='#2A3348';rr(c,vx,by2,vw,6,3);c.fillStyle=det?C.ui:failed?C.bad:C.pop;rr(c,vx,by2,vw*stopP,6,3);
+    mono(c,Math.round(stopP*100)+' %',vx+vw,by2+22,'right',C.soft,Math.max(10,pw*.045));var fs=Math.max(10,pw*.05),ry=by2+50;[['Boquilla',det?'apagada':'220 °C'],['Cama','60 °C'],['Restante',det?'en pausa':fmin(190*(1-stopP))],['Filamento','PLA naranja']].forEach(function(r,ri){var yy=ry+ri*fs*2.1;c.fillStyle='#1B2333';rr(c,vx,yy-fs*1.3,vw,fs*1.8,8);txt(c,r[0],vx+10,yy,'left',C.soft,fs,500);txt(c,r[1],vx+vw-10,yy,'right',C.ink,fs,700)});
+    if(det){var ny=sy+8,nh=Math.max(46,pw*.22);c.fillStyle='rgba(37,71,119,.97)';rr(c,sx+6,ny,sw-12,nh,12);txt(c,'Falla detectada',sx+18,ny+nh*.42,'left','#FFFFFF',Math.max(11,pw*.055),700);txt(c,'Pausé la impresión. Revisala.',sx+18,ny+nh*.78,'left','#D6E3FF',Math.max(10,pw*.046),500)}
+    else if(!S6.ai&&failed){c.fillStyle='rgba(90,31,27,.92)';var nw=vw*.7;rr(c,vx+vw/2-nw/2,vy+vh*.12,nw,Math.max(22,pw*.1),10);txt(c,'Nadie está mirando…',vx+vw/2,vy+vh*.12+Math.max(22,pw*.1)*.66,'center','#FFDAD6',Math.max(11,pw*.05),700)}}
+  function finish6(caught){var g=caught?2:38,mn=caught?6:190;$('r6a').textContent=g+' g';$('r6b').textContent=fmin(mn);var m=$('m6');
+    if(caught){m.className='msg ok';m.textContent='¡Atajada! Pausó a los pocos minutos de la falla: tiraste '+g+' g en lugar de casi 40, y te llegó el aviso al celular.';mark('l6')}
+    else if(!done.l6){m.className='msg bad';m.textContent='La impresora siguió tirando plástico al aire hasta el final: '+g+' g de nido y más de 3 horas perdidas. Activá la detección de fallas e imprimí otra vez.'}}
+  function aiBtn6(){var b=$('ai6').firstElementChild;b.setAttribute('aria-pressed',String(S6.ai));b.textContent=S6.ai?'Detección de fallas activada':'Detección de fallas apagada'}
+  function restart6(){S6.t0=0;S6.ended=false;S6.caught=false;$('r6a').textContent='0 g';$('r6b').textContent='0 min';if(!done.l6){var m=$('m6');m.className='msg';m.textContent=S6.ai?'Imprimiendo con la detección activada. Mirá qué pasa cuando la pieza se despegue.':'En esta impresión la pieza se despega a mitad de camino. Mirá qué pasa si nadie la está mirando.'}}
+  $('ai6').firstElementChild.addEventListener('click',function(){S6.ai=!S6.ai;aiBtn6();restart6()});
+  $('go6').addEventListener('click',restart6);
+  START.l6=function(){restart6();loop(draw6)};
 
-  // ---------- audio: lee el comienzo de cada leccion con la voz del navegador ----------
-  var SY=window.speechSynthesis,speaking=null;
-  function stopAudio(){try{if(SY)SY.cancel()}catch(e){}if(speaking){speaking.textContent='▶ Escuchar';speaking.setAttribute('aria-pressed','false');speaking=null}}
-  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
-  if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
-      var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
-      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
-        u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
-      hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
-  var show0=show;show=function(k,p){stopAudio();show0(k,p)};
+  // ---------- repaso ----------
+  (function(){var Q=[['¿Por qué una impresora nueva imprime mucho más rápido que una Ender 3?',['Porque tiene un motor más potente','Porque mejoraron juntas la mecánica, el control de vibraciones y el hotend','Porque usa un filamento especial'],1,'La parte más lenta frena a todas las demás. Lección 8.1.'],
+    ['En una capa con muchos tramos cortos, ¿qué ajuste hace subir más la velocidad real?',['La velocidad máxima','La aceleración','La temperatura'],1,'En tramos cortos la cabeza casi nunca llega al tope. Lección 8.2.'],
+    ['Aparecen ondas repetidas al lado de cada relieve. ¿Qué las corrige sin bajar la velocidad?',['El input shaping','Más relleno','Una boquilla más fina'],0,'Mide la resonancia y cancela la vibración. Lección 8.3.'],
+    ['¿Para qué mide la cama una impresora con nivelación automática?',['Para endurecerla','Para armar un mapa de alturas y seguirlo con la boquilla','Para calentarla más rápido'],1,'Compensa los pozos y las lomas en la primera capa. Lección 8.4.'],
+    ['A alta velocidad las paredes salen finas y con huecos, aunque la máquina se mueve bien. ¿Qué pasa?',['Falta flujo: el hotend no llega a fundir','Las correas están flojas','La cama está fría'],0,'Hace falta un hotend de alto flujo o bajar la velocidad. Lección 8.5.'],
+    ['¿Qué hace la detección de fallas con cámara?',['Arregla la pieza sola','Reconoce el nido de hilos, pausa y avisa','Evita que la pieza se despegue'],1,'No evita la falla, pero corta el desperdicio. Lección 8.6.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var s=$('score');s.hidden=false;s.textContent=good+' de 6. '+(good===6?'¡Módulo dominado!':good>=4?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})})();
 
   // ---------- arranque ----------
   setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
-  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+  upd1();upd2();upd3();upd4();upd5();paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
 })();
 </script>
+
 
 <!--fx--><script>
 (function(){
@@ -800,6 +920,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   'cac-m5b':{l1:'Pedí 100 mm, calculá el valor nuevo y hacé que 100 mm sean 100 mm.',l2:'Dejá la pared en 0,45 mm moviendo el flujo.',l3:'Encontrá el avance de presión que deja las esquinas limpias.',l4:'Elegí la menor distancia de retracción que deja la torre limpia.',l5:'Completá y guardá una ficha con, al menos, impresora y filamento.'},
   'cac-m9a':{l1:'Calculá el precio que te deja un margen real del 30 % sobre un coste de 20.',l2:'Cargá tus precios, mirá cuánto cuestan material y luz, y respondé el mini reto.',l3:'Calculá cuánto cobra la máquina por hora y respondé el mini reto.',l4:'Armá un precio que cubra al menos 5 % de riesgo y deje 30 % de margen real.',l5:'Con una eficiencia realista, decidí si el pedido entra esta semana.'},'cac-m9b':{l1:'Elegí los cuatro bloques del prompt para que la figura salga imprimible, sin carteles rojos.',l2:'Recorré las cinco vistas y marcá el problema que aparece en cada una.',l3:'Marcá todo lo que tiene que estar en el presupuesto, sin las dos promesas peligrosas.',l4:'Decidí si aceptás, aceptás con condiciones o rechazás cada uno de los seis pedidos.',l5:'Respondé las tres objeciones del cliente explicando el valor.'},
   'cac-m8b':{l1:'Decidí qué hacer en cada una de las ocho situaciones.',l2:'Elegí dónde y cómo imprimir ABS de forma responsable.',l3:'Elegí la mejora que resuelve cada uno de los seis problemas.',l4:'Respondé las tres preguntas y mirá qué impresora te conviene.',l5:'Marcá las señales de alerta de la impresora usada y decidí.'},
+  'cac-m8':{l1:'Sumá las mejoras justas para que tu máquina imprima el Benchy en menos de 20 minutos.',l2:'Lográ una velocidad real promedio de más de 150 mm/s en esta capa.',l3:'Medí la resonancia, activá el input shaping y llegá a 10.000 mm/s² con la pared lisa.',l4:'Hacé que la impresora mida la cama y lográ una primera capa pareja en el 95 % de la superficie.',l5:'Imprimí a 300 mm/s con capas de 0,20 mm sin que falte plástico.',l6:'Activá la detección de fallas e imprimí otra vez: tiene que pausar antes de tirar 5 g.'},
   'cac-m8a':{l1:'Elegí la herramienta justa para cada una de las ocho tareas.',l2:'Ubicá cada tarea de mantenimiento en su frecuencia.',l3:'Armá la caja de repuestos con lo que frena la máquina, sin pasarte del presupuesto.',l4:'Revisá en orden, de lo simple a lo complejo, y hacé que vuelva a encender.',l5:'Encontrá los seis riesgos alrededor de la impresora.'},
   'cac-m7b':{l1:'Elegí una unión y abrila y cerrala 10 veces sin que se gaste la rosca.',l2:'Ajustá largo, espesor, capas y radio para que el snap fit trabe sin romperse.',l3:'Elegí bisagra y material para una caja que se abre todos los días.',l4:'Elegí el perfil más eficiente para cada uno de los dos pedidos.',l5:'Elegí el recurso de diseño para cada una de las ocho necesidades.'},
   'cac-m7a':{l1:'Mirá cómo se deforma la barra y reconocé las cinco fuerzas.',l2:'Cambiá la forma de la esquina para que la escuadra aguante 6 kg.',l3:'Lográ que el soporte se doble menos de 1 mm con menos de 25 g de plástico.',l4:'Rediseñá el agujero y el saliente para imprimirlos sin soportes.',l5:'Elegí la holgura justa para cada uno de los tres pedidos y probala.'},
@@ -942,7 +1063,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   window.addEventListener('load',function(){setTimeout(all,100)});
 })();
 
-(function(){var MT={1:['Cómo funciona una impresora 3D','Del archivo a la pieza, el G-code y las dos grandes tecnologías.'],2:['La máquina por dentro','Ejes, motores, correas, extrusor, hotend, cama y electrónica.'],3:['Filamentos y materiales','PLA, PETG, ABS y TPU, temperaturas, humedad y cómo elegir.'],4:['El laminador','Perfiles, capas, paredes, relleno, soportes, retracción y vista previa.'],5:['Calibración','Nivelación, offset Z, temperatura, extrusor, flujo y retracción.'],6:['Errores y diagnóstico','Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.'],7:['Diseño de piezas funcionales','Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.'],8:['El taller','Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora.'],9:['Del hobby al negocio','Costos, márgenes, presupuestos, capacidad, modelos con IA y cómo vender.']};
+(function(){var MT={1:['Cómo funciona una impresora 3D','Del archivo a la pieza, el G-code y las dos grandes tecnologías.'],2:['La máquina por dentro','Ejes, motores, correas, extrusor, hotend, cama y electrónica.'],3:['Filamentos y materiales','PLA, PETG, ABS y TPU, temperaturas, humedad y cómo elegir.'],4:['El laminador','Perfiles, capas, paredes, relleno, soportes, retracción y vista previa.'],5:['Calibración','Nivelación, offset Z, temperatura, extrusor, flujo y retracción.'],6:['Errores y diagnóstico','Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.'],7:['Diseño de piezas funcionales','Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.'],8:['Impresoras de nueva generación','CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3.'],9:['Del hobby al negocio','Costos, márgenes, presupuestos, capacidad, modelos con IA y cómo vender.']};
   var k=document.documentElement.getAttribute('data-cac')||'',m=k.match(/cac-m(\d+)([a-c]?)/);if(!m||!MT[m[1]]||document.querySelector('.mhero'))return;
   var n=+m[1],pt=m[2]?' · parte '+(m[2].charCodeAt(0)-96):'',h=document.createElement('section');h.className='mhero';h.setAttribute('aria-label','Módulo '+n);
   h.innerHTML='<img src="img/m'+n+'.webp" alt="" loading="eager"><div class="tx"><span class="k">Módulo '+n+pt+'</span><h2></h2><p></p></div>';h.querySelector('h2').textContent=MT[n][0];h.querySelector('p').textContent=MT[n][1];
