@@ -482,6 +482,14 @@ code{color:var(--ui)}
 .card.preto{background:rgba(255,185,94,.08);border:2px solid #7A5210;border-radius:20px;padding:16px 18px;gap:10px}
 .card.preto .tag{color:var(--ui)}
 .card.preto h3{font-size:20px}
+
+/* celular: narración solo con ícono y fila superior que puede bajar de renglón */
+@media (max-width:860px){
+  .prog{flex-wrap:wrap;row-gap:8px;min-width:0}
+  .top{min-width:0}
+  .narr{width:40px;padding:0;justify-content:center}
+  .narr span{display:none}
+}
 </style>
 </head>
 <body>
