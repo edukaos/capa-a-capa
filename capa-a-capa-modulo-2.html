@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.cv3{aspect-ratio:16/10}
+@media (max-width:600px){.cv3{aspect-ratio:4/5}}
+.sl{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr) 62px;gap:8px 12px;align-items:center}
+@media (max-width:560px){.sl{grid-template-columns:minmax(0,1fr) 62px}.sl label{grid-column:1/-1}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+#ax{accent-color:var(--ui)}#ay{accent-color:var(--pop)}#az{accent-color:var(--fil)}
+footer a{color:var(--ui)}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-1.html">← <span class="lg">Módulo 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-modulo-2b.html"><span class="lg">Módulo 2 · parte 2</span><span class="sh">Siguiente</span> →</a></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 2, primera parte">
+    <button type="button" data-l="l1" aria-label="Lección 2.1, Ejes X, Y y Z">1</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 2.2, Cama móvil y CoreXY">2</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 2.3, Motores paso a paso">3</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 2.4, Correas y husillos">4</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 2.5, Finales de carrera y homing">5</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 2.1 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 2 · La máquina por dentro</p><h1>Ejes X, Y y Z</h1>
+      <p>Un eje es una dirección de movimiento. Con tres alcanza para llevar la boquilla a cualquier punto del espacio de impresión.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la grúa de los peluches: una palanca la mueve de izquierda a derecha, otra de adelante hacia atrás, y el botón la hace bajar.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c1" class="cv1" role="img" aria-label="Impresora vista de frente y cama vista desde arriba"></canvas>
+      <div class="simbody">
+        <div class="sl">
+          <label for="ax">X · izquierda y derecha</label><input id="ax" type="range" min="0" max="220" value="110"><span class="val" id="vx">110 mm</span>
+          <label for="ay">Y · adelante y atrás</label><input id="ay" type="range" min="0" max="220" value="110"><span class="val" id="vy">110 mm</span>
+          <label for="az">Z · arriba y abajo</label><input id="az" type="range" min="0" max="250" value="60"><span class="val" id="vz">60 mm</span>
+        </div>
+        <p class="note">Cada eje tiene su color en los dos dibujos. Fijate que X aparece en ambos, mientras que Z solo se ve de frente e Y solo desde arriba.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Recorrer las esquinas para nivelar</h3>
+        <p>Para nivelar la cama a mano se lleva la boquilla a cada esquina y se ajusta la perilla de ese lado. Son cuatro viajes en X e Y con la Z casi tocando la cama: exactamente lo que estás haciendo acá.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Llevá la boquilla al anillo punteado</h3>
+        <p>El objetivo está en X 180, Y 40, Z 10. Tenés que acertar los tres ejes.</p><p class="msg" id="m1">Todavía no llegaste.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: ejes y sistema cartesiano</summary><div class="in">
+      <dl><dt>Eje X</dt><dd>X axis. Movimiento lateral del cabezal o carro.</dd>
+      <dt>Eje Y</dt><dd>Y axis. Movimiento de profundidad. Según la impresora lo hace la cama o el cabezal.</dd>
+      <dt>Eje Z</dt><dd>Z axis. Elevación progresiva entre capa y capa.</dd>
+      <dt>Cartesiano</dt><dd>Sistema que usa movimientos independientes en X, Y y Z. Es el más sencillo de entender.</dd></dl>
+      <p>La precisión de una impresión depende de que cada eje se mueva libremente, sin juego y sin resistencia de más.</p></div></details>
+  </section>
+
+  <!-- 2.2 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.2</p><h1>Cama móvil y CoreXY</h1>
+      <p>Las dos dibujan lo mismo sobre la cama. Lo que cambia es qué parte de la máquina se mueve, y eso define cuánto se puede acelerar.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>La cama móvil es la máquina de coser: la aguja se queda y lo que va y viene es la tela. CoreXY es el puente grúa del galpón: la carga queda quieta y se mueve el gancho.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c2" class="cv3" role="img" aria-label="Las dos mecánicas dibujando el mismo cuadrado, vistas desde arriba y de costado"></canvas>
+      <div class="simbody">
+        <div class="row"><label for="acc">Aceleración</label><input id="acc" type="range" min="1" max="10" value="4"><span class="val" id="vacc">media</span></div>
+        <p class="note">Arriba, las dos vistas desde arriba. Abajo, las mismas máquinas de costado con una torre alta y fina sobre la cama. Subí la aceleración y mirá cuál torre se sacude.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La torre que sale mejor en CoreXY</h3>
+        <p>En una cama móvil, cada cambio de dirección sacude la cama con la pieza encima. Una pieza baja ni se entera. Una torre alta y fina se balancea en la punta y las capas de arriba salen corridas o con ondas.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Querés imprimir rápido una torre alta y fina. ¿Qué mecánica la sacude menos?</h3>
+        <div class="opts" id="q2"></div><p class="msg" id="m2" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: cama móvil y CoreXY</summary><div class="in">
+      <dl><dt>Cama móvil</dt><dd>Bed slinger. En muchas impresoras cartesianas la cama se desplaza sobre el eje Y.</dd>
+      <dt>A favor</dt><dd>Diseño sencillo, económico y fácil de mantener.</dd>
+      <dt>En contra</dt><dd>La masa de la cama limita las aceleraciones y puede afectar piezas altas.</dd>
+      <dt>CoreXY</dt><dd>Dos motores y un sistema de correas coordinado mueven el cabezal en X e Y. Mueve menos masa y admite velocidades y aceleraciones altas.</dd>
+      <dt>Cuidado</dt><dd>Necesita las correas bien tensadas y alineadas. Un montaje desparejo produce deformaciones en diagonal.</dd></dl></div></details>
+  </section>
+
+  <!-- 2.3 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.3</p><h1>Motores paso a paso</h1>
+      <p>La impresora no mide dónde está el cabezal. Cuenta los pasos que le mandó al motor y confía en que se dieron todos.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el segundero del reloj: no gira de corrido, avanza de a saltitos iguales. Si contás los saltitos sabés dónde está, siempre que no se haya salteado ninguno.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c3" class="cv2" role="img" aria-label="Motor paso a paso moviendo un carro con una correa sobre una regla"></canvas>
+      <div class="simbody">
+        <div class="row">
+          <button class="btn ghost" type="button" data-st="-100">−100</button><button class="btn ghost" type="button" data-st="-10">−10</button><button class="btn ghost" type="button" data-st="-1">−1</button>
+          <span class="note">pasos</span>
+          <button class="btn ghost" type="button" data-st="1">+1</button><button class="btn ghost" type="button" data-st="10">+10</button><button class="btn ghost" type="button" data-st="100">+100</button>
+        </div>
+        <div class="row"><label><input type="checkbox" id="over"> Aceleración excesiva</label><button class="btn ghost" id="zero3" type="button">Volver a cero</button></div>
+        <dl class="reads">
+          <div><dt>La impresora cree que está en</dt><dd id="r3a">0,0 mm</dd></div>
+          <div><dt>Está de verdad en</dt><dd id="r3b">0,0 mm</dd></div>
+        </dl>
+        <p class="note">En esta máquina de ejemplo cada paso mueve el carro 0,2 mm: una vuelta son 200 pasos y arrastra 40 mm de correa. Son valores típicos; cada impresora tiene los suyos.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>De dónde salen las capas corridas</h3>
+        <p>Si el motor pierde pasos por acelerar de más o por un choque, el cabezal queda corrido y la impresora no se entera. Sigue imprimiendo como si nada, y todas las capas siguientes salen desplazadas. Probalo: tildá "Aceleración excesiva" y mandá 100 pasos.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dejá el carro exactamente en 30 mm</h3>
+        <p>Sin perder ningún paso: lo que cree la impresora y la posición real tienen que coincidir.</p><p class="msg" id="m3">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: motor paso a paso</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Stepper motor</dd>
+      <dt>Qué es</dt><dd>Motor que gira en pasos controlados. Mueve los ejes y el extrusor con gran repetibilidad.</dd>
+      <dt>Síntomas</dt><dd>Puede perder pasos si la aceleración es excesiva, y puede calentarse durante el uso. Necesita la corriente bien configurada.</dd>
+      <dt>Ojo</dt><dd>Una polea floja en el eje puede parecer una falla del motor.</dd></dl>
+      <p>En la práctica el firmware divide cada paso en micropasos, por ejemplo 16, para que el movimiento sea más suave. Con los valores de este ejemplo serían 80 micropasos por milímetro.</p></div></details>
+  </section>
+
+  <!-- 2.4 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.4</p><h1>Correas y husillos</h1>
+      <p>El motor gira. Para que ese giro mueva el cabezal hace falta una correa en X e Y, y un tornillo largo, el husillo, en Z.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>La correa es la cadena de la bici: floja salta y se sacude, demasiado tirante gasta todo. El husillo es el crique del auto: muchas vueltas para subir un poquito, con mucha fuerza y precisión.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <div class="vs">
+        <div><h3>Correa · ejes X e Y</h3><canvas id="c4a" data-ar="0.75" role="img" aria-label="Carro moviéndose con una correa y la pared que imprime"></canvas></div>
+        <div><h3>Husillo · eje Z</h3><canvas id="c4b" data-ar="0.75" role="img" aria-label="Husillo girando y levantando el eje"></canvas></div>
+      </div>
+      <div class="simbody">
+        <div class="row"><label for="ten">Tensión de la correa</label><input id="ten" type="range" min="0" max="100" value="22"><span class="val" id="vten">floja</span></div>
+        <p class="msg" id="m4"></p>
+        <div class="row"><label for="turns">Vueltas del husillo</label><input id="turns" type="range" min="0" max="10" step="0.25" value="2"><span class="val" id="vturns">16 mm</span></div>
+        <div class="row"><label><input type="checkbox" id="bent"> Husillo doblado</label><span class="note">En un husillo T8 común, cada vuelta sube 8 mm.</span></div>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Ondas después de cada esquina</h3>
+        <p>Imprimís un cubo y al lado de cada esquina aparece un eco de ondas que se va apagando. Antes de tocar el laminador, revisá la correa: tiene que estar firme, pero no sonar como una cuerda de guitarra.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dejá la correa en su punto justo</h3>
+        <p>La pared tiene que salir sin ondas y sin forzar los rodamientos.</p><p class="msg" id="r4">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: correas, poleas y tornillo del eje Z</summary><div class="in">
+      <dl><dt>Correa</dt><dd>Timing belt. Cinta flexible con dientes que transmite el movimiento del motor al carro. La más habitual es la GT2.</dd>
+      <dt>Polea</dt><dd>Rueda dentada fija al eje del motor. Hay que revisar que su tornillo prisionero no esté flojo.</dd>
+      <dt>Tensión</dt><dd>Firme, no excesiva. Demasiada tensión desgasta rodamientos y motores; una tensión despareja afecta la precisión.</dd>
+      <dt>Husillo</dt><dd>Lead screw. Convierte el giro del motor en desplazamiento vertical. Debe estar limpio, lubricado y sin forzar de costado.</dd>
+      <dt>Z banding</dt><dd>Bandas horizontales repetidas que aparecen cuando el tornillo está doblado o desalineado.</dd></dl>
+      <p>No se lubrican las correas ni las ruedas; el husillo sí, con un lubricante compatible.</p></div></details>
+  </section>
+
+  <!-- 2.5 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Lección 2.5</p><h1>Finales de carrera y homing</h1>
+      <p>Al encender, la impresora no sabe dónde quedó cada eje. Antes de imprimir va a buscar un punto conocido: eso es el homing.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es entrar a un cuarto a oscuras y caminar con la mano adelante hasta tocar la pared. Recién ahí sabés dónde estás parado y podés contar los pasos hasta la cama.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c5" class="cv2" role="img" aria-label="Carro buscando el final de carrera"></canvas>
+      <div class="simbody">
+        <div class="row"><button class="btn" id="home5" type="button">Hacer homing</button><button class="btn ghost" id="rand5" type="button">Mover el carro a mano</button><label><input type="checkbox" id="cable5"> Cable del sensor desconectado</label></div>
+        <p class="msg" id="m5">La impresora recién se enciende: no sabe dónde está el carro.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El traqueteo al arrancar</h3>
+        <p>Mandás a imprimir y un eje llega al tope y sigue empujando con un ruido fuerte de traqueteo. El sensor no avisó que llegó: puede estar roto, corrido de lugar o con el cable suelto. Probalo tildando el cable desconectado.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>El eje llegó al tope y sigue empujando. ¿Qué hacés?</h3>
+        <div class="opts" id="q5"></div><p class="msg" id="r5" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: final de carrera y homing</summary><div class="in">
+      <dl><dt>Final de carrera</dt><dd>Endstop. Sensor que le indica al firmware que un eje llegó a su referencia. Puede ser mecánico, óptico o magnético.</dd>
+      <dt>Homing</dt><dd>Procedimiento con el que la impresora busca la posición de referencia de cada eje.</dd>
+      <dt>Condición</dt><dd>El sensor debe activarse antes de que el eje golpee la estructura.</dd>
+      <dt>Seguridad</dt><dd>Detené la máquina si un eje sigue moviéndose después de tocar el final de carrera. Un cable dañado puede provocar movimientos peligrosos.</dd></dl>
+      <p>El segundo toque, más lento, es para medir con precisión: a baja velocidad el sensor se activa siempre en el mismo punto.</p></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 2 · Repaso de la primera parte</p><h1>Cinco preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en el capítulo 2 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea; las medidas de ejemplo son valores típicos, no los de una máquina en particular.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var ORDER=['l1','l2','l3','l4','l5','repaso'],cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m2')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>2.1</b> Ejes X, Y y Z',l2:'<b>2.2</b> Cama móvil y CoreXY',l3:'<b>2.3</b> Motores paso a paso',l4:'<b>2.4</b> Correas y husillos',l5:'<b>2.5</b> Finales de carrera y homing',repaso:'<b>Repaso</b> Cinco preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;['l1','l2','l3','l4','l5'].forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de 5 retos';$('prog-bar').style.width=(n/5*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m2',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- ayudas de dibujo del modulo 2 ----------
+  var XC=C.ui,YC=C.pop,ZC='#FFB38A';
+  function pill(c,txt,x,y){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(txt).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=C.ink;c.textAlign='center';c.fillText(txt,x,y+1)}
+  function ring(c,x,y,r){c.save();c.strokeStyle=C.ui;c.lineWidth=2;c.setLineDash([4,4]);c.beginPath();c.arc(x,y,r,0,7);c.stroke();c.setLineDash([]);c.beginPath();c.moveTo(x-3,y);c.lineTo(x+3,y);c.moveTo(x,y-3);c.lineTo(x,y+3);c.stroke();c.restore()}
+  function arrow(c,x0,y0,x1,y1,col,txt){var a=Math.atan2(y1-y0,x1-x0);c.strokeStyle=col;c.fillStyle=col;c.lineWidth=2.5;c.lineCap='round';c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke();
+    c.beginPath();c.moveTo(x1,y1);c.lineTo(x1-9*Math.cos(a-.45),y1-9*Math.sin(a-.45));c.lineTo(x1-9*Math.cos(a+.45),y1-9*Math.sin(a+.45));c.closePath();c.fill();
+    if(txt){c.font='700 14px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText(txt,x1+13*Math.cos(a),y1+13*Math.sin(a)+5)}}
+  function headTop(c,hx,hy,col,spin){var g=c.createLinearGradient(hx-15,0,hx+15,0);g.addColorStop(0,'#52628A');g.addColorStop(1,'#37435F');c.fillStyle=g;rr(c,hx-15,hy-44,30,28,7);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(hx,hy-30,9,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=2;for(var k=0;k<5;k++){var an=spin+k*1.2566;c.beginPath();c.arc(hx,hy-30,6,an,an+.75);c.stroke()}
+    c.fillStyle='#8E9BBB';c.beginPath();c.moveTo(hx-5,hy-16);c.lineTo(hx+5,hy-16);c.lineTo(hx+2,hy-7);c.lineTo(hx-2,hy-7);c.closePath();c.fill();
+    c.shadowColor=col;c.shadowBlur=12;c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.arc(hx,hy,7,0,7);c.stroke();c.shadowBlur=0;c.fillStyle=col;c.beginPath();c.arc(hx,hy,2.6,0,7);c.fill()}
+  function plate(c,x,y,L,div){c.fillStyle='rgba(0,0,0,.3)';rr(c,x-2,y+4,L+8,L+8,12);var g=c.createLinearGradient(x,y,x+L,y+L);g.addColorStop(0,'#252F48');g.addColorStop(1,'#161D2E');c.fillStyle=g;rr(c,x-4,y-4,L+8,L+8,12);
+    c.strokeStyle='rgba(169,180,204,.2)';c.lineWidth=1;c.beginPath();for(var i=0;i<=div;i++){c.moveTo(x+L*i/div,y);c.lineTo(x+L*i/div,y+L);c.moveTo(x,y+L*i/div);c.lineTo(x+L,y+L*i/div)}c.stroke()}
+  function pulley(c,x,y,r,ang,hot){var g=c.createRadialGradient(x-r*.3,y-r*.3,1,x,y,r);g.addColorStop(0,'#E3E9F6');g.addColorStop(1,'#7C89AA');if(hot>0){c.shadowColor='#FF6B5C';c.shadowBlur=22*hot}c.fillStyle=g;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.shadowBlur=0;
+    c.strokeStyle='#4A5878';c.lineWidth=2;for(var k=0;k<8;k++){var a=ang+k*Math.PI/4;c.beginPath();c.moveTo(x+Math.cos(a)*r*.45,y+Math.sin(a)*r*.45);c.lineTo(x+Math.cos(a)*r*.9,y+Math.sin(a)*r*.9);c.stroke()}
+    c.fillStyle='#2F3A57';c.beginPath();c.arc(x,y,r*.28,0,7);c.fill()}
+  function motorBox(c,x,y,sz,ang){var g=c.createLinearGradient(x-sz/2,y-sz/2,x+sz/2,y+sz/2);g.addColorStop(0,'#55648A');g.addColorStop(1,'#2F3A57');c.fillStyle=g;rr(c,x-sz/2,y-sz/2,sz,sz,sz*.16);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(x,y,sz*.36,0,7);c.fill();c.strokeStyle='rgba(174,185,212,.55)';c.lineWidth=1.5;for(var k=0;k<40;k++){var a=k*Math.PI/20;c.beginPath();c.moveTo(x+Math.cos(a)*sz*.31,y+Math.sin(a)*sz*.31);c.lineTo(x+Math.cos(a)*sz*.35,y+Math.sin(a)*sz*.35);c.stroke()}
+    c.strokeStyle=C.ui;c.lineWidth=3;c.lineCap='round';c.beginPath();c.moveTo(x,y);c.lineTo(x+Math.cos(ang)*sz*.29,y+Math.sin(ang)*sz*.29);c.stroke();c.fillStyle=C.ui;c.beginPath();c.arc(x,y,3.5,0,7);c.fill()}
+  function carriage(c,x,y,w,h,col){var g=c.createLinearGradient(0,y-h/2,0,y+h/2);g.addColorStop(0,'#6B7BA6');g.addColorStop(1,'#3F4D70');c.fillStyle=g;rr(c,x-w/2,y-h/2,w,h,7);c.fillStyle=col||C.ui;c.beginPath();c.arc(x,y,4,0,7);c.fill()}
+  function fmm(v){return v.toFixed(1).replace('.',',')+' mm'}
+
+  // ---------- 2.1 ejes ----------
+  var P1={x:110,y:110,z:60},TG=[180,40,10];
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,vert=w<520;bg(c,w,h);
+    var tx=+$('ax').value,ty=+$('ay').value,tz=+$('az').value;P1.x+=(tx-P1.x)*.2;P1.y+=(ty-P1.y)*.2;P1.z+=(tz-P1.z)*.2;
+    var A=vert?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B=vert?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h};
+    var s=Math.min(A.w/42,A.h/31.5),ox=A.x+A.w/2,oy=A.y+A.h-3.4*s,k=31/220,kz=20.5/250;
+    posts(c,ox,oy,s,oy-27*s);bed(c,ox,oy,s,15.5);ring(c,ox+(TG[0]-110)*k*s,oy-TG[2]*kz*s,8);
+    var px=ox+(P1.x-110)*k*s,py=oy-P1.z*kz*s-1;toolhead(c,px,py,s*.55,t,ox-17.4*s,ox+17.4*s);
+    label(c,'De frente',A.x+12,A.y+22);arrow(c,A.x+A.w-74,A.y+40,A.x+A.w-34,A.y+40,XC,'X');arrow(c,A.x+A.w-74,A.y+40,A.x+A.w-74,A.y+12,ZC,'');c.fillStyle=ZC;c.font='700 14px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText('Z',A.x+A.w-88,A.y+20);
+    var L=Math.min(B.w-70,B.h-64),x0=B.x+(B.w-L)/2,y0=B.y+(B.h-L)/2+8;plate(c,x0,y0,L,5);
+    ring(c,x0+TG[0]/220*L,y0+L-TG[1]/220*L,8);var hx=x0+P1.x/220*L,hy=y0+L-P1.y/220*L;
+    c.fillStyle='rgba(124,138,174,.24)';rr(c,x0-8,hy-36,L+16,12,6);headTop(c,hx,hy,C.ui,t*6);
+    label(c,'Desde arriba',B.x+12,B.y+22);arrow(c,x0,y0+L+16,x0+44,y0+L+16,XC,'X');arrow(c,x0-16,y0+L,x0-16,y0+L-44,YC,'');c.fillStyle=YC;c.font='700 14px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText('Y',x0-16,y0+L-52);
+    c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke();
+    pill(c,'X '+Math.round(P1.x)+' · Y '+Math.round(P1.y)+' · Z '+Math.round(P1.z),w/2,vert?h/2:h-16)}
+  function upd1(){var tx=+$('ax').value,ty=+$('ay').value,tz=+$('az').value;$('vx').textContent=tx+' mm';$('vy').textContent=ty+' mm';$('vz').textContent=tz+' mm';
+    var dx=TG[0]-tx,dy=TG[1]-ty,dz=TG[2]-tz,ok=Math.abs(dx)<=6&&Math.abs(dy)<=6&&Math.abs(dz)<=6,m=$('m1');
+    if(ok){m.className='msg ok';m.textContent='¡Llegaste! Con tres números alcanza para ubicar cualquier punto.';mark('l1')}
+    else if(!done.l1){var miss=[];if(Math.abs(dx)>6)miss.push('X');if(Math.abs(dy)>6)miss.push('Y');if(Math.abs(dz)>6)miss.push('Z');m.className='msg';m.textContent='Te falta ajustar: '+miss.join(', ')+'.'}}
+  ['ax','ay','az'].forEach(function(id){$(id).addEventListener('input',upd1)});
+  START.l1=function(){loop(draw1)};
+
+  // ---------- 2.2 cama movil y CoreXY ----------
+  var U2=0,T2=0,SQ=[[-35,-35],[35,-35],[35,35],[-35,35]];
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,a=+$('acc').value,dt=T2?Math.min(.05,(now-T2)/1000):0;T2=now;bg(c,w,h);
+    var sp=.28+.085*a;U2+=dt*sp;var lap=U2%4,sg=Math.floor(lap),fr=lap-sg,p0=SQ[sg],p1=SQ[(sg+1)%4],px=p0[0]+(p1[0]-p0[0])*fr,py=p0[1]+(p1[1]-p0[1])*fr,tau=fr/sp;
+    var wob=(a/10)*Math.exp(-2.4*tau)*Math.cos(15*tau)*(sg%2?1:-1),Wc=w/2,Ht=h*.62,k=Math.min((Wc-44)/124,(Ht-56)/176),cy=34+(Ht-34)/2,spin=now/1000*(3+a);
+    function trace(X,Y){c.lineJoin='round';c.lineCap='round';c.strokeStyle='rgba(255,179,138,.22)';c.lineWidth=5;c.beginPath();SQ.forEach(function(q,i){if(i)c.lineTo(X(q[0]),Y(q[1]));else c.moveTo(X(q[0]),Y(q[1]))});c.closePath();c.stroke();
+      c.strokeStyle=rgb(FIL);c.lineWidth=5;c.beginPath();c.moveTo(X(SQ[0][0]),Y(SQ[0][1]));for(var i=1;i<=sg;i++)c.lineTo(X(SQ[i][0]),Y(SQ[i][1]));c.lineTo(X(px),Y(py));c.stroke()}
+    // --- cama movil
+    var cx=Wc/2,by=cy+py*k;c.strokeStyle='#4A5878';c.lineWidth=4;c.beginPath();c.moveTo(cx-30*k,cy-86*k);c.lineTo(cx-30*k,cy+86*k);c.moveTo(cx+30*k,cy-86*k);c.lineTo(cx+30*k,cy+86*k);c.stroke();
+    plate(c,cx-50*k,by-50*k,100*k,4);trace(function(x){return cx+x*k},function(y){return by-y*k});
+    c.fillStyle='rgba(124,138,174,.32)';rr(c,cx-60*k,cy-36,120*k,12,6);headTop(c,cx+px*k,cy,C.ui,spin);
+    arrow(c,cx+58*k,cy+10,cx+58*k,cy+34,YC,'');arrow(c,cx+58*k,cy-10,cx+58*k,cy-34,YC,'');label(c,'Cama móvil',12,22);
+    // --- CoreXY
+    cx=Wc+Wc/2;var gy=cy-py*k;c.strokeStyle='#4A5878';c.lineWidth=3;c.strokeRect(cx-60*k,cy-60*k,120*k,120*k);plate(c,cx-50*k,cy-50*k,100*k,4);trace(function(x){return cx+x*k},function(y){return cy-y*k});
+    c.strokeStyle='rgba(174,185,212,.6)';c.lineWidth=1.5;c.beginPath();c.moveTo(cx-58*k,cy-60*k);c.lineTo(cx-58*k,gy-30);c.lineTo(cx+px*k,gy-30);c.moveTo(cx+58*k,cy-60*k);c.lineTo(cx+58*k,gy-30);c.lineTo(cx+px*k,gy-30);c.stroke();
+    c.fillStyle='rgba(124,138,174,.32)';rr(c,cx-60*k,gy-36,120*k,12,6);headTop(c,cx+px*k,gy,C.ui,spin);
+    motorBox(c,cx-58*k,cy-60*k,22,(px+py)*.11);motorBox(c,cx+58*k,cy-60*k,22,(px-py)*.11);label(c,'CoreXY',Wc+12,22);
+    // --- de costado, con una torre alta
+    var yb=h-18,Hh=h-Ht-78,k2=k*.75;[0,1].forEach(function(i){var ccx=Wc*i+Wc/2,bx=i?ccx:ccx+py*k2,lean=i?0:wob*Hh*.3;
+      c.fillStyle='#2F3A57';rr(c,ccx-80*k2,yb,160*k2,5,2);var g=c.createLinearGradient(0,yb-7,0,yb);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,bx-50*k2,yb-7,100*k2,7,3);
+      c.fillStyle=rgb(FIL);c.beginPath();c.moveTo(bx-5,yb-7);c.lineTo(bx+5,yb-7);c.lineTo(bx+5+lean,yb-7-Hh);c.lineTo(bx-5+lean,yb-7-Hh);c.closePath();c.fill();
+      c.strokeStyle=rgb(tone(FIL2,-.25),.6);c.lineWidth=1;for(var z=6;z<Hh;z+=6){c.beginPath();c.moveTo(bx-5+lean*z/Hh,yb-7-z);c.lineTo(bx+5+lean*z/Hh,yb-7-z);c.stroke()}
+      var hxx=i?ccx-py*k2*.6:ccx;c.fillStyle='#52628A';rr(c,hxx-9,yb-7-Hh-16,18,12,4);c.fillStyle=C.ui;c.beginPath();c.moveTo(hxx-3,yb-7-Hh-4);c.lineTo(hxx+3,yb-7-Hh-4);c.lineTo(hxx,yb-7-Hh);c.closePath();c.fill();
+      c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText(i?'Se mueve solo el cabezal':'Se mueve la cama con la pieza',ccx,Ht+14)});
+    c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();c.moveTo(w/2,10);c.lineTo(w/2,h-10);c.moveTo(10,Ht);c.lineTo(w-10,Ht);c.stroke()}
+  $('acc').addEventListener('input',function(){var a=+this.value;$('vacc').textContent=a<=3?'baja':a<=6?'media':a<=8?'alta':'muy alta'});
+  START.l2=function(){T2=0;loop(draw2)};
+  mcq($('q2'),$('m2'),['La cama móvil','CoreXY','Las dos por igual'],1,'Exacto. En CoreXY la cama no va y viene, así que la torre no se balancea.',
+    ['En la cama móvil la torre viaja con la cama y se sacude en cada cambio de dirección.',null,'Mirá las dos torres de abajo con la aceleración al máximo.'],function(){mark('l2')});
+
+  // ---------- 2.3 motor paso a paso ----------
+  var M3={cmd:0,real:0,d:0,dc:0};
+  function upd3(){$('r3a').textContent=fmm(M3.cmd*.2);$('r3b').textContent=fmm(M3.real*.2);var m=$('m3');
+    if(M3.cmd===150&&M3.real===150){m.className='msg ok';m.textContent='¡Justo en 30 mm! Fueron 150 pasos y no se perdió ninguno.';mark('l3')}
+    else if(M3.cmd!==M3.real){m.className='msg bad';m.textContent='Se perdieron '+Math.abs(M3.cmd-M3.real)+' pasos. La impresora cree una cosa y el carro está en otra. Volvé a cero para corregirlo.'}
+    else if(!done.l3){m.className='msg';m.textContent='Vas por '+fmm(M3.real*.2)+'. Cada paso son 0,2 mm.'}}
+  [].forEach.call(document.querySelectorAll('[data-st]'),function(b){b.addEventListener('click',function(){var n=+b.dataset.st,nc=Math.max(0,Math.min(300,M3.cmd+n)),eff=nc-M3.cmd;
+    var r=$('over').checked&&Math.abs(eff)>=10?Math.round(eff*.7):eff;M3.cmd=nc;M3.real=Math.max(0,Math.min(300,M3.real+r));upd3()})});
+  $('zero3').addEventListener('click',function(){M3.cmd=0;M3.real=0;upd3()});
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h;bg(c,w,h);M3.d+=(M3.real-M3.d)*.16;M3.dc+=(M3.cmd-M3.dc)*.16;
+    var big=w>560,ms=big?76:52,xm=big?70:44,xi=w-(big?44:28),ym=h*.36,pr=big?14:10,xr0=xm+ms/2+(big?36:22),xr1=xi-(big?40:26),sc=(xr1-xr0)/60,yr=h*.74,ang=M3.d*Math.PI/100;
+    // correa
+    c.strokeStyle='#1A2133';c.lineWidth=big?6:4;c.beginPath();c.moveTo(xm,ym-pr);c.lineTo(xi,ym-pr);c.arc(xi,ym,pr,-Math.PI/2,Math.PI/2);c.lineTo(xm,ym+pr);c.arc(xm,ym,pr,Math.PI/2,-Math.PI/2);c.stroke();
+    c.strokeStyle='rgba(174,185,212,.5)';c.lineWidth=1.5;var off=(M3.d*.2*sc)%8;c.beginPath();for(var x=xm+off;x<xi;x+=8){c.moveTo(x,ym-pr-2);c.lineTo(x,ym-pr+2);c.moveTo(xi-(x-xm),ym+pr-2);c.lineTo(xi-(x-xm),ym+pr+2)}c.stroke();
+    motorBox(c,xm,ym,ms,ang);pulley(c,xm,ym,pr,ang,0);pulley(c,xi,ym,pr,ang,0);
+    // regla
+    c.strokeStyle=C.soft;c.fillStyle=C.soft;c.lineWidth=1.5;c.beginPath();c.moveTo(xr0,yr);c.lineTo(xr1,yr);for(var mm=0;mm<=60;mm+=5){var X=xr0+mm*sc;c.moveTo(X,yr);c.lineTo(X,yr+(mm%10?6:11))}c.stroke();
+    c.font='500 11px "DM Mono",ui-monospace,monospace';c.textAlign='center';for(mm=0;mm<=60;mm+=10)c.fillText(mm,xr0+mm*sc,yr+26);
+    var xc=xr0+M3.dc*.2*sc,xr=xr0+M3.d*.2*sc,cw=big?48:34;
+    if(Math.abs(M3.dc-M3.d)>1){c.save();c.setLineDash([5,4]);c.strokeStyle=C.ui;c.lineWidth=2;c.strokeRect(xc-cw/2,ym-pr-17,cw,34);c.beginPath();c.moveTo(xc,ym-pr+17);c.lineTo(xc,yr);c.stroke();c.restore();
+      c.fillStyle=C.ui;c.font='700 12px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText('cree que está acá',Math.min(w-64,Math.max(64,xc)),ym-pr-26)}
+    carriage(c,xr,ym-pr,cw,34,C.pop);c.strokeStyle=C.pop;c.lineWidth=2;c.beginPath();c.moveTo(xr,ym-pr+17);c.lineTo(xr,yr-2);c.stroke();c.fillStyle=C.pop;c.beginPath();c.moveTo(xr-5,yr-8);c.lineTo(xr+5,yr-8);c.lineTo(xr,yr);c.closePath();c.fill();
+    label(c,'Pasos enviados: '+M3.cmd,12,22);c.fillStyle=C.soft;c.font='500 11px "DM Mono",ui-monospace,monospace';c.textAlign='center';c.fillText('1 paso = 1,8°',xm,ym+ms/2+16)}
+  START.l3=function(){loop(draw3)};
+
+  // ---------- 2.4 correas y husillo ----------
+  function upd4(){var T=+$('ten').value,st=T<12?0:T<45?1:T<=65?2:T<=85?3:4,names=['muy floja','floja','justa','tirante','muy tirante'],m=$('m4'),r=$('r4');$('vten').textContent=names[st];
+    m.className='msg'+(st===2?' ok':st===0||st===4?' bad':'');
+    m.textContent=['Tan floja que los dientes saltan sobre la polea: el carro pierde posición y las capas salen corridas.','Floja: el carro se pasa de largo al frenar y la pared queda con ondas después de cada esquina.','Justa: firme, sin colgar y sin forzar. La pared sale limpia.','Tirante: imprime bien, pero los rodamientos y el motor empiezan a trabajar forzados.','Demasiado tirante: suena como una cuerda de guitarra. Se desgastan rodamientos y motor, y la correa se estira.'][st];
+    if(st===2){r.className='msg ok';r.textContent='¡Ese es el punto! Firme, pero sin sonar como una guitarra.';mark('l4')}else if(!done.l4){r.className='msg';r.textContent='Todavía no.'}
+    var tn=+$('turns').value;$('vturns').textContent=fmm(tn*8).replace(',0','')}
+  $('ten').addEventListener('input',upd4);$('turns').addEventListener('input',upd4);
+  var TN4=2;
+  function draw4(now){var t=now/1000,T=+$('ten').value,loose=Math.max(0,(45-T)/45),tight=Math.max(0,(T-65)/35),f=fit($('c4a')),c,w,h,g;
+    if(f){c=f.c;w=f.w;h=f.h;bg(c,w,h);var x1=34,x2=w-34,y=h*.24,r=13,ph=(t*.42)%1,half=ph<.5,tri=half?ph*2:2-ph*2,tau=(half?ph:ph-.5)/.42;
+      var pos=x1+46+tri*(x2-x1-92)+loose*16*Math.exp(-4*tau)*Math.sin(26*tau)*(half?1:-1),sag=loose*20,vib=tight*1.2*Math.sin(t*90);
+      c.strokeStyle='#141B2B';c.lineWidth=5;c.lineCap='round';c.beginPath();c.moveTo(x1,y-r);c.quadraticCurveTo((x1+x2)/2,y-r+sag*.8+vib,x2,y-r);c.stroke();c.beginPath();c.moveTo(x1,y+r);c.quadraticCurveTo((x1+x2)/2,y+r+sag*1.3-vib,x2,y+r);c.stroke();
+      if(tight>0){c.strokeStyle='rgba(255,154,154,'+(.5*tight)+')';c.lineWidth=1.5;c.beginPath();c.moveTo(x1,y-r-4);c.lineTo(x2,y-r-4);c.stroke()}
+      pulley(c,x1,y,r,pos*.07,tight);pulley(c,x2,y,r,pos*.07,tight);carriage(c,pos,y-r+sag*.8*(1-Math.pow((pos-(x1+x2)/2)/((x2-x1)/2),2)),40,26,C.ui);
+      // la pared que sale
+      var wx0=40,wy0=h*.56,wx1=w-52,wy1=h-22;c.lineCap='round';c.lineJoin='round';
+      function wall(dx,al){c.beginPath();c.moveTo(wx0+dx,wy0);for(var d=0;d<=wx1-wx0;d+=3)c.lineTo(wx0+dx+d,wy0);for(d=0;d<=wy1-wy0;d+=3)c.lineTo(wx1+dx+loose*9*Math.exp(-d/40)*Math.sin(d/6.5),wy0+d);
+        c.strokeStyle=rgb(tone(FIL2,-.3),al);c.lineWidth=9;c.stroke();c.strokeStyle=rgb(FIL,al);c.lineWidth=6;c.stroke()}
+      if(T<12)wall(-13,.45);wall(0,1);c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='left';c.fillText(T<12?'Pared impresa: capa corrida':'Pared impresa después de una esquina',wx0-6,wy1+2)}
+    f=fit($('c4b'));if(!f)return;c=f.c;w=f.w;h=f.h;bg(c,w,h);TN4+=(+$('turns').value-TN4)*.12;var bent=$('bent').checked?1:0,sx=w*.3,yb=h-64,yt=20,pm=(yb-yt-18)/80,mm=TN4*8,rot=TN4*Math.PI*2;
+    function off(yy){return bent*4.5*Math.sin(yy/38+rot)}
+    g=c.createLinearGradient(sx-28,0,sx+28,0);g.addColorStop(0,'#55648A');g.addColorStop(1,'#2F3A57');c.fillStyle=g;rr(c,sx-28,h-50,56,38,7);c.fillStyle='#8E9BBB';rr(c,sx-10,h-66,20,18,4);
+    for(var yy=yt;yy<yb;yy+=3){var o=off(yy);c.fillStyle=((Math.floor((yy+TN4*22)/5))%2)?'#C9D2E6':'#8794B5';c.fillRect(sx+o-6,yy,12,3.4)}
+    var yn=yb-mm*pm,on=off(yn);c.fillStyle='#F4DA95';rr(c,sx+on-13,yn-9,26,18,4);g=c.createLinearGradient(0,yn-6,0,yn+6);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,sx+on+10,yn-6,w*.3,12,6);
+    var hx=sx+on+10+w*.3-14;c.fillStyle='#52628A';rr(c,hx-10,yn+4,20,14,4);c.fillStyle=C.ui;c.beginPath();c.moveTo(hx-4,yn+18);c.lineTo(hx+4,yn+18);c.lineTo(hx,yn+25);c.closePath();c.fill();
+    // pared impresa: una capa cada 2 px
+    var wxx=w*.8,base=h-22;c.fillStyle=C.plate;rr(c,wxx-24,base,48,5,2);for(var z=0;z<mm*pm;z+=2){var zm=z/pm;c.fillStyle=rgb((z/2)%2?FIL2:FIL);c.fillRect(wxx-13+(bent?3.4*Math.sin(zm/8*Math.PI*2):0),base-z-2,26,2.2)}
+    c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='center';c.fillText(bent?'Bandas cada 8 mm':'Pared pareja',wxx,18);pill(c,fmm(mm),sx+on+10+w*.15,yn-18)}
+  START.l4=function(){upd4();loop(draw4)};
+
+  // ---------- 2.5 homing ----------
+  var H5={x:34,st:'idle',known:false,t0:0,last:0};
+  function say5(t,k){var m=$('m5');m.className='msg'+(k?' '+k:'');m.textContent=t}
+  $('home5').addEventListener('click',function(){if(H5.st==='fast'||H5.st==='back'||H5.st==='slow')return;if(H5.x<3)H5.x=3;H5.st='fast';H5.known=false;say5('Buscando el final de carrera: avanza rápido hacia la izquierda…')});
+  $('rand5').addEventListener('click',function(){H5.x=14+Math.random()*40;H5.st='idle';H5.known=false;say5('Moviste el carro a mano con la impresora apagada. La máquina no sabe dónde quedó.')});
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,dt=H5.last?Math.min(.05,(now-H5.last)/1000):0;H5.last=now;bg(c,w,h);
+    var cut=$('cable5').checked;
+    if(H5.st==='fast'){H5.x-=34*dt;if(!cut&&H5.x<=0){H5.x=0;H5.st='back';say5('¡Tocó! Ahora se aleja un poquito para volver a tocar despacio.')}else if(cut&&H5.x<=-1.6){H5.x=-1.6;H5.st='grind';H5.t0=now;say5('El carro llegó al tope, pero el sensor no avisó. El motor sigue empujando: traqueteo y pasos perdidos.','bad')}}
+    else if(H5.st==='back'){H5.x+=12*dt;if(H5.x>=4)H5.st='slow'}
+    else if(H5.st==='slow'){H5.x-=4.5*dt;if(H5.x<=0){H5.x=0;H5.st='done';H5.known=true;say5('Segundo toque, lento y preciso. Ahora la impresora sabe que acá es X = 0.','ok')}}
+    else if(H5.st==='grind'&&now-H5.t0>2800){H5.st='stopped';say5('Así se detiene cuando cortás la corriente. Revisá el sensor, su posición y el cable antes de volver a intentar.','bad')}
+    var x0=w*.2,x1=w-40,sc=(x1-x0)/60,ry=h*.42,jit=H5.st==='grind'?Math.sin(now/22)*2.2:0,xc=x0+H5.x*sc+jit,cw=Math.min(56,w*.12),pressed=H5.x<=.25;
+    // riel y tope
+    var g=c.createLinearGradient(0,ry-7,0,ry+7);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0-cw/2-34,ry-7,x1-x0+cw/2+56,14,7);c.fillStyle='#2F3A57';rr(c,x0-cw/2-40,ry-34,18,68,5);
+    // sensor
+    var sxp=x0-cw/2-22;c.fillStyle=cut?'#5A4A58':'#3F6B66';rr(c,sxp-2,ry-58,26,22,4);c.strokeStyle=pressed?C.ui:C.soft;c.lineWidth=3;c.lineCap='round';c.beginPath();c.moveTo(sxp+4,ry-36);c.lineTo(sxp+(pressed?20:26),ry-(pressed?24:16));c.stroke();
+    c.fillStyle=pressed&&!cut?C.ui:'#1A2133';c.beginPath();c.arc(sxp+18,ry-49,3.5,0,7);c.fill();
+    c.strokeStyle=cut?C.bad:C.soft;c.lineWidth=2;c.setLineDash(cut?[4,5]:[]);c.beginPath();c.moveTo(sxp+10,ry-58);c.bezierCurveTo(sxp+10,ry-84,sxp+60,ry-70,sxp+70,ry-96);c.stroke();c.setLineDash([]);
+    c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='left';c.fillText(cut?'sensor sin cable':'final de carrera',sxp+34,ry-52);
+    carriage(c,xc,ry-16,cw,38,H5.st==='grind'?C.bad:C.pop);
+    if(H5.st==='grind'){c.fillStyle=C.bad;c.font='700 '+(w>560?22:16)+'px "Fredoka",system-ui,sans-serif';c.textAlign='left';c.fillText('TRAC TRAC TRAC',xc+cw/2+12+Math.sin(now/30)*2,ry-22)}
+    // regla: solo aparece cuando la posicion se conoce
+    var yr=h*.74;if(H5.known){c.strokeStyle=C.soft;c.fillStyle=C.soft;c.lineWidth=1.5;c.beginPath();c.moveTo(x0,yr);c.lineTo(x1,yr);for(var mm=0;mm<=60;mm+=5){c.moveTo(x0+mm*sc,yr);c.lineTo(x0+mm*sc,yr+(mm%10?6:11))}c.stroke();
+      c.font='500 11px "DM Mono",ui-monospace,monospace';c.textAlign='center';for(mm=0;mm<=60;mm+=10)c.fillText(mm,x0+mm*sc,yr+26);pill(c,'X = '+fmm(Math.max(0,H5.x)),w/2,22)}
+    else{c.strokeStyle='rgba(169,180,204,.3)';c.lineWidth=1.5;c.setLineDash([3,6]);c.beginPath();c.moveTo(x0,yr);c.lineTo(x1,yr);c.stroke();c.setLineDash([]);pill(c,'X = ?',w/2,22)}}
+  START.l5=function(){H5.last=0;loop(draw5)};
+  mcq($('q5'),$('r5'),['Espero: en algún momento el sensor va a reaccionar','Detengo la máquina y reviso el sensor y su cable','Empujo el carro con la mano para ayudarlo'],1,
+    'Bien. Se corta primero y se revisa después: sensor roto, corrido de lugar o cable suelto.',['Si no reaccionó al tocar, no va a reaccionar. Mientras tanto el motor y la correa sufren.',null,'Meter la mano con el eje en movimiento es justo lo que hay que evitar.'],function(){mark('l5')});
+
+  // ---------- repaso ----------
+  (function(){var Q=[['¿Qué eje sube un poquito entre capa y capa?',['El eje X','El eje Y','El eje Z'],2,'Z es la altura. Lección 2.1.'],
+    ['En una impresora de cama móvil, ¿qué se desplaza en el eje Y?',['El cabezal','La cama con la pieza encima','El husillo'],1,'Por eso las piezas altas se sacuden al acelerar. Lección 2.2.'],
+    ['¿Cómo sabe la impresora dónde está el cabezal mientras imprime?',['Lo mide con una cámara','Cuenta los pasos que le mandó a cada motor','Lo calcula por la temperatura'],1,'Si se pierden pasos, no se entera. Lección 2.3.'],
+    ['Aparecen ondas al lado de cada esquina. ¿Qué revisás primero?',['La tensión de las correas','La temperatura de la cama','El color del filamento'],0,'Una correa floja deja que el carro se pase de largo. Lección 2.4.'],
+    ['¿Para qué sirve el homing?',['Para calentar la boquilla','Para encontrar la posición de referencia de cada eje','Para limpiar la cama'],1,'Sin esa referencia la impresora no sabe dónde está. Lección 2.5.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var s=$('score');s.hidden=false;s.textContent=good+' de 5. '+(good===5?'¡Primera parte dominada!':good>=3?'Muy bien: repasá las que fallaste y seguimos.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})})();
+
+  // ---------- arranque ----------
+  setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  upd1();upd3();upd4();paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+</body>
+</html>

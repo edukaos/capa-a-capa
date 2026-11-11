@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><span></span><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-modulo-2.html"><span class="lg">Módulo 2 · parte 1</span><span class="sh">Siguiente</span> →</a></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 1">
+    <button type="button" data-l="l1" aria-label="Lección 1.1, Fabricar sumando">1</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 1.2, Del archivo a la pieza">2</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 1.3, El G-code">3</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 1.4, FDM y resina">4</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 1.5, Qué puede y qué no">5</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso del módulo">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 1.1 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Cómo funciona una impresora 3D</p><h1>Fabricar sumando</h1>
+      <p>Una impresora 3D no talla ni corta. Arma el objeto agregando material de a poco, un piso arriba del otro.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es una manga pastelera que dibuja un piso, sube un poquito y dibuja el siguiente. Tallar es lo contrario: empezás con un bloque y tirás todo lo que sobra.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c1" class="cv1" role="img" aria-label="La misma pieza hecha sumando capas y hecha tallando un bloque"></canvas>
+      <div class="simbody">
+        <div class="row"><label for="p1">Avance</label><input id="p1" type="range" min="0" max="100" value="55"><button class="btn" id="play1" type="button">Reproducir</button></div>
+        <dl class="reads">
+          <div><dt>Sumando: material desperdiciado</dt><dd id="r1a">0 %</dd></div>
+          <div><dt>Tallando: material desperdiciado</dt><dd id="r1b">0 %</dd></div>
+        </dl>
+        <p class="note">La pieza es el 3DBenchy, el barquito de prueba clásico de la impresión 3D. Al tallarlo, más de la mitad del bloque termina hecho viruta, y la ventana de la cabina no se puede vaciar desde arriba.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El silbato con la bolita adentro</h3>
+        <p>La bolita de un silbato queda encerrada dentro del cuerpo. Tallando no hay forma de meter la herramienta ahí. Imprimiendo, la bolita se va armando capa por capa junto con el silbato y queda suelta adentro.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>¿Cuál de estos solo se puede hacer sumando?</h3>
+        <div class="opts" id="q1"></div><p class="msg" id="m1" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: impresión 3D y fabricación aditiva</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>3D printing · Additive manufacturing</dd>
+      <dt>Qué es</dt><dd>Un proceso que crea un objeto agregando material capa por capa a partir de un modelo digital.</dd>
+      <dt>Lo contrario</dt><dd>El mecanizado, que parte de un bloque y elimina material.</dd>
+      <dt>Para qué sirve</dt><dd>Prototipos rápidos, piezas personalizadas, formas difíciles de fabricar de otra manera y series chicas sin moldes.</dd></dl>
+      <p>Como en una pared de ladrillos, cada capa se apoya sobre la anterior. Por eso lo que queda en el aire necesita ayuda, y eso se ve en el módulo del laminador.</p></div></details>
+  </section>
+
+  <!-- 1.2 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Lección 1.2</p><h1>Del archivo a la pieza</h1>
+      <p>Entre la idea y el objeto hay cuatro paradas. Si sabés qué hace cada una, sabés dónde buscar cuando algo sale mal.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>El modelo es la foto del plato. El laminador es el cocinero que escribe la receta. El G-code es la receta. La impresora la sigue al pie de la letra, aunque esté mal escrita.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <div class="simbody" style="padding-bottom:0"><div class="stations" id="st2"></div></div>
+      <canvas id="c2" class="cv2" role="img" aria-label="Animación de la etapa elegida"></canvas>
+      <div class="simbody">
+        <p id="st2-txt"></p>
+        <div class="io"><div><b>Entra</b><span id="st2-in"></span></div><div><b>Sale</b><span id="st2-out"></span></div></div>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Un llavero, de punta a punta</h3>
+        <p>Bajás el modelo del llavero, igual que acá se baja el Benchy. Lo abrís en el laminador, elegís el filamento y la altura de capa, y guardás el G-code. Lo mandás a la impresora, mirás que la primera capa pegue bien y a los veinte minutos lo despegás de la cama.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Tocá las etapas en el orden correcto</h3>
+        <div class="chipset" id="q2"></div><p class="msg" id="m2" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: modelo 3D, laminador y los 10 pasos completos</summary><div class="in">
+      <dl><dt>Modelo 3D</dt><dd>Representación tridimensional de un objeto. Se diseña en un programa, se descarga, se escanea o se genera con IA.</dd>
+      <dt>Laminador</dt><dd>En inglés, slicer. Programa que divide el modelo en capas y genera las instrucciones para la impresora. Ahí se eligen altura de capa, temperaturas, velocidades, paredes, relleno y soportes.</dd></dl>
+      <p>El recorrido completo de tu curso tiene diez pasos:</p>
+      <ol><li>Definir la función de la pieza.</li><li>Crear, descargar o escanear un modelo 3D.</li><li>Revisar geometría, medidas y orientación.</li><li>Importar el archivo en un laminador.</li><li>Configurar material, capas, paredes, relleno, soportes y velocidades.</li><li>Generar el G-code.</li><li>Preparar la impresora y el filamento.</li><li>Imprimir y supervisar las primeras capas.</li><li>Retirar la pieza.</li><li>Hacer el postprocesado y el control final.</li></ol></div></details>
+  </section>
+
+  <!-- 1.3 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Lección 1.3</p><h1>El G-code</h1>
+      <p>La impresora no entiende de formas. Entiende órdenes cortas: movete acá, empujá plástico, calentá. El G-code es esa lista de órdenes.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Son las indicaciones del GPS: avanzá veinte, doblá, avanzá veinte más. La impresora obedece una línea por vez y no mira si adelante hay una pared.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <div class="gwrap">
+        <canvas id="c3" data-ar="1" data-max="420" role="img" aria-label="Cama de impresión vista desde arriba con el recorrido del cabezal"></canvas>
+        <div class="gside">
+          <p class="note">Cada flecha agrega una orden que mueve el cabezal 20 mm. La línea tenue muestra el recorrido planeado.</p>
+          <div class="row">
+            <div class="pad" aria-label="Movimientos">
+              <button class="btn ghost sq u" type="button" data-d="0,20" aria-label="Arriba 20 milímetros">↑</button>
+              <button class="btn ghost sq l" type="button" data-d="-20,0" aria-label="Izquierda 20 milímetros">←</button>
+              <button class="btn ghost sq r" type="button" data-d="20,0" aria-label="Derecha 20 milímetros">→</button>
+              <button class="btn ghost sq d" type="button" data-d="0,-20" aria-label="Abajo 20 milímetros">↓</button>
+            </div>
+            <label><input type="checkbox" id="ext3" checked> Empujar plástico</label>
+          </div>
+          <ol class="prog-list" id="prog3"></ol>
+          <div class="row"><button class="btn" id="run3" type="button">Ejecutar</button><button class="btn ghost" id="undo3" type="button">Borrar último</button><button class="btn ghost" id="clr3" type="button">Vaciar</button></div>
+          <p class="msg" id="m3">Ya hay dos órdenes de ejemplo. Tocá Ejecutar para ver al cabezal seguirlas, o sumá las tuyas con las flechas.</p>
+        </div>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El archivo que venía con otra impresora</h3>
+        <p>Un G-code está escrito para una máquina concreta: su tamaño de cama, su boquilla, sus temperaturas. Si lo usás en otra, el cabezal puede intentar ir a un lugar que no existe. Probalo acá: mandá el cabezal fuera de la cama y mirá qué pasa.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dibujá un cuadrado cerrado de 20 mm</h3>
+        <p>Cuatro líneas con plástico que vuelvan al punto de partida. Armalo y tocá Ejecutar.</p><p class="msg" id="r3" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: G-code y cómo leer una línea</summary><div class="in">
+      <dl><dt>Qué es</dt><dd>Archivo con los movimientos, temperaturas, velocidades y órdenes que ejecuta la impresora. Lo genera el laminador.</dd>
+      <dt>Cuidado</dt><dd>Un G-code generado para otra impresora puede provocar movimientos incorrectos o choques.</dd></dl>
+      <p>Una línea como <code>G1 X60 Y40 E0.67 F1800</code> se lee así:</p>
+      <ul><li><code>G1</code>: moverse en línea recta empujando plástico. <code>G0</code> es moverse sin empujar.</li>
+      <li><code>X60 Y40</code>: a qué punto de la cama ir, en milímetros.</li>
+      <li><code>E0.67</code>: cuántos milímetros de filamento empujar en total hasta ese punto.</li>
+      <li><code>F1800</code>: a qué velocidad, en milímetros por minuto.</li></ul>
+      <p>Otras órdenes comunes: <code>G28</code> lleva los ejes al origen, <code>M104</code> fija la temperatura de la boquilla y <code>M140</code> la de la cama.</p></div></details>
+  </section>
+
+  <!-- 1.4 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Lección 1.4</p><h1>FDM y resina</h1>
+      <p>Las dos familias de impresoras de escritorio arman capas, pero con materiales y cuidados muy distintos. Este manual se centra en FDM.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>FDM dibuja con una manga pastelera de plástico derretido. La resina se revela con luz, como una foto: donde pega la luz, el líquido se endurece.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <div class="vs">
+        <div><h3>FDM · filamento</h3><canvas id="c4a" data-ar="0.75" role="img" aria-label="Boquilla depositando líneas de plástico"></canvas></div>
+        <div><h3>Resina · luz</h3><canvas id="c4b" data-ar="0.75" role="img" aria-label="Pieza colgando de una plataforma que sube de una batea de resina"></canvas></div>
+      </div>
+      <div class="simbody">
+        <div class="crit" id="crit4"></div>
+        <p class="note">Barras orientativas para impresoras de escritorio comunes. Hay resinas técnicas y filamentos especiales que cambian el panorama.</p>
+        <div class="row"><span>¿Qué querés imprimir?</span><div class="chipset" id="use4"></div></div>
+        <p class="msg" id="m4">Elegí un objeto y te digo cuál conviene y por qué.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Una miniatura y un soporte de estante</h3>
+        <p>La miniatura de 3 cm tiene cara, dedos y pliegues de ropa: en resina salen nítidos. El soporte de estante tiene que aguantar peso y golpes: en filamento sale más resistente, más barato y sin lavar nada.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Vas a imprimir en el living, con chicos cerca. ¿Qué te complica más?</h3>
+        <div class="opts" id="q4"></div><p class="msg" id="r4" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: FDM, FFF y resina</summary><div class="in">
+      <dl><dt>FDM / FFF</dt><dd>Fused Deposition Modeling, modelado por deposición fundida. Un filamento de plástico se empuja a un hotend, se funde y se deposita por la boquilla. Es la tecnología más común en casas, escuelas y talleres.</dd>
+      <dt>A favor</dt><dd>Bajo costo, materiales fáciles de conseguir y mantenimiento simple.</dd>
+      <dt>En contra</dt><dd>Líneas de capa visibles, resistencia distinta según la orientación y soportes en algunas formas.</dd>
+      <dt>Resina</dt><dd>SLA, MSLA o DLP. Una resina líquida se endurece con luz ultravioleta. Mucho detalle; ideal para miniaturas, joyería y odontología.</dd>
+      <dt>Cuidados</dt><dd>Pide lavado, curado y guantes. La resina sin curar no se toca sin protección y sus residuos se tratan aparte.</dd></dl></div></details>
+  </section>
+
+  <!-- 1.5 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Lección 1.5</p><h1>Qué puede y qué no</h1>
+      <p>La impresora no fabrica cualquier cosa sola. Necesita un modelo correcto, una configuración adecuada y un proceso cuidado.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es una herramienta lenta y paciente. Brilla cuando necesitás una pieza única o a medida, y pierde cuando necesitás mil iguales para mañana.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <div class="simbody">
+        <p>Tocá un objeto y después la caja donde creés que va. Tenés que ubicar los nueve.</p>
+        <div class="chipset items" id="items5"></div>
+        <div class="bins" id="bins5"></div>
+        <p class="msg" id="m5">Faltan 9 objetos.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La taza para el café</h3>
+        <p>Se puede imprimir una taza, pero no conviene usarla. El PLA común se ablanda cerca de los 60 °C, y entre capa y capa quedan huecos chiquitos donde se junta suciedad. Queda linda como lapicero.</p></div>
+      <div class="card"><span class="tag">Para arrancar bien</span><h3>Los tropiezos típicos del primer mes</h3>
+        <p>Creer que la impresora anda sin calibrar. Imprimir sin revisar las medidas. Usar un G-code ajeno. Cambiar muchos ajustes juntos. No mirar la primera capa. Elegir el material solo por el color.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: ventajas y limitaciones</summary><div class="in">
+      <dl><dt>Ventajas</dt><dd>Personalización sin moldes, producción a pedido, pruebas rápidas, formas complejas y bajo costo para piezas únicas.</dd>
+      <dt>Limitaciones</dt><dd>Tiempo de impresión, resistencia que cambia según la orientación, necesidad de calibrar, capas visibles, tolerancias que hay que diseñar y fallas largas si nadie supervisa.</dd>
+      <dt>Recordá</dt><dd>No todos los materiales sirven para todos los usos.</dd></dl></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 1 · Repaso</p><h1>Cinco preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en el capítulo 1 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea, no reproducen una máquina exacta.<br><span id="diag"></span></footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var ORDER=['l1','l2','l3','l4','l5','repaso'],cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m1')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>1.1</b> Fabricar sumando',l2:'<b>1.2</b> Del archivo a la pieza',l3:'<b>1.3</b> El G-code',l4:'<b>1.4</b> FDM y resina',l5:'<b>1.5</b> Qué puede y qué no',repaso:'<b>Repaso</b> Cinco preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;['l1','l2','l3','l4','l5'].forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de 5 retos';$('prog-bar').style.width=(n/5*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m1',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();setTimeout(function(){if(cur==='l3'&&!G.run)draw3()},150)}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- 1.1 ----------
+  var play1=null;
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=(now||0)/1000,lh=0.5,n=40,vert=w<520;bg(c,w,h);
+    if(play1!=null){var v=Math.min(1,(now-play1)/6000);$('p1').value=Math.round(v*100);if(v>=1)play1=null}
+    var p=+$('p1').value/100,A=vert?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B=vert?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h};
+    var s=Math.min(A.w/40,A.h/31),ox=A.x+A.w/2,oy=A.y+A.h-3*s;
+    // sumando
+    posts(c,ox,oy,s,oy-27*s);bed(c,ox,oy,s,15.5);var pos=layers(c,ox,oy,s,lh,p*n,p>=1);outline(c,ox,oy,s);
+    if(p<1){var hp=pos||[ox-12*s,oy-1];toolhead(c,hp[0],hp[1],s*.55,t,ox-17.4*s,ox+17.4*s)}else toolhead(c,ox+13*s,oy-21.5*s,s*.55,0,ox-17.4*s,ox+17.4*s);
+    label(c,'Sumando · impresión 3D',A.x+12,A.y+22);
+    // tallando: el bloque mide 25 x 20 y se baja fila por fila
+    var ox2=B.x+B.w/2,oy2=B.y+B.h-3*s,zc=20*(1-p),removed=0,i,k,rows=[];
+    for(i=0;i<n;i++){var cut=(i+1)*lh>zc+1e-6,sp=cut?spans(i*lh+lh/2):[[-12.5,12.5]];rows.push(sp);if(cut){var tot=0;sp.forEach(function(q){tot+=q[1]-q[0]});removed+=(25-tot)*lh}}
+    bed(c,ox2,oy2,s,15.5);c.save();c.beginPath();rows.forEach(function(sp,ix){sp.forEach(function(q){c.rect(ox2+q[0]*s,oy2-(ix+1)*lh*s,(q[1]-q[0])*s,lh*s+.6)})});c.clip();
+    var g=c.createLinearGradient(ox2-12.5*s,oy2-20*s,ox2+12.5*s,oy2);g.addColorStop(0,rgb(tone(WOOD,.18)));g.addColorStop(1,rgb(tone(WOOD,-.2)));c.fillStyle=g;c.fillRect(ox2-12.5*s,oy2-20*s,25*s,20*s+1);
+    c.strokeStyle=rgb(tone(WOOD,-.38),.45);c.lineWidth=1;for(var gy=0;gy<20;gy+=1.25){c.beginPath();for(var gx=-13;gx<=13;gx+=1){var yy=oy2-(gy+.6+Math.sin(gx*.45+gy*1.7)*.35)*s;if(gx===-13)c.moveTo(ox2+gx*s,yy);else c.lineTo(ox2+gx*s,yy)}c.stroke()}
+    c.restore();outline(c,ox2,oy2,s);
+    var sc=spans(Math.min(19.9,zc+.01)),cx=ox2+((sc.length?sc[sc.length-1][1]:0)+1)*s,cy=oy2-zc*s;
+    var chips=Math.round(removed/500*90);for(k=0;k<chips;k++){var a=Math.sin(k*91.7)*43758.5;a-=Math.floor(a);var b=Math.sin(k*17.3)*9631.1;b-=Math.floor(b);
+      c.fillStyle=rgb(tone(WOOD,b*.3-.1));c.save();c.translate(ox2+(a<.5?-1:1)*(13+b*3.2)*s,oy2-(.2+((k*7)%14)*.11)*s);c.rotate(a*6);c.fillRect(-.35*s,-.12*s,.7*s,.24*s);c.restore()}
+    if(p>0&&p<1){ // fresa girando y viruta volando
+      g=c.createLinearGradient(cx-.5*s,0,cx+.5*s,0);g.addColorStop(0,'#E3E9F6');g.addColorStop(1,'#7C89AA');c.fillStyle=g;c.fillRect(cx-.45*s,B.y,.9*s,Math.max(0,cy-3*s-B.y));
+      c.save();c.beginPath();c.rect(cx-.8*s,cy-3*s,1.6*s,3*s);c.clip();c.fillStyle='#C5CEE3';c.fillRect(cx-.8*s,cy-3*s,1.6*s,3*s);c.strokeStyle='#5E6B8E';c.lineWidth=Math.max(1,.28*s);
+      var off=(t*3)%1;for(var q2=-2;q2<7;q2++){var y0=cy-3*s+(q2+off)*.8*s;c.beginPath();c.moveTo(cx-.8*s,y0);c.lineTo(cx+.8*s,y0-.9*s);c.stroke()}c.restore();
+      for(k=0;k<12;k++){var ph=(t*1.3+k/12)%1,r1=Math.sin(k*12.9)*43758.5;r1-=Math.floor(r1);c.fillStyle=rgb(tone(WOOD,.1),1-ph);
+        c.fillRect(cx+(1+r1*5)*s*ph*(k%3?1:-.5),cy-(2+r1*5)*s*ph+9*s*ph*ph,.5*s,.26*s)}}
+    label(c,'Tallando · mecanizado',B.x+12,B.y+22);
+    c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke();
+    $('r1a').textContent='0 %';$('r1b').textContent=Math.round(removed/500*100)+' %'}
+  $('p1').addEventListener('input',function(){play1=null});
+  $('play1').addEventListener('click',function(){$('p1').value=0;play1=performance.now()});
+  START.l1=function(){loop(draw1)};
+  mcq($('q1'),$('m1'),['Un cubo macizo','Un silbato con la bolita suelta adentro','Una cuña para trabar una puerta'],1,
+    '¡Eso! La bolita se imprime dentro del silbato, capa por capa, y queda encerrada.',
+    ['Un cubo se puede tallar sin problema: la herramienta llega a todas las caras.',null,'Una cuña es de lo más fácil de cortar con una sierra.'],function(){mark('l1')});
+
+  // ---------- 1.2 ----------
+  var ST=[{n:'Modelo 3D',s:'el qué',t:'Es la forma del objeto en la computadora. Todavía no dice nada de cómo fabricarlo.',i:'Una idea, un diseño o una descarga',o:'Un archivo STL o 3MF'},
+    {n:'Laminador',s:'el cómo',t:'Corta el modelo en capas finas y decide el recorrido, la temperatura y la velocidad de cada una.',i:'El archivo del modelo y tus ajustes',o:'Un archivo G-code'},
+    {n:'G-code',s:'la receta',t:'Miles de órdenes cortas, una por línea. Vale para una impresora y un material concretos.',i:'Las capas calculadas',o:'Órdenes de movimiento y temperatura'},
+    {n:'Impresora',s:'las manos',t:'Calienta, mueve el cabezal y empuja plástico siguiendo cada línea, sin entender qué está haciendo.',i:'El G-code y el filamento',o:'La pieza, capa por capa'}],st2=0;
+  var GC=['G28            ; ir al origen','M140 S60       ; cama a 60 °C','M104 S210      ; boquilla a 210 °C','G1 Z0.2 F600   ; bajar a la capa 1','G1 X60 Y40 E0.67','G1 X60 Y60 E1.33','G1 X40 Y60 E2.00','G1 X40 Y40 E2.66','G1 Z0.4        ; subir a la capa 2'];
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=(now%9000)/9000,R,s,ox,oy;bg(c,w,h);
+    if(st2===3){s=Math.min(w/44,h/31);ox=w/2;oy=h-3*s;posts(c,ox,oy,s,oy-27*s);bed(c,ox,oy,s,15.5);var pos=layers(c,ox,oy,s,1,t*20);outline(c,ox,oy,s);
+      var hp=pos||[ox-12*s,oy-1];toolhead(c,hp[0],hp[1],s*.55,now/1000,ox-17.4*s,ox+17.4*s);label(c,'Sigue la receta línea por línea',12,22);return}
+    R=screen(c,w,h,st2===0?'3DBenchy.stl':st2===1?'laminador':'3DBenchy.gcode');c.save();c.beginPath();c.rect(R.x,R.y,R.w,R.h);c.clip();
+    s=Math.min(R.w/36,R.h/27);ox=R.x+R.w/2;oy=R.y+R.h-4.8*s;
+    if(st2===0){benchy3d(c,ox,oy,s,.55+Math.sin(now/2600)*.5,1,48,MINT,MINT,1,false)}
+    else if(st2===1){var zc=Math.max(.5,t*48);benchy3d(c,ox,oy,s,.6,1,48,MINT,MINT,.22,false);benchy3d(c,ox,oy,s,.6,2.4,zc,FIL,FIL2,1,true);
+      var py=oy-zc*KB*s;c.fillStyle='rgba(255,217,138,.12)';c.strokeStyle=C.ui;c.lineWidth=2;c.shadowColor=C.ui;c.shadowBlur=10;c.beginPath();c.ellipse(ox,py,16*s,16*s*TILT,0,0,7);c.fill();c.stroke();c.shadowBlur=0;
+      c.fillStyle=C.ui;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign='right';c.fillText('Capa '+Math.max(1,Math.ceil(zc/2.4))+' de 20',R.x+R.w-14,R.y+16)}
+    else{var n=Math.min(GC.length,Math.floor(t*(GC.length+3))+1),fs=Math.max(10,Math.min(15,R.h/(GC.length+1.2))),x0=Math.max(R.x+14,w/2-175);c.font='500 '+fs+'px "DM Mono",ui-monospace,monospace';c.textAlign='left';
+      for(var i=0;i<n;i++){var ln=GC[i],ci=ln.indexOf(';'),code=ci<0?ln:ln.slice(0,ci),spc=code.indexOf(' '),cmd=spc<0?code:code.slice(0,spc),y=R.y+fs*1.2+i*fs*1.42;
+        if(i===n-1){c.fillStyle='rgba(255,217,138,.12)';c.fillRect(R.x,y-fs,R.w,fs*1.35)}
+        c.fillStyle=C.ui;c.fillText(cmd,x0,y);c.fillStyle=C.ink;c.fillText(code.slice(cmd.length),x0+c.measureText(cmd).width,y);
+        if(ci>=0){c.fillStyle=C.soft;c.fillText(ln.slice(ci),x0+c.measureText(code).width,y)}}}
+    c.restore()}
+  function setSt(i){st2=i;[].forEach.call($('st2').children,function(b,j){b.setAttribute('aria-pressed',String(i===j))});
+    $('st2-txt').textContent=ST[i].t;$('st2-in').textContent=ST[i].i;$('st2-out').textContent=ST[i].o;loop(draw2)}
+  ST.forEach(function(o,i){var b=document.createElement('button');b.type='button';b.innerHTML=(i+1)+'. '+o.n+'<small>'+o.s+'</small>';b.addEventListener('click',function(){setSt(i)});$('st2').appendChild(b)});
+  START.l2=function(){setSt(st2)};
+  (function(){var want=['Modelo 3D','Laminador','G-code','Impresora'],shown=['G-code','Impresora','Modelo 3D','Laminador'],step=0,box=$('q2'),msg=$('m2');
+    shown.forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){msg.hidden=false;
+      if(t===want[step]){b.className='right';b.disabled=true;b.textContent=(step+1)+'. '+t;step++;
+        if(step===4){msg.className='msg ok';msg.textContent='¡Perfecto! Primero la forma, después el plan, después la receta y al final la máquina.';mark('l2')}else{msg.className='msg';msg.textContent='Bien. ¿Qué viene después?'}}
+      else{msg.className='msg bad';msg.textContent=step===0?'Todo arranca por tener la forma del objeto.':'Todavía no. Pensá qué necesita esa etapa para poder trabajar.'}});box.appendChild(b)})})();
+
+  // ---------- 1.3 ----------
+  var G={prog:[{dx:20,dy:0,e:true},{dx:0,dy:20,e:true}],pos:[40,40],path:[],run:null,crash:null};
+  function ekey(a,b){var p=[a.join(','),b.join(',')].sort();return p.join('|')}
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,m=30,s=(Math.min(w,h)-2*m)/100,ox=(w-100*s)/2,oy=(h+100*s)/2,X=function(x){return ox+x*s},Y=function(y){return oy-y*s},g;bg(c,w,h);
+    c.fillStyle='rgba(0,0,0,.3)';rr(c,X(0)-4,Y(100)+2,100*s+12,100*s+12,14);
+    g=c.createLinearGradient(X(0),Y(100),X(100),Y(0));g.addColorStop(0,'#232D45');g.addColorStop(1,'#161D2E');c.fillStyle=g;rr(c,X(0)-6,Y(100)-6,100*s+12,100*s+12,14);
+    c.save();c.beginPath();c.rect(X(0),Y(100),100*s,100*s);c.clip();c.strokeStyle='rgba(255,255,255,.03)';c.lineWidth=1;for(var d=-100;d<100;d+=3){c.beginPath();c.moveTo(X(d),Y(0));c.lineTo(X(d+100),Y(100));c.stroke()}c.restore();
+    c.strokeStyle='rgba(169,180,204,.22)';c.lineWidth=1;c.beginPath();for(var q=0;q<=100;q+=20){c.moveTo(X(q),Y(0));c.lineTo(X(q),Y(100));c.moveTo(X(0),Y(q));c.lineTo(X(100),Y(q))}c.stroke();
+    [[0,0],[100,0],[0,100],[100,100]].forEach(function(k){c.fillStyle='#5A698F';c.beginPath();c.arc(X(k[0]),Y(k[1]),5,0,7);c.fill();c.fillStyle='#232D45';c.beginPath();c.arc(X(k[0]),Y(k[1]),2,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 11px "DM Mono",monospace';c.textAlign='center';for(q=0;q<=100;q+=20)c.fillText(q,X(q),Y(0)+22);c.textAlign='right';for(q=20;q<=100;q+=20)c.fillText(q,X(0)-12,Y(q)+4);
+    c.textAlign='left';c.fillText('Y',X(0)-22,Y(100)-12);c.textAlign='right';c.fillText('X',X(100)+18,Y(0)+22);
+    var p=[40,40];c.lineCap='round';c.lineJoin='round';
+    G.prog.forEach(function(o){var e=[p[0]+o.dx,p[1]+o.dy];c.strokeStyle=o.e?'rgba(255,179,138,.25)':'rgba(169,180,204,.3)';c.lineWidth=o.e?7:1.5;c.setLineDash(o.e?[]:[4,6]);c.beginPath();c.moveTo(X(p[0]),Y(p[1]));c.lineTo(X(e[0]),Y(e[1]));c.stroke();p=e});c.setLineDash([]);
+    G.path.forEach(function(sg,ix){var a=[X(sg.a[0]),Y(sg.a[1])],b=[X(sg.b[0]),Y(sg.b[1])];function ln(col,lw,dx){c.strokeStyle=col;c.lineWidth=lw;c.beginPath();c.moveTo(a[0]+dx,a[1]+dx);c.lineTo(b[0]+dx,b[1]+dx);c.stroke()}
+      if(!sg.e){c.setLineDash([4,6]);ln(C.soft,1.5,0);c.setLineDash([]);return}
+      var hot=G.run&&ix===G.path.length-1,col=hot?mixA(FIL,HOT,.7):FIL;if(hot){c.shadowColor=rgb(HOT,.9);c.shadowBlur=14}
+      ln(rgb(tone(FIL2,-.3)),9,0);c.shadowBlur=0;ln(rgb(col),6,0);ln('rgba(255,255,255,.4)',1.3,-1.6)});
+    var hp=G.run?G.pos:(G.path.length?G.pos:p),hx=X(hp[0]),hy=Y(hp[1]),col2=G.crash?C.bad:C.ui;
+    c.fillStyle='rgba(124,138,174,.22)';rr(c,X(0)-6,hy-36,100*s+12,12,6);
+    g=c.createLinearGradient(hx-15,0,hx+15,0);g.addColorStop(0,'#52628A');g.addColorStop(1,'#37435F');c.globalAlpha=.94;c.fillStyle=g;rr(c,hx-15,hy-44,30,28,7);c.globalAlpha=1;
+    c.fillStyle='#1A2133';c.beginPath();c.arc(hx,hy-30,9,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=2;var tt=(now||0)/1000;for(var k=0;k<5;k++){var an=(G.run?tt*9:0)+k*1.2566;c.beginPath();c.arc(hx,hy-30,6,an,an+.75);c.stroke()}
+    c.fillStyle='#8E9BBB';c.beginPath();c.moveTo(hx-5,hy-16);c.lineTo(hx+5,hy-16);c.lineTo(hx+2,hy-7);c.lineTo(hx-2,hy-7);c.closePath();c.fill();
+    c.shadowColor=col2;c.shadowBlur=12;c.strokeStyle=col2;c.lineWidth=3;c.beginPath();c.arc(hx,hy,7,0,7);c.stroke();c.shadowBlur=0;c.fillStyle=col2;c.beginPath();c.arc(hx,hy,2.6,0,7);c.fill()}
+  function list3(curI){var ol=$('prog3');ol.textContent='';var p=[40,40],e=0;G.prog.forEach(function(o,i){p=[p[0]+o.dx,p[1]+o.dy];var li=document.createElement('li');
+      if(o.e){e+=0.665;li.textContent='G1 X'+p[0]+' Y'+p[1]+' E'+e.toFixed(2)}else li.textContent='G0 X'+p[0]+' Y'+p[1];if(i===curI)li.className='cur';ol.appendChild(li)});
+    ol.scrollTop=ol.scrollHeight;return p}
+  function say3(t,k){var m=$('m3');m.className='msg'+(k?' '+k:'');m.textContent=t}
+  function reset3(){cancelAnimationFrame(raf);G.run=null;G.path=[];G.crash=null;G.pos=[40,40]}
+  function edit3(){reset3();var p=list3(-1);say3('Al terminar, el cabezal quedaría en X'+p[0]+' Y'+p[1]+'.');draw3()}
+  [].forEach.call(document.querySelectorAll('.pad button'),function(b){b.addEventListener('click',function(){if(G.prog.length>=24){say3('El programa ya tiene 24 líneas. Borrá alguna para seguir.','bad');return}
+    var d=b.dataset.d.split(',');G.prog.push({dx:+d[0],dy:+d[1],e:$('ext3').checked});edit3()})});
+  $('undo3').addEventListener('click',function(){G.prog.pop();edit3()});
+  $('clr3').addEventListener('click',function(){G.prog=[];edit3();say3('El cabezal está en X40 Y40.')});
+  function check3(){var ed={},cn={};G.path.forEach(function(sg){if(sg.e)ed[ekey(sg.a,sg.b)]=[sg.a,sg.b]});var ks=Object.keys(ed);if(ks.length!==4)return false;
+    ks.forEach(function(k){ed[k].forEach(function(pt){var q=pt.join(',');cn[q]=(cn[q]||0)+1})});var cs=Object.keys(cn);return cs.length===4&&cs.every(function(q){return cn[q]===2})}
+  function finish3(){G.run=null;list3(-1);var r=$('r3');
+    if(G.crash){say3('¡Choque! Esa orden manda el cabezal a X'+G.crash[0]+' Y'+G.crash[1]+', fuera de la cama. La impresora no lo sabe: obedece igual.','bad');draw3();return}
+    say3('Programa terminado. El cabezal quedó en X'+G.pos[0]+' Y'+G.pos[1]+'.');
+    if(check3()){r.hidden=false;r.className='msg ok';r.textContent='¡Cuadrado cerrado! Acabás de escribir tu primer G-code.';mark('l3')}
+    else if(!done.l3){r.hidden=false;r.className='msg';r.textContent='Todavía no es un cuadrado cerrado: necesitás cuatro lados con plástico que terminen donde empezaron.'}
+    draw3()}
+  $('run3').addEventListener('click',function(){if(!G.prog.length){say3('Primero agregá alguna orden con las flechas.','bad');return}reset3();
+    var i=0,from=[40,40],t0=performance.now(),dur=reduce?0:320;
+    function seg(){if(i>=G.prog.length){finish3();return}var o=G.prog[i],to=[from[0]+o.dx,from[1]+o.dy],out=to[0]<0||to[0]>100||to[1]<0||to[1]>100;
+      var lim=[Math.max(0,Math.min(100,to[0])),Math.max(0,Math.min(100,to[1]))];list3(i);t0=performance.now();G.run=1;
+      (function step(now){var k=dur?Math.min(1,(now-t0)/dur):1;G.pos=[from[0]+(lim[0]-from[0])*k,from[1]+(lim[1]-from[1])*k];
+        var live={a:from,b:G.pos.slice(),e:o.e};G.path.push(live);draw3(now);G.path.pop();
+        if(k<1){raf=requestAnimationFrame(step);return}
+        G.path.push({a:from,b:lim,e:o.e});G.pos=lim;if(out){G.crash=to;finish3();return}from=lim;i++;seg()})(performance.now())}
+    seg()});
+  START.l3=function(){list3(-1);draw3()};
+
+  // ---------- 1.4 ----------
+  function draw4(now){var t=(now%9000)/9000,tt=now/1000,g,f=fit($('c4a'));
+    if(f){var c=f.c,w=f.w,h=f.h,s=Math.min(w/40,h/31),ox=w/2,oy=h-3*s;bg(c,w,h);posts(c,ox,oy,s,oy-27*s);bed(c,ox,oy,s,15.5);
+      var pos=layers(c,ox,oy,s,1,t*20),hp=pos||[ox-12*s,oy-1];toolhead(c,hp[0],hp[1],s*.55,tt,ox-17.4*s,ox+17.4*s)}
+    f=fit($('c4b'));if(!f)return;c=f.c;w=f.w;h=f.h;s=Math.min(w/40,h/32);ox=w/2;bg(c,w,h);
+    var vy=h-5*s,fr=(t*20)%1,n=Math.floor(t*20),flash=Math.max(0,1-fr*2.2),lift=n*s*.92+Math.sin(Math.min(1,fr*1.4)*Math.PI)*s*1.3,top=vy-.6*s-lift;
+    c.fillStyle='#2F3A57';rr(c,ox-17*s,vy+.3*s,34*s,3.6*s,.8*s);c.fillStyle='rgba(185,162,255,'+(.25+.75*flash)+')';c.shadowColor='#B9A2FF';c.shadowBlur=18*flash;rr(c,ox-12.5*s,vy+.9*s,25*s,.9*s,.3*s);c.shadowBlur=0;
+    g=c.createLinearGradient(ox+15*s,0,ox+17*s,0);g.addColorStop(0,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,ox+15.2*s,2*s,1.6*s,vy-1.4*s,.5*s);
+    c.fillStyle='#48567A';rr(c,ox-.9*s,top-3.6*s,17.6*s,1.5*s,.5*s);c.fillRect(ox-.7*s,top-3*s,1.4*s,1.6*s);
+    // el Benchy cuelga cabeza abajo: la primera capa curada es el fondo del casco
+    if(flash>.02&&n>0){var ls=spans(n-.5),bx0=ls.length?ls[0][0]:-3,bx1=ls.length?ls[ls.length-1][1]:3;g=c.createLinearGradient(0,vy+.9*s,0,top+n*s*.92);g.addColorStop(0,'rgba(185,162,255,'+(.55*flash)+')');g.addColorStop(1,'rgba(185,162,255,0)');c.fillStyle=g;
+      c.beginPath();c.moveTo(ox-12.5*s,vy+.9*s);c.lineTo(ox+12.5*s,vy+.9*s);c.lineTo(ox+bx1*s,top+n*s*.92);c.lineTo(ox+bx0*s,top+n*s*.92);c.closePath();c.fill()}
+    for(var i=0;i<n;i++){spans(i+.5).forEach(function(q){bead(c,ox+q[0]*s,top+i*s*.92,(q[1]-q[0])*s,s*.92,i%2?MINT2:MINT,i===n-1?flash*.8:0)})}
+    g=c.createLinearGradient(0,top-1.9*s,0,top);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-13*s,top-1.9*s,26*s,1.9*s,.5*s);
+    g=c.createLinearGradient(0,vy-4.2*s,0,vy);g.addColorStop(0,'rgba(143,224,204,.34)');g.addColorStop(1,'rgba(143,224,204,.14)');c.fillStyle=g;c.fillRect(ox-15.6*s,vy-4.2*s,31.2*s,4.2*s);
+    c.fillStyle='rgba(255,255,255,.35)';c.fillRect(ox-15.6*s,vy-4.2*s,31.2*s,Math.max(1,.12*s));
+    c.strokeStyle='rgba(174,185,212,.8)';c.lineWidth=Math.max(1.5,.3*s);c.lineJoin='round';c.beginPath();c.moveTo(ox-16*s,vy-6.4*s);c.lineTo(ox-16*s,vy);c.lineTo(ox+16*s,vy);c.lineTo(ox+16*s,vy-6.4*s);c.stroke()}
+  START.l4=function(){loop(draw4)};
+  (function(){var cr=[['Detalle fino',2,5],['Resistencia para uso diario',4,2],['Limpieza y facilidad',4,1],['Bajo costo en piezas grandes',5,2],['Poco olor y cuidados',4,1]],box=$('crit4');
+    box.innerHTML='<span class="h">FDM</span><span class="t"></span><span class="h r">Resina</span>';
+    cr.forEach(function(r){box.insertAdjacentHTML('beforeend','<div class="b l"><i style="width:'+r[1]*20+'%"></i></div><span class="t">'+r[0]+'</span><div class="b r"><i style="width:'+r[2]*20+'%"></i></div>')});
+    var uses=[['Miniatura de 3 cm','Resina. A ese tamaño las capas del filamento tapan la cara y los dedos; la resina los deja nítidos.'],
+      ['Soporte de estante','FDM. Tiene que aguantar peso y golpes, y es grande: en filamento sale resistente y barato.'],
+      ['Llavero con nombre','FDM. Es chato, resistente al uso y se imprime en minutos sin lavar ni curar nada.'],
+      ['Molde dental o joya','Resina. Son piezas chicas donde el detalle y la superficie lisa mandan.'],
+      ['Maceta de 15 cm','FDM. En resina sería cara y frágil; en filamento es una impresión común.']];
+    uses.forEach(function(u){var b=document.createElement('button');b.type='button';b.textContent=u[0];b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){[].forEach.call($('use4').children,function(x){x.setAttribute('aria-pressed',String(x===b))});$('m4').textContent=u[1]});$('use4').appendChild(b)})})();
+  mcq($('q4'),$('r4'),['La impresora de filamento, por el ruido','La de resina, por el líquido sin curar y la limpieza','Las dos por igual'],1,
+    'Exacto. La resina sin curar no se toca sin guantes y hay que lavar y curar cada pieza. Pide un lugar aparte.',
+    ['El ruido molesta, pero no es el mayor cuidado. Pensá en qué material no se puede tocar.',null,'Hay una diferencia grande en lo que se puede tocar y en la limpieza.'],function(){mark('l4')});
+
+  // ---------- 1.5 ----------
+  (function(){var B=['Sale bien','Sale con trucos','Mejor otra cosa'],
+    IT=[['Llavero con nombre',0,'Chato, chico y personalizado: el caso ideal.'],['Soporte para auriculares',0,'Pieza única y a medida, sin exigencias raras.'],['Maceta chica',0,'Forma simple. Para el balcón conviene PETG.'],
+      ['Figura con brazos extendidos',1,'Los brazos quedan en el aire: necesita soportes.'],['Caja con tapa a rosca',1,'Sale si diseñás la holgura para que la rosca gire.'],['Pieza más grande que la cama',1,'Se parte en secciones y se pega.'],
+      ['Taza para café caliente',2,'El PLA se ablanda con el calor y las capas juntan suciedad.'],['Lente de anteojos',2,'Las capas no dejan pasar la luz limpia como un vidrio pulido.'],['500 tapitas iguales para mañana',2,'Es lenta para cantidad: conviene inyección o comprarlas.']],
+    order=[6,0,3,8,1,4,7,2,5],sel=null,left=9,items=$('items5'),bins=$('bins5'),msg=$('m5'),lists=[];
+    order.forEach(function(ix){var b=document.createElement('button');b.type='button';b.textContent=IT[ix][0];b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){sel=ix;[].forEach.call(items.children,function(x){x.setAttribute('aria-pressed',String(x===b))});b._ix=ix;msg.className='msg';msg.textContent='¿Dónde va "'+IT[ix][0]+'"?';binBtns(false)});b._ix=ix;items.appendChild(b)});
+    function binBtns(dis){[].forEach.call(bins.querySelectorAll('button'),function(x){x.disabled=dis})}
+    B.forEach(function(name,bi){var d=document.createElement('div');d.className='bin';var b=document.createElement('button');b.type='button';b.textContent=name;b.disabled=true;var ul=document.createElement('ul');d.appendChild(b);d.appendChild(ul);bins.appendChild(d);lists.push(ul);
+      b.addEventListener('click',function(){if(sel==null)return;var it=IT[sel];
+        if(it[1]===bi){var li=document.createElement('li');li.innerHTML='<b></b>';li.firstChild.textContent=it[0];li.appendChild(document.createTextNode(it[2]));ul.appendChild(li);
+          [].forEach.call(items.children,function(x){if(x._ix===sel)x.remove()});sel=null;left--;binBtns(true);
+          if(left===0){msg.className='msg ok';msg.textContent='¡Los nueve en su lugar! Ya sabés cuándo conviene imprimir y cuándo no.';mark('l5')}else{msg.className='msg ok';msg.textContent='Bien. Faltan '+left+'.'}}
+        else{msg.className='msg bad';msg.textContent=bi===0?'No es tan directo. Pensá si algo queda en el aire, si tiene que encastrar o si no entra en la cama.':bi===2?'Se puede imprimir, con algún cuidado extra.':(it[1]===0?'No hace falta ningún truco: es una impresión sencilla.':'Acá el problema no se arregla con un truco de impresión.')}})})})();
+
+  // ---------- repaso ----------
+  (function(){var Q=[['¿Qué significa que la impresión 3D es fabricación aditiva?',['Que agrega material capa por capa','Que corta material de un bloque','Que copia objetos con un escáner'],0,'Suma material en lugar de quitarlo. Lección 1.1.'],
+    ['¿Qué programa convierte el modelo en instrucciones para la impresora?',['El G-code','El laminador','El firmware'],1,'El laminador corta en capas y genera el G-code. Lección 1.2.'],
+    ['¿Por qué no conviene usar un G-code hecho para otra impresora?',['Porque ocupa más espacio','Porque puede mandar el cabezal a lugares o temperaturas equivocados','Porque imprime más lento'],1,'Está escrito para una máquina y un material concretos. Lección 1.3.'],
+    ['Para una miniatura de 3 cm con mucho detalle conviene...',['FDM','Resina','Da igual'],1,'La resina resuelve detalles que el filamento no alcanza. Lección 1.4.'],
+    ['¿Cuál es un límite real de la impresión FDM?',['No puede hacer piezas personalizadas','La resistencia cambia según cómo se orienta la pieza','Solo imprime en un color'],1,'Las capas son el punto débil, como la veta de la madera. Lección 1.5.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var h=document.createElement('h3');h.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var w=document.createElement('p');w.className='why';w.hidden=true;
+      q[1].forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';w.hidden=false;w.textContent=q[3];ans++;if(ans===Q.length){var s=$('score');s.hidden=false;s.textContent=good+' de 5. '+(good===5?'¡Módulo dominado!':good>=3?'Muy bien: repasá las que fallaste y seguimos.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(h);d.appendChild(o);d.appendChild(w);box.appendChild(d)})})();
+
+  // ---------- arranque ----------
+  window.addEventListener('resize',function(){if(cur==='l3'&&!G.run)draw3()});
+  if(window.ResizeObserver)new ResizeObserver(function(){if(cur==='l3'&&!G.run)draw3()}).observe($('c3'));
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){if(cur==='l3'&&!G.run)draw3()});
+  // red de seguridad: si el navegador no entrega cuadros de animacion o el lienzo tardo en tener tamano, un reloj comun redibuja
+  setInterval(function(){var now=performance.now();if(cur==='l3'){if(!G.run&&!($('c3')._ok>shownAt)){try{draw3(now)}catch(e){lastErr=String(e)}}}
+    else if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  var fprev=0;setInterval(function(){var ids={l1:['c1'],l2:['c2'],l3:['c3'],l4:['c4a','c4b']}[cur]||[],sz=ids.map(function(id){var r=$(id).getBoundingClientRect();return Math.round(r.width)+'×'+Math.round(r.height)}).join(', ');
+    $('diag').textContent='Diagnóstico v5 · '+cur+' · lienzos '+(sz||'–')+' · cuadros/s '+(frames-fprev)+' · rAF '+(rafSeen&&performance.now()-lastTick<500?'sí':'no')+' · error: '+lastErr;fprev=frames},1000);
+  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+</body>
+</html>

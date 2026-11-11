@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Inicio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: portada del manual. Arriba el nombre y una entrada directa al modulo 1; debajo los diez modulos en orden, cada uno con sus partes y su avance. Un solo tema, oscuro suave, igual que las lecciones. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --pop:#8FE0CC;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
+.wrap{max-width:980px;margin:0 auto;padding-block:22px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--pop);outline-offset:3px;border-radius:8px}
+.brand{font-family:var(--f-display);font-weight:700;font-size:20px;display:flex;align-items:center;gap:10px;color:var(--ink-soft)}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:center}
+@media (max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero h1{font-size:clamp(46px,8vw,78px);letter-spacing:-.01em}
+.hero p{font-size:19px;color:var(--ink-soft);max-width:46ch}
+.hero .txt{display:flex;flex-direction:column;gap:14px}
+.cta{align-self:flex-start;display:inline-block;font-weight:700;font-size:16px;background:var(--ui);color:var(--ui-ink);border-radius:999px;padding:12px 22px;text-decoration:none;transition:transform .12s ease-out}
+.cta:hover{transform:translateY(-2px)}
+.stack{display:flex;flex-direction:column-reverse;gap:5px;align-items:center;padding:10px 0}
+.stack i{display:block;height:16px;border-radius:8px;background:linear-gradient(180deg,#FFC9AB,var(--fil) 45%,#D9845F);animation:drop .5s cubic-bezier(.34,1.56,.64,1) both}
+.stack i:nth-child(even){background:linear-gradient(180deg,#F6B08E,var(--fil2) 45%,#C9714C)}
+@keyframes drop{from{transform:translateY(-40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.stack i{animation:none}}
+.how{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:760px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px;min-width:0}
+.how b{display:block;font-size:14px;color:var(--pop);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.how span{font-size:14px;color:var(--ink-soft)}
+.sec{display:flex;flex-direction:column;gap:14px}
+.sec h2{font-size:28px}
+.mods{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.mods{grid-template-columns:minmax(0,1fr)}}
+.mod{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mod.soon{background:transparent;border-style:dashed}
+.mhead{display:flex;gap:14px;align-items:flex-start}
+.num{flex:none;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:19px;background:var(--ui);color:var(--ui-ink)}
+.soon .num{background:transparent;border:2px solid var(--line);color:var(--ink-soft)}
+.mhead h3{font-size:21px}
+.mhead p{font-size:14px;color:var(--ink-soft)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;font-size:13px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid currentColor}
+.tag.ok{color:var(--pop)}.tag.half{color:var(--ui)}.tag.no{color:var(--ink-soft)}
+.parts{display:flex;flex-direction:column;gap:6px}
+.part{display:flex;justify-content:space-between;align-items:center;gap:12px;text-decoration:none;background:var(--sunken);border-radius:12px;padding:9px 12px;transition:background .15s ease-out}
+.part:hover{background:#121928}
+.part .nm{font-weight:700;font-size:14px;flex:1;min-width:0}
+.part .nm small{display:block;font-weight:400;color:var(--ink-soft);font-size:12px}
+.part .go{font-family:var(--f-mono);font-size:13px;color:var(--ui);white-space:nowrap}
+.part.off{opacity:.55}
+.part.off .go{color:var(--ink-soft)}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--pop);border-radius:3px}
+.note{font-size:13px;color:var(--ink-soft)}
+footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:16px}
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+
+  <section class="hero">
+    <div class="txt">
+      <h1>Capa a Capa</h1>
+      <p>El manual interactivo de impresión 3D FDM de Quirón 3D. Cada idea se entiende tocando: un control, un simulador y la consecuencia a la vista.</p>
+      <a class="cta" href="capa-a-capa-modulo-1.html">Empezar por el módulo 1</a>
+      <p class="note" id="prog-all"></p>
+    </div>
+    <div class="stack" aria-hidden="true" id="stack"></div>
+  </section>
+
+  <section class="sec">
+    <h2>Cómo es cada lección</h2>
+    <div class="how">
+      <div><b>En criollo</b><span>Una analogía de todos los días.</span></div>
+      <div><b>Probalo</b><span>Un simulador con uno o dos controles.</span></div>
+      <div><b>Caso real</b><span>Una pieza donde esto importa.</span></div>
+      <div><b>Mini reto</b><span>Una consigna corta con respuesta.</span></div>
+      <div><b>Ficha</b><span>La definición del curso, para volver.</span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>Los diez módulos</h2>
+    <ol class="mods" id="mods"></ol>
+  </section>
+
+  <footer>Basado en el curso de impresión 3D de Quirón. Cada módulo guarda tu avance en este navegador.</footer>
+</div>
+
+<script>
+(function(){
+  var MODS=[
+    {n:1,t:'Cómo funciona una impresora 3D',d:'Del archivo a la pieza, el G-code y las dos grandes tecnologías.',parts:[['capa-a-capa-modulo-1.html','Lecciones 1.1 a 1.5','cac-m1',5]]},
+    {n:2,t:'La máquina por dentro',d:'Ejes, motores, correas, extrusor, hotend, cama y electrónica.',parts:[['capa-a-capa-modulo-2.html','Parte 1 · lecciones 2.1 a 2.5','cac-m2',5],['capa-a-capa-modulo-2b.html','Parte 2 · lecciones 2.6 a 2.11','cac-m2b',6]]},
+    {n:3,t:'Filamentos y materiales',d:'PLA, PETG, ABS y TPU, temperaturas, humedad y cómo elegir.',parts:[['capa-a-capa-modulo-3.html','Lecciones 3.1 a 3.8','cac-m3',8]]},
+    {n:4,t:'El laminador',d:'Perfiles, capas, paredes, relleno, soportes, retracción y vista previa.',parts:[['capa-a-capa-modulo-4a.html','Parte 1 · lecciones 4.1 a 4.6','cac-m4a',6],['capa-a-capa-modulo-4b.html','Parte 2 · lecciones 4.7 a 4.12','cac-m4b',6],['capa-a-capa-modulo-4c.html','Parte 3 · lecciones 4.13 a 4.18','cac-m4c',6]]},
+    {n:5,t:'Calibración',d:'Nivelación, offset Z, temperatura, extrusor, flujo y retracción.',parts:[['capa-a-capa-modulo-5a.html','Parte 1 · lecciones 5.1 a 5.5','cac-m5a',5],[null,'Parte 2 · lecciones 5.6 a 5.10']]},
+    {n:6,t:'Errores y diagnóstico',d:'Una galería de piezas falladas, con la causa y la solución animadas.'},
+    {n:7,t:'Diseño de piezas funcionales',d:'Orientación según el esfuerzo, holguras, encastres y tornillos.'},
+    {n:8,t:'El taller',d:'Mantenimiento, repuestos, mejoras, seguridad y cómo elegir impresora.'},
+    {n:9,t:'Del hobby al negocio',d:'Modelos con IA, costos, márgenes y presupuestos.'},
+    {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.'}];
+  function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
+  var box=document.getElementById('mods'),TOT=0,DONE=0;
+  MODS.forEach(function(m){var li=document.createElement('li'),ready=m.parts&&m.parts.every(function(p){return p[0]}),some=m.parts&&m.parts.some(function(p){return p[0]});li.className='mod'+(some?'':' soon');
+    var hd=document.createElement('div');hd.className='mhead';var nm=document.createElement('span');nm.className='num';nm.textContent=m.n;var tx=document.createElement('div'),h=document.createElement('h3'),p=document.createElement('p');h.textContent=m.t;p.textContent=m.d;tx.appendChild(h);tx.appendChild(p);hd.appendChild(nm);hd.appendChild(tx);li.appendChild(hd);
+    var meta=document.createElement('div');meta.className='meta';var tg=document.createElement('span');tg.className='tag '+(ready?'ok':some?'half':'no');tg.textContent=ready?'Listo':some?'En curso':'Próximamente';meta.appendChild(tg);li.appendChild(meta);
+    if(m.parts){var ps=document.createElement('div');ps.className='parts';m.parts.forEach(function(q){var a=document.createElement(q[0]?'a':'div');a.className='part'+(q[0]?'':' off');if(q[0])a.href=q[0];
+        var l=document.createElement('span');l.className='nm';l.textContent=q[1];var g=document.createElement('span');g.className='go';
+        if(q[0]){var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;var sm=document.createElement('small');sm.textContent=c+' de '+q[3]+' retos';l.appendChild(sm);var br=document.createElement('div');br.className='bar';var bi=document.createElement('i');bi.style.width=(c/q[3]*100)+'%';br.appendChild(bi);l.appendChild(br);g.textContent=c===q[3]?'Repasar →':c?'Seguir →':'Abrir →'}else g.textContent='Pronto';
+        a.appendChild(l);a.appendChild(g);ps.appendChild(a)});li.appendChild(ps)}
+    box.appendChild(li)});
+  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos.':'Hay '+TOT+' lecciones listas en '+MODS.filter(function(m){return m.parts}).length+' módulos.';
+  var st=document.getElementById('stack'),wd=[86,94,78,98,70,90,82];for(var i=0;i<7;i++){var b=document.createElement('i');b.style.width=wd[i]+'%';b.style.maxWidth='300px';b.style.animationDelay=(i*.09)+'s';st.appendChild(b)}
+})();
+</script>
+
+</body>
+</html>

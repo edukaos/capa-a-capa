@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 4A</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.steps{max-width:660px}
+@media (max-width:440px){.steps{gap:3px}.steps button{width:30px;height:30px;font-size:13px;border-width:1.5px}.steps i{min-width:3px}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);min-width:62px}
+.wiz{display:flex;flex-direction:column;gap:10px}
+.wq{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--sunken);border-radius:12px;padding:10px 14px}
+.wq>span{flex:1;min-width:200px}
+.rec{background:var(--sunken);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.recm{font-family:var(--f-display);font-size:44px;line-height:1;color:var(--ui)}
+.listen{align-self:flex-start;padding:7px 14px;font-size:14px}
+.ftabw{overflow-x:auto}
+.ftab{width:100%;border-collapse:collapse;font-size:14px}
+.ftab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:7px 10px 7px 0;border-top:1px solid var(--line)}
+.ftab td{text-align:right;font-weight:700;padding:7px 0;border-top:1px solid var(--line)}
+.ftab td.y{color:var(--pop)}.ftab td.n{color:var(--ink-soft)}.ftab td.m{color:var(--ui)}
+footer a{color:var(--ui)}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 6 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-3.html">← <span class="lg">Módulo 3</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-modulo-4b.html"><span class="lg">Módulo 4 · parte 2</span><span class="sh">Siguiente</span> →</a></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 4, primera parte">
+    <button type="button" data-l="l1" aria-label="Lección 4.1, Qué hace el laminador">1</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 4.2, Perfiles">2</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 4.3, Tipos de archivo">3</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 4.4, Orientación">4</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 4.5, Altura de capa">5</button><i></i>
+    <button type="button" data-l="l6" aria-label="Lección 4.6, Altura de capa variable">6</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 4.1 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 4 · El laminador</p><h1>Qué hace el laminador</h1>
+      <p>El laminador es el programa que convierte un modelo 3D en instrucciones para la impresora. Corta el objeto en capas y decide cómo dibujar cada una.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es cortar un pan lactal en rodajas. El pan entero es el modelo, cada rodaja es una capa, y el laminador decide además cómo untar cada rodaja: por dónde pasa el cuchillo y cuánta manteca lleva.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c1" class="cv1" role="img" aria-label="Benchy cortado a una altura y la rodaja vista desde arriba"></canvas>
+      <div class="simbody">
+        <div class="row"><label for="cut1">Altura del corte</label><input id="cut1" type="range" min="0.4" max="47.6" step="0.2" value="9"><span class="val" id="vcut1">9,0 mm</span></div>
+        <p class="note">A la izquierda, el barquito de costado con el plano de corte. A la derecha, esa rodaja vista desde arriba: el borde son las paredes y el rayado es el relleno. Eso es lo que la impresora dibuja en esa capa.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La misma pieza, dos resultados</h3>
+        <p>Dos personas bajan el mismo modelo. Una lo lamina con capas finas y mucho relleno; la otra, con capas gruesas y poco. Las dos piezas tienen la misma forma, pero una tarda el triple y pesa el doble. La diferencia la puso el laminador.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Encontrá una capa con dos islas separadas</h3>
+        <p>Buscá una altura donde la rodaja se parta en dos partes que no se tocan.</p><p class="msg" id="m1">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: laminador</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Slicer</dd>
+      <dt>Qué es</dt><dd>Programa que transforma un modelo 3D en instrucciones que la impresora puede interpretar.</dd>
+      <dt>Para qué sirve</dt><dd>Divide el objeto en capas y calcula recorridos, material, velocidades, temperaturas, soportes y tiempo estimado.</dd>
+      <dt>Ejemplos</dt><dd>Ultimaker Cura, PrusaSlicer, OrcaSlicer y Bambu Studio.</dd></dl></div></details>
+  </section>
+
+  <!-- 4.2 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.2</p><h1>Perfiles</h1>
+      <p>El laminador tiene cientos de ajustes. Para no perderse los guarda en tres grupos: uno describe la máquina, otro el material y otro cómo querés imprimir.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el lavarropas. Hay cosas que dependen de la máquina, como cuántos kilos carga. Otras dependen de la tela, como la temperatura del agua. Y otras de lo que querés hoy, como lavado rápido o intenso.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <div class="simbody">
+        <p>Tocá un ajuste y después el perfil donde se guarda. Tenés que ubicar los nueve.</p>
+        <div class="chipset items" id="items2"></div>
+        <div class="bins" id="bins2"></div>
+        <p class="msg" id="m2">Faltan 9 ajustes.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Pasar de PLA a PETG</h3>
+        <p>Cambiás la bobina y solo tocás un perfil: el de filamento. La impresora es la misma y la calidad que querés también. Si los ajustes estuvieran todos mezclados, tendrías que acordarte de cambiar seis cosas a mano.</p></div>
+      <div class="card"><span class="tag">Para arrancar bien</span><h3>Empezá con los perfiles que ya vienen</h3>
+        <p>Los laminadores traen perfiles probados para las impresoras y materiales más comunes. Conviene partir de esos y cambiar de a un ajuste por vez, así sabés qué produjo cada cambio.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: los tres perfiles</summary><div class="in">
+      <dl><dt>De impresora</dt><dd>Printer profile. Describe la máquina: tamaño de cama, altura máxima, diámetro de boquilla, tipo de extrusor, límites de movimiento y G-code inicial y final.</dd>
+      <dt>De filamento</dt><dd>Filament profile. Ajustes de un material o marca: temperatura de boquilla y de cama, flujo, ventilación, retracción y densidad.</dd>
+      <dt>De proceso</dt><dd>Print profile. Calidad, estructura y estrategia: altura de capa, velocidades, paredes, relleno, soportes y costura.</dd></dl>
+      <p>No copies un G-code inicial de Internet sin comprobar que sea compatible con tu máquina.</p></div></details>
+  </section>
+
+  <!-- 4.3 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.3</p><h1>Tipos de archivo</h1>
+      <p>No todos los archivos 3D guardan lo mismo. Algunos traen solo la forma, otros el proyecto entero, y uno solo es el que entiende la impresora.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>El STL es una foto de la pieza: se ve la forma y nada más. El 3MF es la carpeta del proyecto con todo adentro. El STEP es el plano del arquitecto, que se puede corregir. Y el G-code es la receta ya escrita para tu cocina.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c3" class="cv2" role="img" aria-label="El mismo barquito según lo que guarda cada formato"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Formato</span><div class="chipset" id="fmt3"><button type="button" data-f="stl" aria-pressed="true">STL</button><button type="button" data-f="3mf" aria-pressed="false">3MF</button><button type="button" data-f="step" aria-pressed="false">STEP</button><button type="button" data-f="obj" aria-pressed="false">OBJ</button><button type="button" data-f="gcode" aria-pressed="false">G-code</button></div></div>
+        <p class="msg" id="m3"></p>
+        <div class="ftabw"><table class="ftab" id="tab3"><tbody></tbody></table></div>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El STL que llegó diminuto</h3>
+        <p>Te pasan un STL, lo abrís y la pieza mide dos milímetros. El archivo no guarda en qué unidad está: quien lo exportó trabajaba en pulgadas y tu laminador lo leyó en milímetros. Con un 3MF eso no pasa.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Querés retomar un proyecto en un mes, con sus ajustes y la pieza ya acomodada. ¿Qué guardás?</h3>
+        <div class="opts" id="q3"></div><p class="msg" id="r3" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: STL, 3MF, OBJ, STEP y G-code</summary><div class="in">
+      <dl><dt>STL</dt><dd>Describe la superficie con triángulos. No guarda color, materiales ni perfiles, y puede perder las unidades.</dd>
+      <dt>3MF</dt><dd>Formato moderno que conserva uno o varios modelos con su posición, escala, colores, perfiles y configuraciones. Para retomar un proyecto suele ser mejor que STL.</dd>
+      <dt>OBJ</dt><dd>Guarda la geometría y, en algunos casos, color o textura. Común en modelos artísticos y escaneos.</dd>
+      <dt>STEP</dt><dd>Formato para intercambiar modelos sólidos entre programas de diseño. Conserva superficies precisas y es editable. No todos los laminadores lo abren.</dd>
+      <dt>G-code</dt><dd>Archivo final con las instrucciones que sigue la impresora: mover ejes, extruir, calentar, encender ventiladores.</dd></dl></div></details>
+  </section>
+
+  <!-- 4.4 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.4</p><h1>Orientación</h1>
+      <p>Cómo apoyás la pieza en la cama cambia su resistencia, cuántos soportes necesita y cuánto tarda. La posición más intuitiva no siempre es la mejor.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Una pieza impresa es una pila de hojas pegadas. Si la apretás de arriba aguanta muchísimo. Si tirás para separar las hojas, se abre por donde están pegadas.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c4" class="cv1" role="img" aria-label="Un gancho impreso en tres orientaciones y probado con carga"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Cómo lo imprimo</span><div class="chipset" id="ori4"><button type="button" data-o="parado" aria-pressed="true">Parado, como se usa</button><button type="button" data-o="placa" aria-pressed="false">Con la placa en la cama</button><button type="button" data-o="acostado" aria-pressed="false">De costado</button></div></div>
+        <div class="row"><button class="btn" id="load4" type="button">Probar con carga</button><span class="note">Las líneas del gancho muestran por dónde corren las capas.</span></div>
+        <dl class="reads">
+          <div><dt>Soportes</dt><dd id="r4a">Muchos</dd></div>
+          <div><dt>Tiempo de impresión</dt><dd id="r4b">El más largo</dd></div>
+        </dl>
+        <p class="msg" id="m4">Elegí una orientación y probala con carga.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El gancho que se partió por la capa</h3>
+        <p>Un gancho para colgar la mochila, impreso con la placa apoyada en la cama porque parecía lo lógico. Al primer tirón el brazo se desprendió limpio, justo en una línea de capa. Impreso de costado, el mismo diseño no se rompe.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Encontrá la orientación que aguanta toda la carga sin usar soportes</h3>
+        <p>Elegila y tocá "Probar con carga".</p><p class="msg" id="r4">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: orientación</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Orientation</dd>
+      <dt>Qué es</dt><dd>La posición del objeto sobre la cama virtual.</dd>
+      <dt>Qué afecta</dt><dd>Resistencia, soportes, tiempo, acabado, primera capa y riesgo de falla.</dd></dl>
+      <p>La carga de prueba y los resultados del simulador son ilustrativos. La regla que sí vale siempre: una pieza resiste mucho menos cuando el esfuerzo tira para separar las capas.</p></div></details>
+  </section>
+
+  <!-- 4.5 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.5</p><h1>Altura de capa</h1>
+      <p>Es el grosor de cada piso de plástico. Es el ajuste que más cambia cómo se ve la pieza y cuánto tarda en salir.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es una escalera. Con escalones bajitos casi parece una rampa, pero subís muchos más. Con escalones altos llegás enseguida, y cada uno se nota.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c5" class="cv2" role="img" aria-label="Benchy en corte con capas de la altura elegida"></canvas>
+      <div class="simbody">
+        <div class="row"><label for="h5">Altura de capa</label><input id="h5" type="range" min="0.08" max="0.32" step="0.04" value="0.2"><span class="val" id="vh5">0,20 mm</span></div>
+        <dl class="reads">
+          <div><dt>Capas para 20 mm de alto</dt><dd id="r5a">100</dd></div>
+          <div><dt>Tiempo frente a 0,20 mm</dt><dd id="r5b">igual</dd></div>
+        </dl>
+        <p class="msg" id="m5"></p>
+        <p class="note">El barquito está reducido a 20 mm de alto para que las capas se vean. La lupa amplía la curva de la proa, que es donde aparece el escalón.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Tres piezas, tres alturas</h3>
+        <p>Una miniatura va con 0,12 mm porque el detalle manda. Un soporte para el taller va con 0,20 mm, el punto medio. Un prototipo para probar si encastra va con 0,28 mm, porque lo querés hoy y nadie lo va a mirar de cerca.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dejala lista para una miniatura</h3>
+        <p>Buscá una altura donde el escalón de la proa casi no se vea.</p><p class="msg" id="r5">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: altura de capa</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Layer height</dd>
+      <dt>Qué es</dt><dd>El espesor vertical de cada capa.</dd>
+      <dt>Valores</dt><dd>0,12 mm para alta calidad, 0,20 mm como equilibrio y 0,28 mm para imprimir rápido, con una boquilla de 0,4 mm.</dd>
+      <dt>Límite</dt><dd>Como regla práctica, entre el 25 % y el 75 % del diámetro de la boquilla.</dd></dl>
+      <p>El escalón solo aparece en curvas y pendientes. En una pared recta, la altura de capa casi no cambia cómo se ve.</p></div></details>
+  </section>
+
+  <!-- 4.6 -->
+  <section class="lesson" id="l6" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Lección 4.6</p><h1>Altura de capa variable</h1>
+      <p>No hace falta elegir una sola altura para toda la pieza. El laminador puede usar capas finas donde se notan y gruesas donde no.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es hacer los escalones bajitos solo en la parte de la escalera que dobla, donde es fácil tropezar, y normales en el tramo recto.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c6" class="cv2" role="img" aria-label="Benchy con capas finas en las curvas y gruesas en las paredes rectas"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Capas</span><div class="chipset" id="mode6"><button type="button" data-m="fina" aria-pressed="false">Todas finas · 0,10</button><button type="button" data-m="gruesa" aria-pressed="true">Todas gruesas · 0,28</button><button type="button" data-m="var" aria-pressed="false">Variable</button></div></div>
+        <dl class="reads">
+          <div><dt>Cantidad de capas</dt><dd id="r6a">72</dd></div>
+          <div><dt>Tiempo frente a todas finas</dt><dd id="r6b">36 %</dd></div>
+        </dl>
+        <p class="msg" id="m6"></p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La cúpula sobre la base recta</h3>
+        <p>Una lámpara con base cilíndrica y tapa redondeada. La base se ve igual con cualquier altura; la tapa, no. Con capa variable la base sale rápida y la tapa sale lisa, sin pagar capas finas en toda la pieza.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>¿Dónde conviene poner las capas finas?</h3>
+        <div class="opts" id="q6"></div><p class="msg" id="r6" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: altura de capa variable</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Variable layer height, o adaptive layers</dd>
+      <dt>Qué es</dt><dd>Función del laminador que cambia la altura de capa a lo largo de la pieza según la forma.</dd>
+      <dt>Para qué sirve</dt><dd>Mejora las curvas y pendientes suaves sin sumar todo el tiempo de imprimir la pieza completa con capas finas.</dd></dl>
+      <p>En el simulador el casco, que es curvo, va con 0,10 mm y la cabina, que es recta, con 0,28 mm. Los tiempos son proporcionales a la cantidad de capas.</p></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 4 · Repaso de la primera parte</p><h1>Seis preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en el capítulo 10 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea, no reproducen un laminador exacto.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var LES=['l1','l2','l3','l4','l5','l6'],ORDER=LES.concat(['repaso']),cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m4a')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>4.1</b> Qué hace el laminador',l2:'<b>4.2</b> Perfiles',l3:'<b>4.3</b> Tipos de archivo',l4:'<b>4.4</b> Orientación',l5:'<b>4.5</b> Altura de capa',l6:'<b>4.6</b> Altura de capa variable',repaso:'<b>Repaso</b> Seis preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m4a',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- ayudas ----------
+  function pill(c,s,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(s).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(s,x,y+1)}
+  function txt(c,s,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(s,x,y)}
+  function chips(id,attr,fn){var box=$(id);box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(box.children,function(x){x.setAttribute('aria-pressed',String(x===b))});fn(b.dataset[attr])})}
+  function say(id,t,k){var m=$(id);m.className='msg'+(k?' '+k:'');m.textContent=t}
+  function num(v,d){return v.toFixed(d==null?1:d).replace('.',',')}
+  function divider(c,w,h,vert){c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
+  function split(w,h){var v=w<520;return{v:v,A:v?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B:v?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h}}}
+  function lens(c,w,h,fx,fy,zoom,drawFn){var R=Math.min(w*.17,h*.36),cx=w-R-14,cy=R+14,fr=R/zoom;c.strokeStyle=C.ui;c.lineWidth=2;c.beginPath();c.arc(fx,fy,fr,0,7);c.stroke();
+    var a=Math.atan2(cy-fy,cx-fx);c.beginPath();c.moveTo(fx+Math.cos(a)*fr,fy+Math.sin(a)*fr);c.lineTo(cx-Math.cos(a)*R,cy-Math.sin(a)*R);c.stroke();
+    c.save();c.beginPath();c.arc(cx,cy,R,0,7);c.clip();c.fillStyle='#1B2336';c.fillRect(cx-R,cy-R,2*R,2*R);drawFn(cx,cy,zoom);c.restore();c.strokeStyle=C.ui;c.lineWidth=3;c.beginPath();c.arc(cx,cy,R,0,7);c.stroke()}
+
+  // ---------- 4.1 que hace el laminador ----------
+  function upd1(){var y=+$('cut1').value,n=spansMM(y).length;$('vcut1').textContent=num(y)+' mm';
+    if(n>=2){say('m1','¡Ahí! A esa altura la ventana parte la cabina en dos columnas. El laminador tiene que saltar de una a otra en cada capa.','ok');mark('l1')}else if(!done.l1)say('m1','Esta rodaja es una sola pieza. Probá a la altura de la ventana.')}
+  $('cut1').addEventListener('input',upd1);
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,y=+$('cut1').value,S=split(w,h),A=S.A,B=S.B;bg(c,w,h);
+    var s=Math.min(A.w/36,A.h/29),ox=A.x+A.w/2,oy=A.y+A.h-3.4*s,zc=y*KB;bed(c,ox,oy,s,14.5);
+    c.save();c.globalAlpha=.25;layers(c,ox,oy,s,.5,40,true);c.restore();layers(c,ox,oy,s,.5,Math.floor(zc/.5),true);outline(c,ox,oy,s);
+    var py=oy-zc*s;c.shadowColor=C.ui;c.shadowBlur=10;c.strokeStyle=C.ui;c.lineWidth=2.5;c.beginPath();c.moveTo(ox-15.5*s,py);c.lineTo(ox+15.5*s,py);c.stroke();c.shadowBlur=0;
+    txt(c,'De costado',A.x+12,A.y+22,'left',C.soft,13,700);pill(c,'capa '+Math.max(1,Math.round(y/.2))+' de 240',ox,A.y+A.h-10);
+    // rodaja desde arriba
+    var sp=spansMM(y),pm=Math.min((B.w-36)/62,(B.h-64)/34),cx=B.x+B.w/2,cy=B.y+B.h/2+8,X=function(x){return cx+(x-30)*pm},Y=function(v){return cy+v*pm};
+    c.fillStyle='rgba(0,0,0,.25)';rr(c,X(0)-12,Y(-17)-8,60*pm+24,34*pm+16,12);c.fillStyle='#1B2336';rr(c,X(0)-14,Y(-17)-12,60*pm+28,34*pm+16,12);
+    sp.forEach(function(q,qi){var pts=[],N=14,i,x;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;pts.push([X(x),Y(-beam(x,y))])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;pts.push([X(x),Y(beam(x,y))])}
+      c.save();c.beginPath();pts.forEach(function(p,j){if(j)c.lineTo(p[0],p[1]);else c.moveTo(p[0],p[1])});c.closePath();c.clip();c.fillStyle=rgb(FIL,.12);c.fillRect(X(0),Y(-17),60*pm,34*pm);
+      c.strokeStyle=rgb(FIL,.55);c.lineWidth=1.5;c.beginPath();for(var d=-40*pm;d<70*pm;d+=7){c.moveTo(X(0)+d,Y(-17));c.lineTo(X(0)+d+34*pm,Y(17))}c.stroke();c.restore();
+      c.lineJoin='round';c.beginPath();pts.forEach(function(p,j){if(j)c.lineTo(p[0],p[1]);else c.moveTo(p[0],p[1])});c.closePath();c.strokeStyle=rgb(tone(FIL2,-.25));c.lineWidth=6;c.stroke();c.strokeStyle=rgb(FIL);c.lineWidth=3.5;c.stroke();
+      var u=((t*.25+qi*.37)%1)*(pts.length-1),k=Math.floor(u),fr=u-k,a=pts[k],b=pts[Math.min(pts.length-1,k+1)];c.shadowColor=C.ui;c.shadowBlur=12;c.fillStyle=C.ui;c.beginPath();c.arc(a[0]+(b[0]-a[0])*fr,a[1]+(b[1]-a[1])*fr,4.5,0,7);c.fill();c.shadowBlur=0});
+    txt(c,'Esa rodaja, desde arriba',B.x+12,B.y+22,'left',C.soft,13,700);pill(c,sp.length===1?'1 isla':sp.length+' islas',cx,B.y+B.h-10,sp.length>1?C.pop:C.ink);divider(c,w,h,S.v)}
+  START.l1=function(){upd1();loop(draw1)};
+
+  // ---------- 4.2 perfiles ----------
+  (function(){var B=['Perfil de impresora','Perfil de filamento','Perfil de proceso'],
+    IT=[['Tamaño de la cama',0,'Es una medida de la máquina.'],['Diámetro de la boquilla',0,'Depende de qué boquilla tiene puesta la máquina.'],['G-code inicial',0,'Son las órdenes de arranque de esa impresora.'],
+      ['Temperatura de boquilla',1,'Cada material funde a su temperatura.'],['Temperatura de cama',1,'También la define el material.'],['Retracción',1,'Cada filamento gotea distinto.'],
+      ['Altura de capa',2,'Es una decisión de calidad.'],['Relleno',2,'Define cuán maciza querés la pieza.'],['Soportes',2,'Depende de cómo decidís imprimir esta pieza.']],
+    order=[6,3,0,8,4,1,7,5,2],sel=null,left=9,items=$('items2'),bins=$('bins2');
+    order.forEach(function(ix){var b=document.createElement('button');b.type='button';b.textContent=IT[ix][0];b.setAttribute('aria-pressed','false');b._ix=ix;b.addEventListener('click',function(){sel=ix;[].forEach.call(items.children,function(x){x.setAttribute('aria-pressed',String(x===b))});say('m2','¿En qué perfil se guarda "'+IT[ix][0]+'"?');bb(false)});items.appendChild(b)});
+    function bb(dis){[].forEach.call(bins.querySelectorAll('button'),function(x){x.disabled=dis})}
+    B.forEach(function(name,bi){var d=document.createElement('div');d.className='bin';var b=document.createElement('button');b.type='button';b.textContent=name;b.disabled=true;var ul=document.createElement('ul');d.appendChild(b);d.appendChild(ul);bins.appendChild(d);
+      b.addEventListener('click',function(){if(sel==null)return;var it=IT[sel];
+        if(it[1]===bi){var li=document.createElement('li'),st=document.createElement('b');st.textContent=it[0];li.appendChild(st);li.appendChild(document.createTextNode(it[2]));ul.appendChild(li);[].forEach.call(items.children,function(x){if(x._ix===sel)x.remove()});sel=null;left--;bb(true);
+          if(left===0){say('m2','¡Los nueve en su perfil! Máquina, material y forma de imprimir, cada cosa en su lugar.','ok');mark('l2')}else say('m2','Bien. Faltan '+left+'.','ok')}
+        else say('m2',['No depende de la máquina. Pensá si cambia al cambiar de bobina o al cambiar de pieza.','No depende del material. ¿Es algo fijo de la máquina o una decisión para esta pieza?','No es una decisión de calidad. ¿Lo define la máquina o el material?'][bi],'bad')})})})();
+
+  // ---------- 4.3 tipos de archivo ----------
+  var F3='stl',FD={stl:['Solo la forma, hecha de triángulos. Es la foto: no sabe de colores, de medidas ni de ajustes.',['Sí','No','A veces se pierden','No','Muy poco','No']],
+    '3mf':['La carpeta completa: forma, colores, tamaño real y los ajustes con que lo ibas a imprimir.',['Sí','Sí','Sí','Sí','Muy poco','No']],
+    step:['El plano: superficies exactas con sus medidas, que se pueden modificar en un programa de diseño.',['Sí, exacta','No hace falta','Sí','No','Sí','No']],
+    obj:['Forma y, a veces, color o textura. Viene mucho de escaneos y modelos artísticos.',['Sí','A veces','No siempre','No','Muy poco','No']],
+    gcode:['Ya no es una forma: es la lista de movimientos para una impresora y un material concretos.',['Solo como recorrido','No','Ya aplicadas','Ya aplicados','No','Sí']]},
+    FR=['Guarda la forma','Guarda el color','Guarda escala y unidades','Guarda los ajustes de impresión','Se puede editar como pieza','La impresora lo entiende directo'];
+  function upd3(){say('m3',FD[F3][0]);var tb=$('tab3').querySelector('tbody');tb.textContent='';FR.forEach(function(r,i){var tr=document.createElement('tr'),a=document.createElement('th'),b=document.createElement('td'),v=FD[F3][1][i];a.textContent=r;a.scope='row';b.textContent=v;b.className=/^Sí|^Ya/.test(v)?'y':/^No$/.test(v)?'n':'m';tr.appendChild(a);tr.appendChild(b);tb.appendChild(tr)})}
+  chips('fmt3','f',function(v){F3=v;upd3()});
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,s=Math.min(w/44,h/27),ox=w/2,oy=h-5*s,rot=.55+Math.sin(now/2600)*.45,big=w>560;bg(c,w,h);
+    if(F3==='gcode'){oy=h-3*s;bed(c,ox,oy,s,14.5);var pos=layers(c,ox,oy,s,1,((t*.18)%1)*20);if(pos)toolhead(c,pos[0],pos[1],s*.5,t);pill(c,'instrucciones, no una forma',ox,24,C.ui);return}
+    if(F3==='stl'){benchy3d(c,ox,oy,s,rot,3,48,MINT,MINT2,1,true);pill(c,'triángulos, sin medidas',ox,24)}
+    else if(F3==='3mf'){benchy3d(c,ox,oy,s,rot,1,48,FIL,FIL,1,false);pill(c,'60 × 31 × 48 mm',big?w*.2:ox,24,C.pop);if(big){pill(c,'PLA · capa 0,20 · relleno 15 %',w*.78,24,C.ui);pill(c,'posición en la cama guardada',w*.78,50,C.ui)}}
+    else if(F3==='step'){benchy3d(c,ox,oy,s,rot,.5,48,STEEL,STEEL,1,false);c.strokeStyle=C.ui;c.fillStyle=C.ui;c.lineWidth=1.5;var x0=ox-13.5*s,x1=ox+13.5*s,yd=oy+3.6*s;c.beginPath();c.moveTo(x0,yd);c.lineTo(x1,yd);c.moveTo(x0,yd-5);c.lineTo(x0,yd+5);c.moveTo(x1,yd-5);c.lineTo(x1,yd+5);
+      var xv=ox+15.5*s;c.moveTo(xv,oy);c.lineTo(xv,oy-20*s);c.moveTo(xv-5,oy);c.lineTo(xv+5,oy);c.moveTo(xv-5,oy-20*s);c.lineTo(xv+5,oy-20*s);c.stroke();pill(c,'60 mm',ox,yd-12,C.ui);pill(c,'48 mm',xv+(big?34:0),oy-10*s,C.ui)}
+    else{benchy3d(c,ox,oy,s,rot,2,48,hex('#E57C7C'),hex('#F4E3B1'),1,false);pill(c,'con color o textura',ox,24)}}
+  START.l3=function(){upd3();loop(draw3)};
+  mcq($('q3'),$('r3'),['Un STL','Un 3MF','El G-code'],1,'Exacto. El 3MF guarda la pieza con su posición, su escala y los ajustes del proyecto.',
+    ['El STL guarda solo la forma: los ajustes y la posición se pierden.',null,'El G-code sirve para imprimir de nuevo lo mismo, pero ya no se puede cambiar nada.'],function(){mark('l3')});
+
+  // ---------- 4.4 orientacion ----------
+  var O4={o:'parado',load:0,test:false,brk:0,held:false},OD={parado:[80,'Muchos','El más largo'],placa:[30,'Pocos','Intermedio'],acostado:[100,'Ninguno','El más corto']},
+    UR=[[0,0,3,16],[3,4,9,3],[9,7,3,4]];
+  function reset4(){O4.load=0;O4.test=false;O4.brk=0;O4.held=false}
+  chips('ori4','o',function(v){O4.o=v;reset4();$('r4a').textContent=OD[v][1];$('r4b').textContent=OD[v][2];say('m4','Probala con carga para ver cuánto aguanta.')});
+  $('load4').addEventListener('click',function(){reset4();O4.test=true;say('m4','Sumando carga…')});
+  function hatch(c,x,y,w,h,dir,step){c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.strokeStyle=rgb(tone(FIL2,-.3),.7);c.lineWidth=1;c.beginPath();if(dir==='h')for(var yy=y+h;yy>y;yy-=step){c.moveTo(x,yy);c.lineTo(x+w,yy)}else if(dir==='v')for(var xx=x;xx<x+w;xx+=step){c.moveTo(xx,y);c.lineTo(xx,y+h)}c.stroke();c.restore()}
+  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,S=split(w,h),A=S.A,B=S.B,o=O4.o,lim=OD[o][0],g;bg(c,w,h);
+    if(O4.test){if(O4.brk>0)O4.brk+=1/60;else if(O4.load<100){O4.load=Math.min(100,O4.load+.55);if(O4.load>=lim&&lim<100){O4.brk=.01;say('m4',o==='placa'?'Se partió con apenas el '+lim+' % de la carga: el brazo se desprendió por una línea de capa. Tirar así separa las hojas de la pila.':'Aguantó hasta el '+lim+' % y cedió en la punta. Resiste bien, pero para imprimirlo así hacen falta muchos soportes.','bad')}}
+      else if(!O4.held){O4.held=true;say('m4','¡Aguantó toda la carga! Las capas siguen la forma del gancho, así que no hay ninguna línea débil cruzando el brazo.','ok');var r=$('r4');r.className='msg ok';r.textContent='¡Esa es! Fuerte, sin soportes y la más rápida.';mark('l4')}}
+    // --- en la cama
+    var s=Math.min(A.w/26,A.h/24),ox=A.x+A.w/2,oy=A.y+A.h-3.4*s;bed(c,ox,oy,s,11);
+    function part(x,y,ww,hh,sup){var X=ox+x*s,Y=oy-(y+hh)*s;if(sup){c.fillStyle='rgba(174,185,212,.22)';c.fillRect(X,Y,ww*s,hh*s);c.strokeStyle='rgba(174,185,212,.55)';c.lineWidth=1;c.beginPath();for(var xx=X+3;xx<X+ww*s;xx+=7){c.moveTo(xx,Y);c.lineTo(xx,Y+hh*s)}c.stroke()}
+      else{g=c.createLinearGradient(0,Y,0,Y+hh*s);g.addColorStop(0,rgb(tone(FIL,.15)));g.addColorStop(1,rgb(FIL2));c.fillStyle=g;c.fillRect(X,Y,ww*s,hh*s);hatch(c,X,Y,ww*s,hh*s,'h',.55*s)}}
+    if(o==='parado'){part(-3,0,9,4,true);UR.forEach(function(r){part(r[0]-6,r[1],r[2],r[3])})}
+    else if(o==='placa'){part(-1,3,4,6,true);part(-8,0,16,3);part(-4,3,3,9);part(-1,9,4,3)}
+    else{part(-8,0,16,3);txt(c,'El perfil del gancho queda apoyado entero',ox,oy-5*s,'center',C.soft,12)}
+    txt(c,'Así se imprime',A.x+12,A.y+22,'left',C.soft,13,700);
+    // --- en uso
+    s=Math.min(B.w/26,B.h/25);var wx=B.x+B.w/2-7*s,by=B.y+B.h-5*s,dir=o==='parado'?'h':o==='placa'?'v':'n',fall=O4.brk>0?Math.min(1.6,O4.brk):0;
+    c.fillStyle='#3A4766';c.fillRect(wx-2.2*s,B.y+30,2.2*s,B.h-50);c.fillStyle='rgba(255,255,255,.06)';for(var k=0;k<8;k++)c.fillRect(wx-2.2*s,B.y+40+k*2.6*s,2.2*s,1);
+    function up(r,dy,dx,rotA){var X=wx+r[0]*s,Y=by-(r[1]+r[3])*s;c.save();c.translate(X+dx,Y+dy);if(rotA){c.translate(0,r[3]*s);c.rotate(rotA);c.translate(0,-r[3]*s)}g=c.createLinearGradient(0,0,0,r[3]*s);g.addColorStop(0,rgb(tone(FIL,.15)));g.addColorStop(1,rgb(FIL2));c.fillStyle=g;c.fillRect(0,0,r[2]*s,r[3]*s);hatch(c,0,0,r[2]*s,r[3]*s,dir,.55*s);c.restore()}
+    var dy=fall*fall*9*s,brA=o==='placa'&&fall,brT=o==='parado'&&fall;
+    up(UR[0],0,0,0);up(UR[1],brA?dy:0,0,brA?fall*.5:0);up(UR[2],(brA||brT)?dy:0,brT?fall*2*s:0,(brA||brT)?fall*.6:0);
+    if(fall&&o==='placa'){c.strokeStyle=C.bad;c.lineWidth=2;c.beginPath();c.moveTo(wx+3*s,by-7.6*s);c.lineTo(wx+3*s,by-3.4*s);c.stroke()}
+    // carga
+    var lx=wx+7.5*s,ly=by-7*s+(fall?dy:0),wsz=(1.6+O4.load/100*2.4)*s;c.strokeStyle=C.soft;c.lineWidth=2;c.beginPath();c.moveTo(lx,ly);c.lineTo(lx,ly+4*s);c.stroke();
+    g=c.createLinearGradient(0,ly+4*s,0,ly+4*s+wsz);g.addColorStop(0,'#8E9BBB');g.addColorStop(1,'#55648A');c.fillStyle=g;rr(c,lx-wsz/2,ly+4*s,wsz,wsz,4);txt(c,Math.round(O4.load)+' %',lx,ly+4*s+wsz/2+4,'center','#141B2B',Math.max(10,wsz*.3),700);
+    txt(c,'Así se usa',B.x+12,B.y+22,'left',C.soft,13,700);pill(c,dir==='n'?'capas de frente: ninguna cruza el brazo':dir==='h'?'capas horizontales':'capas verticales: cruzan el brazo',B.x+B.w/2,B.y+B.h-10,dir==='v'?C.bad:dir==='n'?C.pop:C.ink);divider(c,w,h,S.v)}
+  START.l4=function(){loop(draw4)};
+
+  // ---------- 4.5 altura de capa ----------
+  function upd5(){var hh=+$('h5').value,rel=.2/hh;$('vh5').textContent=num(hh,2)+' mm';$('r5a').textContent=Math.ceil(20/hh-1e-6);$('r5b').textContent=Math.abs(rel-1)<.01?'igual':rel>1?num(rel)+' veces más lento':num(1/rel)+' veces más rápido';
+    say('m5',hh<.1?'Capas muy finas: superficie excelente, pero la impresión se hace eterna.':hh<=.14?'Capas finas: la curva de la proa sale suave. Ideal para figuras y miniaturas.':hh<=.22?'El punto medio: buen aspecto y tiempo razonable. Es el valor para arrancar casi siempre.':hh<=.3?'Capas gruesas: sale rápido y el escalón se nota en las curvas.':'Capas muy gruesas para una boquilla de 0,4: escalón marcado y capas que se unen peor.');
+    if(hh<=.121){var r=$('r5');r.className='msg ok';r.textContent='¡Lista para una miniatura! El escalón casi desaparece.';mark('l5')}}
+  $('h5').addEventListener('input',upd5);
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,hh=+$('h5').value,n=Math.ceil(20/hh-1e-6),s=Math.min(w/44,h/27),ox=w*.4,oy=h-3.2*s;bg(c,w,h);
+    bed(c,ox,oy,s,14.5);layers(c,ox,oy,s,hh,n,true);outline(c,ox,oy,s);
+    lens(c,w,h,ox+10.3*s,oy-3.4*s,4,function(cx,cy,z){var s2=s*z;layers(c,cx-10.3*s2,cy+3.4*s2,s2,hh,n,true);outline(c,cx-10.3*s2,cy+3.4*s2,s2)});
+    txt(c,num(hh,2)+' mm · '+n+' capas',14,24,'left',C.soft,13,700)}
+  START.l5=function(){upd5();loop(draw5)};
+
+  // ---------- 4.6 capa variable ----------
+  var M6='gruesa';
+  function bounds6(){var b=[0],z=0;while(z<20-1e-6){var hh=M6==='fina'?.1:M6==='gruesa'?.28:(z<8.2-1e-6?.1:.28);z=Math.min(20,z+hh);b.push(z)}return b}
+  function upd6(){var n=bounds6().length-1;$('r6a').textContent=n;$('r6b').textContent=Math.round(n/200*100)+' %';
+    say('m6',M6==='fina'?'Todo fino: la proa sale perfecta, pero también pagás capas finas en la cabina recta, donde no se notan.':M6==='gruesa'?'Todo grueso: rapidísimo, y la curva de la proa queda escalonada.':'Variable: la proa sale tan lisa como con todo fino, y la impresión tarda bastante menos.',M6==='var'?'ok':'')}
+  chips('mode6','m',function(v){M6=v;upd6()});
+  function lay6(c,ox,oy,s,b){for(var i=0;i<b.length-1;i++){var z0=b[i],z1=b[i+1],thin=z1-z0<.2;spans((z0+z1)/2).forEach(function(q){bead(c,ox+q[0]*s,oy-z1*s,(q[1]-q[0])*s,(z1-z0)*s,thin?(i%2?FIL2:FIL):(i%2?hex('#E8B25A'):hex('#F2C56B')),0)})}}
+  function draw6(now){var f=fit($('c6'));if(!f)return;var c=f.c,w=f.w,h=f.h,b=bounds6(),s=Math.min(w/44,h/27),ox=w*.42,oy=h-3.2*s;bg(c,w,h);
+    bed(c,ox,oy,s,14.5);lay6(c,ox,oy,s,b);outline(c,ox,oy,s);
+    // regla de alturas a la izquierda
+    var gx=ox-16.6*s;b.forEach(function(z,i){if(i===b.length-1)return;var thin=b[i+1]-z<.2;c.fillStyle=thin?rgb(FIL):'#F2C56B';c.fillRect(gx,oy-b[i+1]*s,1.1*s,Math.max(1,(b[i+1]-z)*s-.6))});
+    lens(c,w,h,ox+10.3*s,oy-3.4*s,4,function(cx,cy,z){var s2=s*z;lay6(c,cx-10.3*s2,cy+3.4*s2,s2,b);outline(c,cx-10.3*s2,cy+3.4*s2,s2)});
+    c.fillStyle=rgb(FIL);c.fillRect(14,14,12,12);txt(c,'capa fina 0,10',32,24,'left',C.soft,12,700);c.fillStyle='#F2C56B';c.fillRect(14,32,12,12);txt(c,'capa gruesa 0,28',32,42,'left',C.soft,12,700)}
+  START.l6=function(){upd6();loop(draw6)};
+  mcq($('q6'),$('r6'),['En las paredes rectas y verticales','En las curvas y pendientes suaves','En las primeras capas, siempre'],1,'Bien. Ahí es donde cada capa queda corrida respecto de la anterior y el escalón se ve.',
+    ['En una pared recta todas las capas caen una sobre otra: no hay escalón que disimular.',null,'La primera capa tiene su propio ajuste. La capa fina rinde donde hay pendiente.'],function(){mark('l6')});
+
+  // ---------- repaso ----------
+  (function(){var Q=[['¿Qué hace el laminador?',['Diseña el modelo 3D','Corta el modelo en capas y genera las instrucciones','Calienta la boquilla'],1,'Del modelo al G-code. Lección 4.1.'],
+    ['Cambiás de PLA a PETG. ¿Qué perfil tocás?',['El de impresora','El de filamento','El de proceso'],1,'La máquina y la calidad buscada no cambiaron. Lección 4.2.'],
+    ['¿Qué formato guarda solo la forma, sin unidades ni ajustes?',['STL','3MF','G-code'],0,'Es la foto de la pieza. Lección 4.3.'],
+    ['¿Cuándo es más débil una pieza impresa?',['Cuando el esfuerzo tira para separar las capas','Cuando se la aprieta de arriba','Cuando tiene mucho relleno'],0,'Las capas son el punto débil. Lección 4.4.'],
+    ['¿Dónde se nota más la altura de capa?',['En paredes rectas','En curvas y pendientes suaves','En la cara de abajo'],1,'Ahí aparece el escalón. Lección 4.5.'],
+    ['¿Qué ventaja tiene la capa variable?',['Usa menos filamento','Capas finas solo donde se notan, con menos tiempo total','Evita usar soportes'],1,'Calidad donde importa. Lección 4.6.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(tx,i){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var sc=$('score');sc.hidden=false;sc.textContent=good+' de 6. '+(good===6?'¡Primera parte dominada!':good>=4?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})})();
+
+  // ---------- audio: lee el comienzo de cada leccion con la voz del navegador ----------
+  var SY=window.speechSynthesis,speaking=null;
+  function stopAudio(){try{if(SY)SY.cancel()}catch(e){}if(speaking){speaking.textContent='▶ Escuchar';speaking.setAttribute('aria-pressed','false');speaking=null}}
+  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
+  if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
+      var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+        u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
+      hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
+  var show0=show;show=function(k,p){stopAudio();show0(k,p)};
+
+  // ---------- arranque ----------
+  setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+</body>
+</html>

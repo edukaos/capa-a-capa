@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 5A</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.steps{max-width:660px}
+@media (max-width:440px){.steps{gap:3px}.steps button{width:30px;height:30px;font-size:13px;border-width:1.5px}.steps i{min-width:3px}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);min-width:62px}
+.wiz{display:flex;flex-direction:column;gap:10px}
+.wq{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--sunken);border-radius:12px;padding:10px 14px}
+.wq>span{flex:1;min-width:200px}
+.rec{background:var(--sunken);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.recm{font-family:var(--f-display);font-size:44px;line-height:1;color:var(--ui)}
+.listen{align-self:flex-start;padding:7px 14px;font-size:14px}
+.ftabw{overflow-x:auto}
+.ftab{width:100%;border-collapse:collapse;font-size:14px}
+.ftab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:7px 10px 7px 0;border-top:1px solid var(--line)}
+.ftab td{text-align:right;font-weight:700;padding:7px 0;border-top:1px solid var(--line)}
+.ftab td.y{color:var(--pop)}.ftab td.n{color:var(--ink-soft)}.ftab td.m{color:var(--ui)}
+.cvT{aspect-ratio:4/3}
+@media (max-width:600px){.cvT{aspect-ratio:3/4}}
+.knobs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.knobs{grid-template-columns:minmax(0,1fr)}}
+.kn{background:var(--sunken);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kn b{font-size:14px}.kn .st{font-size:13px;color:var(--ui)}.kn .st.ok{color:var(--pop)}.kn .st.bad{color:var(--bad)}
+.kn .btn{padding:7px 14px;font-size:14px}
+.chipset button.right{border-color:var(--pop);color:var(--pop)}
+footer a{color:var(--ui)}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-4c.html">← <span class="lg">Módulo 4 · parte 3</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><span class="mn-off"><span class="lg">Módulo 5 · parte 2: pronto</span><span class="sh">Pronto</span></span></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 5, primera parte">
+    <button type="button" data-l="l1" aria-label="Lección 5.1, Por qué calibrar">1</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 5.2, Nivelar la cama">2</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 5.3, Malla de nivelación">3</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 5.4, Offset Z y primera capa">4</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 5.5, Torre de temperatura">5</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 5.1 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Calibración</p><h1>Por qué calibrar</h1>
+      <p>Calibrar es comparar lo que imprime la máquina con lo que debería imprimir, y corregir la diferencia. No se trata de tocar todo: se ajustan pocas cosas, de a una y en orden.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es afinar la guitarra. Se afina una cuerda por vez, empezando por la que sirve de referencia. Si girás tres clavijas juntas, no sabés cuál desafinó.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c1" class="cv2" role="img" aria-label="Pila de calibraciones que se arma en orden"></canvas>
+      <div class="simbody">
+        <p>Tocá las calibraciones en el orden en que conviene hacerlas. Cada una se apoya en la anterior.</p>
+        <div class="chipset" id="ord1"></div>
+        <p class="msg" id="m1">Arrancá por la base de todo.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>"Cambié tres cosas y ahora no sé"</h3>
+        <p>La primera capa sale mal. Bajás la boquilla, subís la temperatura y cambiás el flujo, todo junto. Mejora un poco, pero no sabés qué la mejoró ni si alguno de los tres la empeoró. Un cambio, una prueba, una nota.</p></div>
+      <div class="card"><span class="tag">Para arrancar bien</span><h3>Una buena calibración es</h3>
+        <p>Sencilla, medible, repetible y documentada. Si no la podés repetir mañana con el mismo resultado, todavía no es una calibración.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: calibración y orden recomendado</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Calibration</dd>
+      <dt>Qué es</dt><dd>Comparar el resultado real de la impresora con el esperado y corregir las diferencias.</dd>
+      <dt>Para qué sirve</dt><dd>Mejora calidad, precisión, repetibilidad, resistencia, adherencia, flujo y acabado.</dd></dl>
+      <p>El orden completo de tu curso:</p>
+      <ol><li>Revisión mecánica.</li><li>Nivelación de cama.</li><li>Offset Z.</li><li>Temperatura.</li><li>Extrusor.</li><li>Flujo.</li><li>Retracción.</li><li>Velocidad.</li><li>Puentes y ventilación.</li><li>Tolerancias dimensionales.</li></ol>
+      <p>Una correa floja, una cama con juego o una rueda deformada generan defectos que ningún ajuste del laminador puede corregir. Por eso la revisión mecánica va primero.</p></div></details>
+  </section>
+
+  <!-- 5.2 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.2</p><h1>Nivelar la cama</h1>
+      <p>Nivelar es dejar la boquilla a la misma distancia de la cama en toda la superficie. La cama tiene que quedar paralela al recorrido de la boquilla, no al piso.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la mesa del bar que cojea. No se arregla cambiando la mesa: se gira la patita del lado que baila hasta que apoya pareja. Acá cada esquina de la cama tiene su perilla.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c2" class="cv2" role="img" aria-label="Cama vista desde arriba con una prueba de primera capa"></canvas>
+      <div class="simbody">
+        <div class="knobs" id="knobs2"></div>
+        <p class="note">Las líneas sobre la cama son una prueba de primera capa. Donde la boquilla queda lejos salen finitas y separadas; donde queda pegada, transparentes y raspadas.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Buena de un lado, despegada del otro</h3>
+        <p>La primera capa sale perfecta a la izquierda y no pega a la derecha. No es la temperatura ni el filamento: la cama está inclinada. Se ajusta la perilla de ese lado y se vuelve a revisar todo, porque mover una esquina cambia un poco las otras.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dejá las cuatro esquinas rozando el papel</h3>
+        <p>Ni suelto ni trabado: una leve resistencia en las cuatro.</p><p class="msg" id="r2">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: nivelación y método del papel</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Bed leveling</dd>
+      <dt>Formas</dt><dd>Manual con papel, manual con galga, sensor automático, malla de nivelación y ajuste asistido desde la pantalla.</dd>
+      <dt>Galga</dt><dd>Feeler gauge. Lámina metálica de espesor conocido. Da una referencia más constante que el papel.</dd></dl>
+      <p>El método del papel, según tu curso:</p>
+      <ol><li>Hacer homing.</li><li>Calentar cama y boquilla si corresponde.</li><li>Llevar el cabezal a una esquina.</li><li>Ajustar hasta sentir una ligera resistencia.</li><li>Repetir en todas las esquinas y volver a revisar.</li></ol>
+      <p>El papel da solo una aproximación: la calibración final se mira en una primera capa real.</p></div></details>
+  </section>
+
+  <!-- 5.3 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.3</p><h1>Malla de nivelación</h1>
+      <p>Ninguna cama es perfectamente plana. Con un sensor, la impresora mide la altura en muchos puntos y arma un mapa. Después sube y baja la boquilla un poquito para seguirlo.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es pasar la mano por una mesa vieja antes de escribir encima. Ya sabés dónde está el pozo y dónde la loma, y vas acompañando con la lapicera.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c3" class="cv1" role="img" aria-label="Mapa de alturas de la cama y corte de la primera capa"></canvas>
+      <div class="simbody">
+        <div class="row"><button class="btn" id="probe3" type="button">Medir la cama</button><label><input type="checkbox" id="use3"> Usar la malla al imprimir</label><label><input type="checkbox" id="loose3"> Cama con un tornillo flojo</label></div>
+        <p class="msg" id="m3">Esta cama está un poco hundida en el centro. Medila para ver el mapa.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>La cama combada que igual imprime bien</h3>
+        <p>Una cama de aluminio que se curvó con el calor. Con el papel queda bien en las esquinas y mal en el centro, y no hay perilla para el centro. Con la malla activada, la boquilla acompaña la curva y la primera capa sale pareja.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>¿Qué no puede corregir la malla?</h3>
+        <div class="opts" id="q3"></div><p class="msg" id="r3" hidden></p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: malla de nivelación</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Bed mesh</dd>
+      <dt>Qué es</dt><dd>Representación digital de las variaciones de altura de la cama.</dd>
+      <dt>Para qué sirve</dt><dd>El firmware hace pequeños movimientos en Z para mantener una distancia más pareja.</dd>
+      <dt>Límite</dt><dd>Compensa irregularidades pequeñas. No corrige una cama floja, un eje inclinado, una estructura deformada ni un sensor mal montado.</dd></dl>
+      <p>La forma de la cama del simulador es un ejemplo exagerado para que se vea.</p></div></details>
+  </section>
+
+  <!-- 5.4 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.4</p><h1>Offset Z y primera capa</h1>
+      <p>El offset Z es el ajuste fino de cuánto se acerca la boquilla a la cama. Una diferencia de 0,05 mm, menos que el grosor de un pelo, cambia por completo la primera capa.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es untar dulce de leche. Con el cuchillo muy alto no se pega al pan. Muy bajo, raspás el pan y no queda nada. A la altura justa queda una capa pareja.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c4" class="cv1" role="img" aria-label="Líneas de la primera capa en corte y vistas desde arriba"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Ajuste en vivo</span><button class="btn ghost" type="button" data-z="-0.05">−0,05</button><button class="btn ghost" type="button" data-z="-0.01">−0,01</button><button class="btn ghost" type="button" data-z="0.01">+0,01</button><button class="btn ghost" type="button" data-z="0.05">+0,05</button></div>
+        <dl class="reads">
+          <div><dt>Offset Z</dt><dd id="r4a">+0,12 mm</dd></div>
+          <div><dt>Altura real de la primera capa</dt><dd id="r4b">0,32 mm</dd></div>
+        </dl>
+        <p class="msg" id="m4"></p>
+        <p class="note">Negativo acerca la boquilla a la cama; positivo la aleja. La primera capa pedida es de 0,20 mm.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Las tres fotos de la prueba de primera capa</h3>
+        <p>Líneas redondas con rayas oscuras entre ellas: boquilla alta. Superficie lisa y opaca, sin huecos: justa. Capa transparente con crestas y el extrusor haciendo clic: boquilla baja. Con eso se reconoce cualquier prueba de un vistazo.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Dejá la primera capa justa</h3>
+        <p>Empezás muy alto. Usá los pasos grandes para acercarte y los chicos para afinar.</p><p class="msg" id="r4">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: offset Z y prueba de primera capa</summary><div class="in">
+      <dl><dt>En inglés</dt><dd>Z offset</dd>
+      <dt>Qué es</dt><dd>Diferencia entre el origen del eje Z, o lo que detecta el sensor, y la altura real de la boquilla.</dd>
+      <dt>Muy alto</dt><dd>Líneas separadas, filamento redondeado y mala adherencia.</dd>
+      <dt>Muy bajo</dt><dd>Boquilla raspando, capa transparente, clics del extrusor y pata de elefante.</dd></dl>
+      <p>Ajuste en vivo, según tu curso: imprimir un cuadrado grande de una sola capa, mirar las líneas, ajustar en pasos de 0,01 a 0,05 mm, parar cuando queden unidas y parejas, y guardar el valor.</p></div></details>
+  </section>
+
+  <!-- 5.5 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Lección 5.5</p><h1>Torre de temperatura</h1>
+      <p>Cada bobina funde un poco distinto, aunque sea del mismo material. La torre de temperatura imprime la misma forma varias veces, cada piso a una temperatura, para comparar y elegir.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es probar el mate a distintas temperaturas hasta dar con la tuya. Muy caliente se quema; muy frío no tiene gusto. Y la que te gusta a vos no tiene por qué ser la del paquete.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c5" class="cvT" role="img" aria-label="Torre de temperatura con un piso por temperatura"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Material</span><div class="chipset" id="mat5"><button type="button" data-m="PLA" aria-pressed="true">PLA</button><button type="button" data-m="PETG" aria-pressed="false">PETG</button></div></div>
+        <div class="row"><span>Elegí un piso</span><div class="chipset" id="tmp5"></div></div>
+        <p class="msg" id="m5">Tocá cada piso para ver cómo salió. La torre se imprime de abajo hacia arriba, empezando por la temperatura más alta.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Bobina nueva de una marca que no conocés</h3>
+        <p>El paquete dice "190 a 220 °C". Eso es un rango, no un valor. La torre te muestra en qué punto de ese rango esta bobina y tu impresora andan mejor, y lo anotás para la próxima.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Elegí la temperatura de esta bobina de PLA</h3>
+        <p>No la más brillante: la que mejor equilibra hilos, puente y unión entre capas.</p><p class="msg" id="r5">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: temperatura de boquilla y torre</summary><div class="in">
+      <dl><dt>Muy baja</dt><dd>Mala unión, clics, piezas débiles y flujo irregular.</dd>
+      <dt>Muy alta</dt><dd>Hilos, goteo, pérdida de detalle y puentes caídos.</dd>
+      <dt>Torre</dt><dd>Temperature tower. Pieza dividida en secciones impresas a distintas temperaturas, para comparar hilos, puentes, brillo, detalle, unión entre capas y resistencia.</dd>
+      <dt>Rangos</dt><dd>Según tu curso: PLA 190 a 220 °C, PETG 225 a 250 °C.</dd></dl>
+      <p>Pasos: elegir el rango recomendado, generar cambios reales de temperatura en el G-code, imprimir, comparar cada sección y elegir el mejor equilibrio, no solo la sección más linda. Las bobinas del simulador son ejemplos: la tuya puede andar mejor en otro punto del rango.</p></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 5 · Repaso de la primera parte</p><h1>Cinco preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en el capítulo 11 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea, no reproducen una máquina exacta.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var LES=['l1','l2','l3','l4','l5'],ORDER=LES.concat(['repaso']),cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m5a')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>5.1</b> Por qué calibrar',l2:'<b>5.2</b> Nivelar la cama',l3:'<b>5.3</b> Malla de nivelación',l4:'<b>5.4</b> Offset Z y primera capa',l5:'<b>5.5</b> Torre de temperatura',repaso:'<b>Repaso</b> Cinco preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m5a',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- ayudas ----------
+  function pill(c,s,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(s).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(s,x,y+1)}
+  function txt(c,s,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(s,x,y)}
+  function chips(id,attr,fn){var box=$(id);box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(box.children,function(x){x.setAttribute('aria-pressed',String(x===b))});fn(b.dataset[attr],b)})}
+  function say(id,t,k){var m=$(id);m.className='msg'+(k?' '+k:'');m.textContent=t}
+  function num(v,d){return v.toFixed(d==null?1:d).replace('.',',')}
+  function sgn(v){return(v>0?'+':v<0?'−':'')+num(Math.abs(v),2)}
+  function rnd(i,k){var x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)}
+  function divider(c,w,h,vert){c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
+  function split(w,h){var v=w<520;return{v:v,A:v?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B:v?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h}}}
+  function bnc(t){var n=7.5625,d=2.75;if(t<1/d)return n*t*t;if(t<2/d){t-=1.5/d;return n*t*t+.75}if(t<2.5/d){t-=2.25/d;return n*t*t+.9375}t-=2.625/d;return n*t*t+.984375}
+  function hotMini(c,x,y,s){var g=c.createLinearGradient(0,y-7.4*s,0,y-3*s);g.addColorStop(0,'#93A1C4');g.addColorStop(1,'#66749A');c.fillStyle=g;for(var k=0;k<4;k++)rr(c,x-1.7*s,y-7.2*s+k*1.05*s,3.4*s,.7*s,.2*s);c.fillRect(x-.6*s,y-7.2*s,1.2*s,4.3*s);
+    g=c.createLinearGradient(0,y-3*s,0,y-1.4*s);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,x-1.9*s,y-3*s,3.8*s,1.7*s,.3*s);c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(x-1.1*s,y-2.15*s,.38*s,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(x-s,0,x+s,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(x-s,y-1.4*s);c.lineTo(x+s,y-1.4*s);c.lineTo(x+.3*s,y);c.lineTo(x-.3*s,y);c.closePath();c.fill()}
+  // tramo de linea de primera capa segun la distancia boquilla-cama (mm). 0,10 a 0,13 es lo justo en la escala del papel.
+  function flSeg(c,x1,x2,y,lw,gap,ref){var hi=ref+.035,lo=ref-.035,yy1=y,yy2=y;
+    if(gap>hi){var k=Math.min(1,(gap-hi)/.15),a=k*lw*.35;c.strokeStyle=rgb(FIL);c.lineWidth=lw*(.75-.4*k);c.beginPath();c.moveTo(x1,y+a*Math.sin(x1/6));c.lineTo(x2,y+a*Math.sin(x2/6));c.stroke();return}
+    if(gap>=lo){c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();return}
+    var q=Math.min(1,(lo-gap)/.1);c.strokeStyle=rgb(FIL,.85-.5*q);c.lineWidth=lw*(1+.25*q);c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();
+    c.strokeStyle=rgb(tone(FIL2,-.35),.4+.4*q);c.lineWidth=1.2;c.beginPath();c.moveTo(x1,y-lw*.55);c.lineTo(x2,y-lw*.55);c.moveTo(x1,y+lw*.55);c.lineTo(x2,y+lw*.55);c.stroke()}
+
+  // ---------- 5.1 por que calibrar ----------
+  var O1={got:0,t0:0,wob:0},ST1=['Revisión mecánica','Nivelación de cama','Offset Z','Temperatura','Extrusor','Flujo'],
+    WHY1=['Primero la máquina tiene que estar firme: correas, tornillos y ruedas. Si algo baila, ningún ajuste lo arregla.','Con la máquina firme, se deja la cama pareja en toda la superficie.','Con la cama pareja, recién se puede afinar cuánto baja la boquilla.','Con la primera capa resuelta, se busca la temperatura de la bobina.','Con la temperatura definida, se mide si el motor empuja lo que debe.','Al final se afina el flujo, que depende de todo lo anterior.'];
+  (function(){var box=$('ord1');[3,0,5,2,4,1].forEach(function(i){var b=document.createElement('button');b.type='button';b.textContent=ST1[i];b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){
+      if(i===O1.got){b.disabled=true;b.className='right';b.textContent=(i+1)+'. '+ST1[i];O1.got++;O1.t0=performance.now();
+        if(O1.got===6){say('m1','¡Pila completa! Cada calibración quedó apoyada en la anterior. Tu curso sigue con retracción, velocidad, puentes y tolerancias.','ok');mark('l1')}else say('m1',WHY1[i]+' ¿Qué sigue?','ok')}
+      else{O1.wob=performance.now();say('m1','Todavía no. "'+ST1[i]+'" necesita que antes esté bien "'+ST1[O1.got]+'". '+WHY1[O1.got],'bad')}});box.appendChild(b)})})();
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,bh=Math.min(36,(h-50)/6.6),bw=Math.min(w*.62,380),cx=w/2,base=h-18,wb=O1.wob?Math.max(0,1-(now-O1.wob)/700):0,i;bg(c,w,h);
+    c.fillStyle=C.plate;rr(c,cx-bw/2-20,base,bw+40,8,4);
+    for(i=0;i<6;i++){var y=base-(i+1)*bh,x=cx-bw/2+(i*6);if(i>=O1.got){c.save();c.strokeStyle='rgba(169,180,204,.3)';c.setLineDash([5,5]);c.lineWidth=1.5;c.strokeRect(x+.5,y+3.5,bw-i*12-1,bh-6);c.restore();continue}
+      var dy=0;if(i===O1.got-1){var e=Math.min(1,(now-O1.t0)/650);dy=-(1-bnc(e))*140}var sh=wb*Math.sin((now-O1.wob)/35)*(i+1)*1.6;
+      bead(c,x+sh,y+dy+2,bw-i*12,bh-4,i%2?FIL2:FIL,0);txt(c,(i+1)+'. '+ST1[i],cx+sh,y+dy+bh/2+6,'center','#3A2418',Math.min(16,bh*.45),700)}
+    txt(c,O1.got===6?'Lista para calibrar lo demás':'Cada calibración se apoya en la de abajo',14,24,'left',C.soft,13,700)}
+  START.l1=function(){loop(draw1)};
+
+  // ---------- 5.2 nivelar la cama ----------
+  var G2=[.30,.10,.20,.00],N2=['Adelante, izquierda','Adelante, derecha','Atrás, derecha','Atrás, izquierda'];
+  function st2(g){return g>.13?['suelto','el papel pasa sin tocar','']:g>=.07?['roza','leve resistencia: así','ok']:['trabado',g<=0?'la boquilla toca la cama':'el papel no pasa','bad']}
+  (function(){var box=$('knobs2');N2.forEach(function(n,i){var d=document.createElement('div');d.className='kn';d.innerHTML='<b></b><span class="st"></span><div class="row"><button class="btn ghost" type="button" data-d="-0.05">Acercar</button><button class="btn ghost" type="button" data-d="0.05">Alejar</button></div>';
+      d.querySelector('b').textContent=n;d.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;G2[i]=Math.round((G2[i]+ +b.dataset.d)*100)/100;G2[i]=Math.max(-.1,Math.min(.4,G2[i]));
+        var k=(i+2)%4;G2[k]=Math.round((G2[k]- +b.dataset.d*.2)*1000)/1000;upd2()});box.appendChild(d)})})();
+  function upd2(){var ok=0;[].forEach.call($('knobs2').children,function(d,i){var s=st2(G2[i]),sp=d.querySelector('.st');sp.textContent=s[0]+' · '+s[1];sp.className='st '+s[2];if(s[2]==='ok')ok++});
+    if(ok===4){say('r2','¡Pareja! Las cuatro esquinas rozan el papel. Ahora la prueba real de primera capa confirma.','ok');mark('l2')}else if(!done.l2)say('r2',ok+' de 4 esquinas listas. Ojo: mover una esquina corre un poco la opuesta.')}
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,L=w<520?Math.min(w-60,h-50):Math.min(w-140,h-60),x0=(w-L)/2,y0=(h-L)/2+6,i,k,g;bg(c,w,h);
+    c.fillStyle='rgba(0,0,0,.3)';rr(c,x0-6,y0+2,L+16,L+16,14);g=c.createLinearGradient(x0,y0,x0+L,y0+L);g.addColorStop(0,'#D9A441');g.addColorStop(1,'#B98832');c.fillStyle=g;rr(c,x0-8,y0-8,L+16,L+16,12);
+    function gap(u,v){return(1-u)*(1-v)*G2[0]+u*(1-v)*G2[1]+u*v*G2[2]+(1-u)*v*G2[3]}
+    c.lineCap='round';var lw=Math.max(4,L*.026);for(k=0;k<7;k++){var v=1-(k+.5)/7,y=y0+(k+.5)/7*L;for(var x=x0+16;x<x0+L-16;x+=6){flSeg(c,x,Math.min(x+6.5,x0+L-16),y,lw,gap((x-x0)/L,v),.10)}}
+    var P=[[x0,y0+L],[x0+L,y0+L],[x0+L,y0],[x0,y0]];P.forEach(function(p,i){var s=st2(G2[i]),col=s[2]==='ok'?C.pop:s[2]==='bad'?C.bad:C.ui,ang=G2[i]*20;c.fillStyle='#2F3A57';c.beginPath();c.arc(p[0],p[1],15,0,7);c.fill();c.strokeStyle=col;c.lineWidth=3;c.beginPath();c.arc(p[0],p[1],15,0,7);c.stroke();
+      c.strokeStyle=C.ink;c.lineWidth=2.5;c.beginPath();c.moveTo(p[0],p[1]);c.lineTo(p[0]+Math.cos(ang)*10,p[1]+Math.sin(ang)*10);c.stroke();
+      var lx=p[0]+(i===0||i===3?-54:54),ly=p[1]+(i<2?-2:6);if(w<520){lx=p[0]+(i===0||i===3?48:-48);ly=p[1]+(i<2?-22:26)}pill(c,num(Math.max(0,G2[i]),2)+' mm',lx,ly,col)});
+    var ph=(t*.12)%1,ci=Math.floor(ph*4),fr=ph*4-ci,pa=P[ci],pb=P[(ci+1)%4],q=fr<.6?0:(fr-.6)/.4,hx=pa[0]+(pb[0]-pa[0])*q,hy=pa[1]+(pb[1]-pa[1])*q;
+    c.fillStyle='rgba(255,255,255,.88)';c.save();c.translate(hx,hy);c.rotate(-.18);c.fillRect(-14,-10,28,20);c.restore();c.shadowColor=C.ui;c.shadowBlur=12;c.strokeStyle=C.ui;c.lineWidth=3;c.beginPath();c.arc(hx,hy,7,0,7);c.stroke();c.shadowBlur=0;
+    if(w>=520)txt(c,'La cama desde arriba',14,22,'left',C.soft,13,700)}
+  START.l2=function(){upd2();loop(draw2)};
+
+  // ---------- 5.3 malla ----------
+  var M3={n:0,t0:0,run:false},NP=5;
+  function zb(u,v){return-.16+.64*((u-.5)*(u-.5)+(v-.5)*(v-.5))}
+  $('probe3').addEventListener('click',function(){M3.n=0;M3.t0=performance.now();M3.run=true;say('m3','Midiendo: el sensor toca la cama punto por punto…')});
+  function msg3(){if(M3.run)return;var use=$('use3').checked,loose=$('loose3').checked,meas=M3.n>=NP*NP;
+    if(loose)say('m3','Con un tornillo flojo la cama se mueve mientras imprime. El mapa se midió con la cama en otra posición: la malla no puede seguir algo que cambia. Primero se arregla la mecánica.','bad');
+    else if(use&&!meas)say('m3','Activaste la malla, pero todavía no hay mapa. Medí la cama primero.','bad');
+    else if(use)say('m3','La boquilla sube y baja unas centésimas siguiendo el mapa. La primera capa sale pareja de punta a punta.','ok');
+    else if(meas)say('m3','El mapa muestra la cama hundida en el centro. Sin usarlo, la boquilla va derecha: en los bordes queda pegada y en el centro, lejos.');
+    else say('m3','Esta cama está un poco hundida en el centro. Medila para ver el mapa.')}
+  $('use3').addEventListener('change',msg3);$('loose3').addEventListener('change',msg3);
+  function heat3(z){var a=hex('#6D8FD6'),b=hex('#8FE0CC'),d=hex('#FFB38A');var k=(z+.16)/.32;return k<.5?mixA(a,b,k*2):mixA(b,d,(k-.5)*2)}
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,S=split(w,h),A=S.A,B=S.B,i,j,k;bg(c,w,h);
+    if(M3.run){M3.n=Math.min(NP*NP,Math.floor((now-M3.t0)/110));if(M3.n>=NP*NP){M3.run=false;msg3()}}
+    var loose=$('loose3').checked,use=$('use3').checked&&M3.n>=NP*NP,L=Math.min(A.w-60,A.h-80),x0=A.x+(A.w-L)/2,y0=A.y+(A.h-L)/2+8,cs=L/NP;
+    c.fillStyle='#1B2336';rr(c,x0-6,y0-6,L+12,L+12,10);
+    for(i=0;i<NP;i++)for(j=0;j<NP;j++){var idx=i*NP+(i%2?NP-1-j:j),z=zb((j+.5)/NP,(i+.5)/NP),on=idx<M3.n;c.fillStyle=on?rgb(heat3(z)):'rgba(169,180,204,.12)';rr(c,x0+j*cs+2,y0+i*cs+2,cs-4,cs-4,6);
+      if(on&&cs>40){txt(c,(z>0?'+':'')+num(z,2),x0+(j+.5)*cs,y0+(i+.5)*cs+4,'center','#1B2336',11,700)}}
+    if(M3.run){var pi=Math.min(NP*NP-1,M3.n),ii=Math.floor(pi/NP),jj=ii%2?NP-1-pi%NP:pi%NP;c.shadowColor=C.ui;c.shadowBlur=14;c.strokeStyle=C.ui;c.lineWidth=3;c.beginPath();c.arc(x0+(jj+.5)*cs,y0+(ii+.5)*cs,cs*.3,0,7);c.stroke();c.shadowBlur=0}
+    txt(c,'Mapa de la cama, desde arriba',A.x+12,A.y+22,'left',C.soft,13,700);
+    // corte por el centro
+    var gx0=B.x+30,gx1=B.x+B.w-30,mid=B.y+B.h*.55,sc=(B.h*.9)/1.0,X=function(u){return gx0+(gx1-gx0)*u},jit=loose?Math.sin(t*7)*.07+Math.sin(t*3.1)*.04:0;
+    function bedY(u){return mid-(zb(u,.5)+jit*(u-.5)*2)*sc}
+    c.fillStyle='#B98832';c.beginPath();c.moveTo(X(0),bedY(0));for(k=0;k<=40;k++)c.lineTo(X(k/40),bedY(k/40));c.lineTo(X(1),mid+.4*sc);c.lineTo(X(0),mid+.4*sc);c.closePath();c.fill();
+    var lw=Math.max(5,sc*.07);c.lineCap='round';for(k=0;k<40;k++){var u=(k+.5)/40,nz=use?zb(u,.5):-.06,gp=.1+(nz-(zb(u,.5)+jit*(u-.5)*2)),y=Math.min(bedY(u),mid-(nz+.1)*sc)-lw*.45;flSeg(c,X(k/40),X((k+1)/40),y,lw,gp,.10)}
+    c.save();c.strokeStyle=C.ui;c.setLineDash([6,5]);c.lineWidth=1.6;c.beginPath();for(k=0;k<=40;k++){var uu=k/40,yy=mid-((use?zb(uu,.5):-.06)+.1)*sc-lw*1.2;if(k)c.lineTo(X(uu),yy);else c.moveTo(X(uu),yy)}c.stroke();c.restore();
+    txt(c,'Corte por el centro · altura exagerada',B.x+12,B.y+22,'left',C.soft,13,700);txt(c,'- - recorrido de la boquilla',B.x+12,B.y+40,'left',C.ui,12,700);
+    pill(c,loose?'la cama se mueve':use?'primera capa pareja':'pareja solo en una zona',B.x+B.w/2,B.y+B.h-12,loose?C.bad:use?C.pop:C.ui);divider(c,w,h,S.v)}
+  START.l3=function(){msg3();loop(draw3)};
+  mcq($('q3'),$('r3'),['Una cama apenas combada','Una cama floja que se mueve al imprimir','Pequeñas diferencias de altura entre zonas'],1,'Exacto. La malla compensa una forma fija; si la cama se mueve, el mapa deja de valer.',
+    ['Eso es justo lo que la malla compensa.',null,'Para eso está la malla.'],function(){mark('l3')});
+
+  // ---------- 5.4 offset Z ----------
+  var Z4={o:.12};
+  function st4(){var o=Z4.o;return o>.06?'alto':o>.02?'algo alto':o>=-.02?'justo':o>=-.06?'algo bajo':'bajo'}
+  function upd4(){var o=Z4.o,s=st4();$('r4a').textContent=sgn(o)+' mm';$('r4b').textContent=num(Math.max(0,.2+o),2)+' mm';
+    say('m4',{alto:'Boquilla alta: el plástico cae redondo, las líneas no se tocan y casi no se agarran a la cama.','algo alto':'Todavía un poco alta: las líneas se tocan, pero quedan surcos entre ellas.',justo:'Justa: líneas aplastadas, unidas y parejas. La superficie se ve lisa y opaca.','algo bajo':'Un poco baja: aparecen crestas donde el plástico sobrante se levanta entre líneas.',bajo:'Boquilla baja: raspa la cama, la capa queda transparente y el extrusor hace clic porque no tiene por dónde sacar plástico.'}[s],s==='justo'?'ok':s==='alto'||s==='bajo'?'bad':'');
+    if(s==='justo'){say('r4','¡Primera capa justa! Ahora se guarda el valor.','ok');mark('l4')}else if(!done.l4)say('r4','Todavía no.')}
+  [].forEach.call(document.querySelectorAll('[data-z]'),function(b){b.addEventListener('click',function(){Z4.o=Math.max(-.15,Math.min(.2,Math.round((Z4.o+ +b.dataset.z)*100)/100));upd4()})});
+  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,S=split(w,h),A=S.A,B=S.B,o=Z4.o,hh=Math.max(.05,.2+o),s=st4(),k,g;bg(c,w,h);
+    var pm=Math.min((A.w-40)/2.9,(A.h-90)/.75),cx=A.x+A.w/2,by=A.y+A.h-34,area=.45*.2,wd=Math.min(.95,area/hh),pitch=.45;
+    c.fillStyle='#B98832';rr(c,cx-1.45*pm,by,2.9*pm,10,3);
+    for(k=-2;k<=2;k++){var x=cx+k*pitch*pm,ww=wd*pm,ht=hh*pm;if(s==='alto'){c.fillStyle=rgb(FIL);c.beginPath();c.ellipse(x,by-ht*.55,ww/2,ht*.55,0,0,7);c.fill()}
+      else{g=c.createLinearGradient(0,by-ht,0,by);g.addColorStop(0,rgb(tone(FIL,.25),s==='bajo'?.55:1));g.addColorStop(1,rgb(FIL2,s==='bajo'?.55:1));c.fillStyle=g;rr(c,x-ww/2,by-ht,ww,ht,Math.min(ht/2,ww/2))}
+      if(ww>pitch*pm*1.05){c.fillStyle=rgb(tone(FIL2,-.1),s==='bajo'?.6:.9);c.beginPath();c.ellipse(x+pitch*pm/2,by-ht-.03*pm,(ww-pitch*pm)*.4+2,(ww-pitch*pm)*.25+2,0,0,7);c.fill()}}
+    var ny=by-hh*pm-2,nz=.42*pm;g=c.createLinearGradient(cx-nz,0,cx+nz,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(cx-nz*1.8,ny-nz*1.4);c.lineTo(cx+nz*1.8,ny-nz*1.4);c.lineTo(cx+nz*.6,ny);c.lineTo(cx-nz*.6,ny);c.closePath();c.fill();
+    c.strokeStyle=C.ui;c.lineWidth=1.5;var dx=cx+1.25*pm;c.beginPath();c.moveTo(dx,by);c.lineTo(dx,ny);c.moveTo(dx-5,by);c.lineTo(dx+5,by);c.moveTo(dx-5,ny);c.lineTo(dx+5,ny);c.stroke();pill(c,num(hh,2)+' mm',dx-(A.w<400?40:58),(by+ny)/2,C.ui);
+    if(s==='bajo'&&Math.sin(t*9)>.6)pill(c,'clic',cx,ny-nz*2.4,C.bad);
+    txt(c,'Las líneas en corte',A.x+12,A.y+22,'left',C.soft,13,700);
+    // prueba desde arriba
+    var L=Math.min(B.w-70,B.h-80),x0=B.x+(B.w-L)/2,y0=B.y+(B.h-L)/2+6,n=11,lw=L/n;c.fillStyle='#B98832';rr(c,x0-10,y0-10,L+20,L+20,10);
+    for(k=0;k<n;k++){var yy=y0+(k+.5)*lw;c.lineCap='butt';flSeg(c,x0,x0+L,yy,lw*(s==='alto'?1:1.02),.1+o,.10)}
+    if(s==='bajo'){c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1;for(k=0;k<6;k++){c.beginPath();c.moveTo(x0+rnd(k,1)*L,y0);c.lineTo(x0+rnd(k,2)*L,y0+L);c.stroke()}}
+    txt(c,'Prueba de primera capa, desde arriba',B.x+12,B.y+22,'left',C.soft,13,700);pill(c,s==='justo'?'justa':s,B.x+B.w/2,B.y+B.h-12,s==='justo'?C.pop:s==='alto'||s==='bajo'?C.bad:C.ui);divider(c,w,h,S.v)}
+  START.l4=function(){upd4();loop(draw4)};
+
+  // ---------- 5.5 torre de temperatura ----------
+  var T5={m:'PLA',sel:null},TW={PLA:{hi:230,best:[205,210],ideal:207.5,rng:'190 a 220'},PETG:{hi:260,best:[235,240],ideal:237.5,rng:'225 a 250'}};
+  function temps5(){var a=[],hi=TW[T5.m].hi;for(var i=0;i<9;i++)a.push(hi-5*i);return a}
+  function build5(){var box=$('tmp5');box.textContent='';temps5().forEach(function(T){var b=document.createElement('button');b.type='button';b.textContent=T+' °C';b.dataset.t=T;b.setAttribute('aria-pressed','false');box.appendChild(b)});T5.sel=null}
+  function defs5(T){var d=T-TW[T5.m].ideal;return{str:Math.max(0,Math.min(1,(d-4)/16)),droop:Math.max(0,Math.min(1,(d-2)/18)),cold:Math.max(0,Math.min(1,(-d-4)/14))}}
+  chips('mat5','m',function(v){T5.m=v;build5();say('m5','Bobina de '+v+' de ejemplo. Tu curso indica '+TW[v].rng+' °C. Tocá cada piso para ver cómo salió.')});
+  $('tmp5').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call($('tmp5').children,function(x){x.setAttribute('aria-pressed',String(x===b))});var T=+b.dataset.t;T5.sel=T;var d=defs5(T),bt=TW[T5.m].best,ok=T>=bt[0]&&T<=bt[1];
+    say('m5',ok?T+' °C: buen equilibrio. Casi sin hilos, el puente cruza derecho y las capas se ven bien unidas.':d.str>.5?T+' °C: demasiado caliente. Muchos hilos, el puente se cae y el detalle se ablanda.':d.str>0||d.droop>.3?T+' °C: algo caliente. Brilla lindo, pero aparecen hilos y el puente hace panza.':d.cold>.5?T+' °C: muy frío. Superficie áspera, huecos y capas que se separan con poco esfuerzo.':T+' °C: algo frío. Se ve mate y las capas se unen peor; la pieza queda más débil.',ok?'ok':(d.str>.5||d.cold>.5)?'bad':'');
+    if(ok&&T5.m==='PLA'){say('r5','¡Esa! Para esta bobina, '+T+' °C es el mejor equilibrio. Anotalo junto con la marca y el color.','ok');mark('l5')}else if(!done.l5&&T5.m==='PLA')say('r5','Todavía no. Buscá el piso donde no haya hilos ni grietas.')});
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,TT=temps5(),n=TT.length,sh=(h-30)/n,W=Math.min(w*.5,320),cx=w/2+(w>520?30:16),x0=cx-W/2,by=h-12,i,k,col=T5.m==='PLA'?FIL:hex('#8FD3E8'),col2=T5.m==='PLA'?FIL2:hex('#6FBCD6');bg(c,w,h);
+    c.fillStyle=C.plate;rr(c,x0-20,by,W+40,8,4);
+    for(i=0;i<n;i++){var T=TT[i],d=defs5(T),y1=by-(i+1)*sh,y0=by-i*sh,sel=T5.sel===T,ex=d.cold*3;
+      // losa
+      var sy=y0-sh*.32;c.fillStyle=rgb(i%2?col2:col);c.beginPath();c.moveTo(x0,y0);for(k=0;k<=24;k++)c.lineTo(x0+W*k/24,sy+(d.cold?(rnd(i,k)-.5)*ex*2:0));c.lineTo(x0+W,y0);c.closePath();c.fill();
+      if(d.cold>0){c.fillStyle='rgba(20,27,43,'+(.35+.5*d.cold)+')';for(k=0;k<Math.round(d.cold*7);k++)c.fillRect(x0+rnd(i,k+30)*W*.9,y0-sh*.18,W*.05,2)}
+      // puente
+      var bx0=x0+W*.06,bx1=x0+W*.46,pw=W*.07,py=y1+sh*.18;c.fillStyle=rgb(col);c.fillRect(bx0,py,pw,sy-py);c.fillRect(bx1-pw,py,pw,sy-py);
+      var dr=d.droop*(sy-py)*.75;c.strokeStyle=rgb(i%2?col2:col);c.lineWidth=Math.max(3,sh*.14);c.lineCap='butt';c.beginPath();c.moveTo(bx0,py+2);c.quadraticCurveTo((bx0+bx1)/2,py+2+2*dr,bx1,py+2);c.stroke();
+      // cono y columna para hilos
+      var cx1=x0+W*.66,cx2=x0+W*.9;c.fillStyle=rgb(col);c.beginPath();c.moveTo(cx1-W*.07,sy);c.lineTo(cx1+W*.07,sy);c.lineTo(cx1+(d.str>.6?W*.02:0),py-(d.str>.6?-2:0));c.lineTo(cx1-(d.str>.6?W*.02:0),py);c.closePath();c.fill();c.fillRect(cx2-W*.03,py,W*.06,sy-py);
+      var ns=Math.round(d.str*7);c.strokeStyle=rgb(col,.8);c.lineWidth=1;for(k=0;k<ns;k++){var yy=py+(k+.5)*(sy-py)/7;c.beginPath();c.moveTo(cx1+W*.02,yy);c.quadraticCurveTo((cx1+cx2)/2,yy+(rnd(i,k)-.3)*8,cx2-W*.03,yy+(rnd(k,i)-.5)*4);c.stroke()}
+      if(d.cold>.3){c.strokeStyle='#141B2B';c.lineWidth=1.5;c.beginPath();c.moveTo(cx2-W*.03,py+(sy-py)*.5);c.lineTo(cx2+W*.03,py+(sy-py)*.55);c.stroke()}
+      txt(c,T+' °C',x0-12,y0-sh*.38,'right',sel?C.ui:C.soft,Math.min(13,sh*.45),sel?700:500);
+      if(sel){c.strokeStyle=C.ui;c.lineWidth=2.5;c.strokeRect(x0-6,y1+2,W+12,sh-2)}}
+    txt(c,'Torre de '+T5.m,14,22,'left',C.soft,13,700)}
+  START.l5=function(){loop(draw5)};
+  build5();
+
+  // ---------- repaso ----------
+  (function(){var Q=[['¿Qué conviene calibrar primero?',['La temperatura','La revisión mecánica','El flujo'],1,'Si algo baila, ningún ajuste lo arregla. Lección 5.1.'],
+    ['Con el método del papel, ¿qué se busca sentir en cada esquina?',['Que el papel pase sin tocar','Una leve resistencia','Que el papel quede trabado'],1,'Roce parejo en las cuatro. Lección 5.2.'],
+    ['¿Qué hace la malla de nivelación?',['Endereza la cama','Sube y baja la boquilla para seguir la forma medida','Calienta más el centro'],1,'Compensa, no corrige la mecánica. Lección 5.3.'],
+    ['La capa sale transparente y el extrusor hace clic. ¿Cómo está la boquilla?',['Muy alta','Muy baja','Justa'],1,'No tiene por dónde sacar plástico. Lección 5.4.'],
+    ['En una torre de temperatura, ¿qué piso elegís?',['El más brillante','El de mejor equilibrio entre hilos, puente y unión','El más caliente'],1,'Lo más lindo no siempre es lo mejor. Lección 5.5.']],
+    box=$('quiz'),ans=0,good=0;
+    Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(tx,i){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var sc=$('score');sc.hidden=false;sc.textContent=good+' de 5. '+(good===5?'¡Primera parte dominada!':good>=3?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})})();
+
+  // ---------- audio: lee el comienzo de cada leccion con la voz del navegador ----------
+  var SY=window.speechSynthesis,speaking=null;
+  function stopAudio(){try{if(SY)SY.cancel()}catch(e){}if(speaking){speaking.textContent='▶ Escuchar';speaking.setAttribute('aria-pressed','false');speaking=null}}
+  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
+  if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
+      var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+        u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
+      hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
+  var show0=show;show=function(k,p){stopAudio();show0(k,p)};
+
+  // ---------- arranque ----------
+  setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+</body>
+</html>
