@@ -408,7 +408,7 @@ h1 .en{border:1px solid #8791A8;border-radius:10px;padding:4px 12px;font-size:14
 .criollo .pstep .t b{color:#fff}.criollo .pstep .t small{color:var(--on-pri-c)}
 .criollo .pstep .n{background:var(--pri);color:var(--on-pri)}
 .sim>.pstep{padding:22px 24px 0}
-.sim .mision{margin:14px 24px 0}
+.sim .mision{margin:14px 24px 18px}
 .simbody,.gside{padding:18px 24px 24px}
 .card{padding:22px 24px;gap:12px}
 .card h3{font-size:24px;line-height:1.15}
@@ -477,6 +477,11 @@ code{color:var(--ui)}
 .narr svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .narr:not(.on) svg{fill:currentColor;stroke-width:1.5}
 @media (min-width:861px){.top{position:sticky;top:0;z-index:15;background:var(--bg);padding:12px 0;margin-block:-12px;box-shadow:0 1px 0 var(--line)}}
+
+/* mini reto con respuesta: va dentro del simulador, como parte del reto */
+.card.preto{background:rgba(255,185,94,.08);border:2px solid #7A5210;border-radius:20px;padding:16px 18px;gap:10px}
+.card.preto .tag{color:var(--ui)}
+.card.preto h3{font-size:20px}
 </style>
 </head>
 <body>
@@ -1089,7 +1094,7 @@ code{color:var(--ui)}
       var go=el('button','btn',(nb&&nb.textContent.trim())||'Siguiente →');go.type='button';go.addEventListener('click',function(){nb&&nb.click();window.scrollTo({top:0,behavior:'smooth'})});nx.appendChild(go);body.appendChild(nx);
       sec._pnext=nx;sec._go=go}
     // mini reto duplicado: fuera
-    if(duo){[].slice.call(duo.children).forEach(function(c){var t=c.querySelector('.tag');if(t&&/mini reto/i.test(t.textContent))c.hidden=true});duo.classList.add('solo')}
+    if(duo){[].slice.call(duo.children).forEach(function(c){var t=c.querySelector('.tag');if(t&&/mini reto/i.test(t.textContent)){if(c.querySelector('.opts,.chipset,button,input,select')){c.classList.add('preto');if(sec._pnext)sec._pnext.before(c);else sim.appendChild(c)}else c.hidden=true}});duo.classList.add('solo')}
     if(duo||fi){var dp=el('div','pdeep');dp.appendChild(el('h2','','Para profundizar'));var anchor=duo||fi;anchor.before(dp);if(duo)dp.appendChild(duo);if(fi)dp.appendChild(fi)}
     function sync(){var d=mis&&mis.classList.contains('done'),lis=ul.children;sim.classList.toggle('pdone',!!d);if(lis[1]){lis[0].className='ok';lis[1].className=d?'ok':'now';if(lis[2])lis[2].className=d?'now':''}
       if(sec._pnext){sec._pnext.classList.toggle('on',!!d);var nb=document.getElementById('next');if(nb)sec._go.textContent=nb.textContent.trim()}}
