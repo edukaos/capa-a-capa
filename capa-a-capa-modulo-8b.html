@@ -648,7 +648,7 @@ details.ficha .in{font-size:16px}
     var all=Q4.a&&Q4.b&&Q4.c,r=rec4(),pw=V?w*.5:Math.min(w*.3,220),ph=h*(V?.5:.7),px=V?(w-pw)/2:w*.1,py=h*.16;
     printer(c,px,py,pw,ph,{t:t,hx:.2+.25*Math.sin(t),bed:r.cl?0:Math.sin(t*1.2)*pw*.06});
     if(r.cl){c.strokeStyle='rgba(238,241,247,.55)';c.lineWidth=3;c.strokeRect(px-10,py-12,pw+20,ph+14);c.fillStyle='rgba(159,197,255,.08)';c.fillRect(px-10,py-12,pw+20,ph+14)}
-    if(!all){txt(c,'Respondé y armamos tu impresora ideal',V?w/2:px+pw+30,V?h*.75:h*.5,V?'center':'left',C.soft,14,700);return}
+    if(!all){var qx=V?14:px+pw+40,qy=V?py+ph+28:h*.3,ql=V?22:Math.min(40,h*.16);txt(c,'Respondé y armamos tu impresora ideal',qx,qy,'left',C.ui,V?13:16,700);[['Qué vas a imprimir',Q4.a],['Qué materiales',Q4.b],['Si querés aprender a ajustarla',Q4.c]].forEach(function(q,i){var yy=qy+(i+1)*ql,ok=!!q[1];c.strokeStyle=ok?C.pop:C.line;c.lineWidth=2;c.beginPath();c.arc(qx+7,yy-5,7,0,7);c.stroke();if(ok){c.fillStyle=C.pop;c.beginPath();c.arc(qx+7,yy-5,3.5,0,7);c.fill()}txt(c,q[0],qx+22,yy,'left',ok?C.ink:C.soft,V?12:15,600)});return}
     var lx=V?14:px+pw+36,ly=V?py+ph+30:h*.2,lh=V?18:Math.min(30,h*.13);r.list.forEach(function(s,i){c.fillStyle=C.pop;c.beginPath();c.arc(lx+5,ly+i*lh-4,4,0,7);c.fill();c.font='600 '+(V?11:14)+'px "DM Sans",sans-serif';c.fillStyle=C.ink;c.textAlign='left';var tt=s;var mw=w-lx-30;while(c.measureText(tt).width>mw&&tt.length>4)tt=tt.slice(0,-2);if(tt!==s)tt+='…';c.fillText(tt,lx+16,ly+i*lh)});
     txt(c,'Tu impresora ideal',14,22,'left',C.soft,13,700)}
   START.l4=function(){loop(draw4)};

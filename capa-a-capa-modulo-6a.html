@@ -671,7 +671,7 @@ details.ficha .in{font-size:16px}
     var fill=cp>=1,col=cp>=2?mixA(FIL,hex('#D9C6B5'),Math.min(1,cool)):FIL,dy=-pull*nh*.5;
     if(hot){c.save();c.globalAlpha=.35+.15*Math.sin(t*5);c.fillStyle='#FF8A5C';c.fillRect(nx-nw/2,ny-nh*.55,nw,6);c.restore();pill(c,'calentando',nx,zy+38,C.ui)}
     c.save();c.beginPath();c.rect(zx,zy+30,zw,zh-30);c.clip();if(fill&&!H3.fixed||cp>=3){c.save();c.translate(0,dy);c.fillStyle=rgb(col);c.beginPath();c.moveTo(nx-bw/2+1,zy+26);c.lineTo(nx+bw/2-1,zy+26);c.lineTo(nx+bw/2-1,ny-nh*.4);c.lineTo(nx+2.5,ny-5);c.lineTo(nx-2.5,ny-5);c.lineTo(nx-bw/2+1,ny-nh*.4);c.closePath();c.fill();if(cp>=3){c.fillStyle='#5A3A2A';c.beginPath();c.ellipse(nx,ny-nh*.32,bw*.28,nh*.08,0,0,7);c.fill()}c.restore()}
-    if(!H3.fixed&&cp<3){c.fillStyle='#5A3A2A';c.beginPath();c.ellipse(nx,ny-nh*.32,bw*.28,nh*.08,0,0,7);c.fill();if(!fill||cp<0)txt(c,'resto de PETG',zx+12,zy+zh-12,'left','#C9A27E',12,700)}c.restore();
+    if(!H3.fixed&&cp<3){c.fillStyle='#5A3A2A';c.beginPath();c.ellipse(nx,ny-nh*.32,bw*.28,nh*.08,0,0,7);c.fill();if(!fill||cp<0)pill(c,'resto de PETG',zx+zw/2,zy+zh-14,'#C9A27E')}c.restore();
     if(cp>=0){var st=CPS[Math.min(4,cp)];pill(c,(Math.min(4,cp)+1)+'. '+st,WD?zx+zw/2:w/2,WD?zy+46:h*.46,cp>=4?C.pop:C.ui)}
     txt(c,'Del rollo a la pieza',14,22,'left',C.soft,13,700);ring(0,0,0,'')}
   START.l3=function(){loop(draw3)};

@@ -646,7 +646,7 @@ details.ficha .in{font-size:16px}
       var wx0=40,wy0=h*.56,wx1=w-52,wy1=h-22;c.lineCap='round';c.lineJoin='round';
       function wall(dx,al){c.beginPath();c.moveTo(wx0+dx,wy0);for(var d=0;d<=wx1-wx0;d+=3)c.lineTo(wx0+dx+d,wy0);for(d=0;d<=wy1-wy0;d+=3)c.lineTo(wx1+dx+loose*9*Math.exp(-d/40)*Math.sin(d/6.5),wy0+d);
         c.strokeStyle=rgb(tone(FIL2,-.3),al);c.lineWidth=9;c.stroke();c.strokeStyle=rgb(FIL,al);c.lineWidth=6;c.stroke()}
-      if(T<12)wall(-13,.45);wall(0,1);c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='left';c.fillText(T<12?'Pared impresa: capa corrida':'Pared impresa después de una esquina',wx0-6,wy1+2)}
+      if(T<12)wall(-13,.45);wall(0,1);c.fillStyle=C.soft;c.font='500 12px "DM Sans",system-ui,sans-serif';c.textAlign='left';c.fillText(w<360?(T<12?'Capa corrida':'Tras una esquina'):(T<12?'Pared impresa: capa corrida':'Pared impresa después de una esquina'),wx0-6,wy1+2)}
     f=fit($('c4b'));if(!f)return;c=f.c;w=f.w;h=f.h;bg(c,w,h);TN4+=(+$('turns').value-TN4)*.12;var bent=$('bent').checked?1:0,sx=w*.3,yb=h-64,yt=20,pm=(yb-yt-18)/80,mm=TN4*8,rot=TN4*Math.PI*2;
     function off(yy){return bent*4.5*Math.sin(yy/38+rot)}
     g=c.createLinearGradient(sx-28,0,sx+28,0);g.addColorStop(0,'#55648A');g.addColorStop(1,'#2F3A57');c.fillStyle=g;rr(c,sx-28,h-50,56,38,7);c.fillStyle='#8E9BBB';rr(c,sx-10,h-66,20,18,4);

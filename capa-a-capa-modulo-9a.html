@@ -590,7 +590,7 @@ details.ficha .in{font-size:16px}
     if(Math.abs(v-28.57)<=.06){say('r1','¡Exacto! 20 / 0,70 = 28,57. Con 26, el recargo del 30 % te dejaba solo un 23 % real.','ok');mark('l1')}
     else if(Math.abs(v-26)<.06)say('r1','Ese es el recargo del 30 % sobre el coste. De cada 26 te quedan 6: un 23 %. Probá con coste / (1 − margen).','bad');
     else say('r1','No da. El precio con margen real es coste / (1 − margen): 20 / 0,70.','bad')});
-  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,co=pn($('co1').value)||0,p=+$('pc1').value/100,pr=co*(1+p),pm=co/(1-p),mx=Math.max(pm,1),x0=w*(w<520?.24:.2),bw=w*(w<520?.66:.62),bh=Math.min(34,h*.16),k;bg(c,w,h);
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,co=pn($('co1').value)||0,p=+$('pc1').value/100,pr=co*(1+p),pm=co/(1-p),mx=Math.max(pm,1),x0=w*(w<520?.24:.2),bw=w*(w<520?.58:.62),bh=Math.min(34,h*.16),k;bg(c,w,h);
     var rows=[['Con recargo',pr,(pr-co)/pr],['Con margen',pm,p]];rows.forEach(function(r,i){var y=h*.3+i*(bh+h*.2);txt(c,r[0],x0-12,y+bh/2+5,'right',C.soft,w<520?11:13,700);
       bars(c,x0,y,bw*r[1]/mx,bh,[['coste',co,'#9FC5FF'],['ganancia',r[1]-co,i?'#8FE0CC':'#FFD98A']],r[1],true);txt(c,fm(r[1]),x0+bw*r[1]/mx+8,y+bh/2+5,'left',C.ink,14,700);txt(c,'te quedás con el '+fm(r[2]*100,1)+' %',x0,y+bh+16,'left',i?C.pop:C.ui,12,700)});
     txt(c,'Lo que cobrás, partido en coste y ganancia',14,22,'left',C.soft,13,700)}

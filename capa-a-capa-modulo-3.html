@@ -712,14 +712,15 @@ details.ficha .in{font-size:16px}
   function upd7(){var kg=+$('kg7').value,wr=wear7(),d=.4*(1+wr*.9);$('vkg7').textContent=String(kg).replace('.',',')+' kg';$('r7a').textContent=d.toFixed(2).replace('.',',')+' mm';$('r7b').textContent=wr<.05?'Como nueva':wr<.3?'Algo gastada':wr<.65?'Gastada: se pierde detalle':'Arruinada: hay que cambiarla'}
   chips('fil7','f',function(v){N7.f=+v;upd7()});chips('noz7','n',function(v){N7.n=+v;upd7()});$('kg7').addEventListener('input',upd7);
   function draw7(now){var f=fit($('c7'));if(!f)return;var c=f.c,w=f.w,h=f.h,wr=wear7(),g,k;bg(c,w,h);N7.w+=(wr-N7.w)*.1;var d=.4*(1+N7.w*.9),W2=w/2,nx=W2/2,ns=Math.min(W2/10,h/11),ny=h*.6,bore=d*ns*2.6,steel=N7.n<.5;
+    function hd7(s,x){if(w>=560){txt(c,s.replace(' · en',', en').replace('imprime · ','imprime: '),x,22,'center',C.soft,13,700);return}var q=s.split(' · ');txt(c,q[0],x,20,'center',C.soft,12,700);if(q[1])txt(c,q[1].replace('con dientes ',''),x,36,'center',C.soft,11,500)}
     g=c.createLinearGradient(nx-3.6*ns,0,nx+3.6*ns,0);if(steel){g.addColorStop(0,'#D5DCEC');g.addColorStop(1,'#6F7C9E')}else{g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A')}c.fillStyle=g;
     c.beginPath();c.moveTo(nx-3.4*ns,ny-5.2*ns);c.lineTo(nx+3.4*ns,ny-5.2*ns);c.lineTo(nx+3.4*ns,ny-2.6*ns);c.lineTo(nx+1.3*ns,ny);c.lineTo(nx-1.3*ns,ny);c.lineTo(nx-3.4*ns,ny-2.6*ns);c.closePath();c.fill();
     var skew=N7.w*.35*ns;c.fillStyle=rgb(HOT);c.beginPath();c.moveTo(nx-1.3*ns,ny-5.2*ns);c.lineTo(nx+1.3*ns,ny-5.2*ns);c.lineTo(nx+1.3*ns,ny-2.6*ns);c.lineTo(nx+bore/2+skew,ny-1.1*ns);c.lineTo(nx+bore/2+skew,ny);c.lineTo(nx-bore/2,ny);c.lineTo(nx-bore/2,ny-1.1*ns);c.lineTo(nx-1.3*ns,ny-2.6*ns);c.closePath();c.fill();
     if(N7.f>.1){c.fillStyle='#2F3A57';for(k=0;k<26;k++){var py=((now/900+rnd(k,1))%1);c.fillRect(nx-1.1*ns+rnd(k,2)*2.2*ns*(1-py*.6)+py*.6*ns,ny-5.2*ns+py*5*ns,Math.max(1.5,.14*ns),Math.max(1.5,.14*ns))}}
     c.strokeStyle=rgb(FIL);c.lineWidth=bore+skew;c.lineCap='butt';c.beginPath();c.moveTo(nx+skew/2,ny);c.lineTo(nx+skew/2,ny+2.2*ns);c.stroke();
-    txt(c,steel?'Acero endurecido, en corte':'Latón, en corte',nx,22,'center',C.soft,13,700);pill(c,d.toFixed(2).replace('.',',')+' mm',nx,ny+3.6*ns,N7.w>.3?C.bad:C.ink);
+    hd7(steel?'Acero endurecido · en corte':'Latón · en corte',nx);pill(c,d.toFixed(2).replace('.',',')+' mm',nx,ny+3.6*ns,N7.w>.3?C.bad:C.ink);
     var pm=Math.min(W2/13,h/12.5),lw=Math.max(1.5,d*pm),ox=W2+W2/2-3.6*pm,oy=h*.78;c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.lineCap='round';c.beginPath();c.moveTo(ox-.4*pm,oy);c.lineTo(ox+7.6*pm,oy);c.stroke();
-    for(k=0;k<7;k++){c.beginPath();c.moveTo(ox+k*1.2*pm,oy);c.lineTo(ox+k*1.2*pm+rnd(k,5)*N7.w*.3*pm,oy-6*pm);c.stroke()}txt(c,'Lo que imprime: peine con dientes cada 1,2 mm',W2*1.5,22,'center',C.soft,13,700);
+    for(k=0;k<7;k++){c.beginPath();c.moveTo(ox+k*1.2*pm,oy);c.lineTo(ox+k*1.2*pm+rnd(k,5)*N7.w*.3*pm,oy-6*pm);c.stroke()}hd7('Lo que imprime · peine con dientes cada 1,2 mm',W2*1.5);
     c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();c.moveTo(W2,10);c.lineTo(W2,h-10);c.stroke()}
   START.l7=function(){upd7();loop(draw7)};
   mcq($('q7'),$('m7'),['La de latón que vino con la impresora','Una de acero endurecido','Cualquiera, mientras sea de 0,4'],1,'Bien. La fibra de carbono es abrasiva y el latón no la aguanta.',['El latón es blando: la fibra lo lija en pocas bobinas.',null,'El diámetro no cambia que el material de la boquilla se desgaste.'],function(){mark('l7')});

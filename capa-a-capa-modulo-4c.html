@@ -618,7 +618,7 @@ details.ficha .in{font-size:16px}
     hotMini(c,hx,ny,u);if(travel&&s.d>0){c.strokeStyle=C.ui;c.lineWidth=2;c.beginPath();c.moveTo(hx+3*u,ny-1.2*u);c.lineTo(hx+3*u,ny-1.2*u-back);c.moveTo(hx+2.5*u,ny-1.2*u-back+5);c.lineTo(hx+3*u,ny-1.2*u-back);c.lineTo(hx+3.5*u,ny-1.2*u-back+5);c.stroke()}
     if(s.ex){c.fillStyle=rgb(HOT,.9);c.beginPath();c.ellipse(hx,ny-5.6*u,.9*u,1.4*u,0,0,7);c.fill()}
     pill(c,s.ex?'riesgo de atasco':n===0?'sin hilos':n<=2?'algún hilo':'muchos hilos',cx,22,s.ex?C.bad:n===0?C.pop:n<=2?C.ui:C.bad);
-    txt(c,(SY2==='bowden'?'Bowden':'Directo')+' · referencia '+s.need+' mm',14,24,'left',C.soft,13,700)}
+    if(w<520)txt(c,(SY2==='bowden'?'Bowden':'Directo')+' · referencia '+s.need+' mm',w/2,h-8,'center',C.soft,12,700);else txt(c,(SY2==='bowden'?'Bowden':'Directo')+' · referencia '+s.need+' mm',14,24,'left',C.soft,13,700)}
   START.l2=function(){upd2();loop(draw2)};
 
   // ---------- 4.15 velocidad y aceleracion ----------
