@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es" data-cac="cac-m9b">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Módulo 9B</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Layout: aula de un solo tema (oscuro suave). Arriba la tira de lecciones con progreso; cada leccion es una columna: analogia, simulador grande, caso real + mini reto, ficha plegable. */
+:root{
+  --bg:#1E2638; --surface:#28324A; --sunken:#182031; --line:#3E4A66;
+  --ink:#EEF1F7; --ink-soft:#A9B4CC; --ui:#FFD98A; --ui-ink:#1E2638;
+  --fil:#FFB38A; --fil2:#F2976E; --plate:#7C8AAE; --pop:#8FE0CC; --bad:#FF9A9A;
+  --f-display:"Fredoka","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  --r:18px; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:980px;margin:0 auto;padding-block:18px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:22px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;text-wrap:balance}
+p{margin:0}
+button{font-family:var(--f-body)}
+button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between}
+.brand{font-family:var(--f-display);font-weight:700;font-size:22px;display:flex;align-items:center;gap:10px}
+.brand i{display:inline-flex;flex-direction:column;gap:3px}
+.brand i b{display:block;height:4px;border-radius:2px;background:var(--fil)}
+.brand i b:nth-child(1){width:14px}.brand i b:nth-child(2){width:20px}.brand i b:nth-child(3){width:26px}
+.prog{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--ink-soft)}
+.prog .bar{width:120px;height:8px;border-radius:4px;background:var(--sunken);overflow:hidden}
+.prog .bar i{display:block;height:100%;width:0;background:var(--pop);border-radius:4px;transition:width .4s cubic-bezier(.34,1.56,.64,1)}
+
+.steps{display:flex;align-items:center;gap:6px;max-width:560px}
+.steps button{flex:none;width:40px;height:40px;border-radius:50%;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--ink-soft);background:var(--surface);border:2px solid var(--line);cursor:pointer;transition:transform .12s ease-out}
+.steps button:hover{transform:scale(1.08)}
+.steps button.done{border-color:var(--pop);color:var(--pop)}
+.steps button[aria-current="true"]{background:var(--ui);border-color:var(--ui);color:var(--ui-ink);box-shadow:0 0 0 4px rgba(255,217,138,.18)}
+.steps i{flex:1;min-width:6px;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease-out}
+.steps i.on{background:var(--pop)}
+.stepcap{font-size:14px;color:var(--ink-soft);margin-top:-12px}
+.stepcap b{color:var(--ink);font-weight:700}
+
+.lesson{display:flex;flex-direction:column;gap:20px}
+.lhead{display:flex;flex-direction:column;gap:8px;max-width:62ch}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ui)}
+.lhead h1{font-size:clamp(34px,6vw,54px)}
+.lhead p{font-size:18px;color:var(--ink-soft)}
+.tag{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--pop)}
+.criollo{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.criollo p{font-family:var(--f-display);font-weight:500;font-size:clamp(19px,2.6vw,23px);line-height:1.3}
+
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.sim>.tag{padding:14px 18px 0}
+.sim canvas{display:block;width:100%}
+.cv1{aspect-ratio:5/2}.cv2{aspect-ratio:5/2}
+@media (max-width:600px){.cv1{aspect-ratio:4/5}.cv2{aspect-ratio:4/3}}
+.simbody{padding:14px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.row.split{justify-content:space-between}
+.btn{font-weight:700;font-size:15px;background:var(--ui);color:var(--ui-ink);border:0;border-radius:999px;padding:9px 18px;cursor:pointer;transition:transform .12s ease-out}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:translateY(1px) scale(.97)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.sq{border-radius:12px;min-width:48px;padding:10px 12px;font-size:18px}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--ui);height:30px;margin:0}
+label{font-weight:500}
+.reads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0}
+.reads div{background:var(--sunken);border-radius:12px;padding:10px 14px;min-width:0}
+.reads dt{font-size:12px;color:var(--ink-soft)}
+.reads dd{margin:0;font-family:var(--f-display);font-size:20px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-soft)}
+.msg{font-size:15px;padding:10px 14px;border-radius:12px;background:var(--sunken)}
+.msg.ok{color:var(--pop)}.msg.bad{color:var(--bad)}
+
+.duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.duo{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card h3{font-size:20px}
+.card p{font-size:15px;color:var(--ink-soft)}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opts button,.chipset button{text-align:left;font-size:15px;font-weight:500;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chipset{display:flex;flex-wrap:wrap;gap:8px}
+.chipset button{border-radius:999px}
+.opts button.right,.chipset button.right{border-color:var(--pop);color:var(--pop)}
+.opts button.wrong,.chipset button.wrong{border-color:var(--bad);color:var(--bad)}
+.chipset button[aria-pressed="true"]{border-color:var(--ui);color:var(--ui)}
+.chipset button:disabled,.opts button:disabled{cursor:default;opacity:.75}
+
+details.ficha{background:var(--sunken);border-radius:var(--r);padding:0 18px}
+details.ficha summary{cursor:pointer;padding:14px 0;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:12px}
+details.ficha summary::after{content:"+";font-family:var(--f-mono);color:var(--ui)}
+details.ficha[open] summary::after{content:"–"}
+details.ficha .in{padding:0 0 16px;display:flex;flex-direction:column;gap:10px;font-size:15px;color:var(--ink-soft);max-width:68ch}
+details.ficha dl{margin:0;display:grid;grid-template-columns:minmax(90px,max-content) minmax(0,1fr);gap:6px 14px}
+details.ficha dt{color:var(--ink);font-weight:700}
+details.ficha dd{margin:0}
+details.ficha ol,details.ficha ul{margin:0;padding-left:20px}
+code{font-family:var(--f-mono);font-size:.92em;color:var(--ui)}
+
+.stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.stations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stations button{font-size:14px;font-weight:700;color:var(--ink);background:var(--sunken);border:1px solid var(--line);border-radius:12px;padding:10px 8px;cursor:pointer;display:flex;flex-direction:column;gap:2px;align-items:flex-start;min-width:0}
+.stations button small{font-weight:400;color:var(--ink-soft);font-size:12px}
+.stations button[aria-pressed="true"]{border-color:var(--ui);box-shadow:inset 0 0 0 1px var(--ui)}
+.io{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.io div{background:var(--sunken);border-radius:12px;padding:10px 14px;font-size:14px;min-width:0}
+.io b{display:block;font-size:12px;color:var(--ink-soft);font-weight:500}
+
+.gwrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0}
+@media (max-width:700px){.gwrap{grid-template-columns:minmax(0,1fr)}}
+.gwrap canvas{aspect-ratio:1/1;max-height:420px}
+.gside{padding:14px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.pad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,44px);gap:6px}
+.pad .u{grid-column:2;grid-row:1}.pad .l{grid-column:1;grid-row:2}.pad .r{grid-column:3;grid-row:2}.pad .d{grid-column:2;grid-row:3}
+.prog-list{margin:0;padding:10px 12px 10px 38px;background:var(--sunken);border-radius:12px;font-family:var(--f-mono);font-size:13px;min-height:74px;max-height:170px;overflow-y:auto}
+.prog-list li.cur{color:var(--ui)}
+.prog-list:empty::before{content:"Tu programa aparece acá.";margin-left:-26px;color:var(--ink-soft);font-family:var(--f-body)}
+
+.vs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.vs>div{display:block;min-width:0}
+.vs>div+div{border-left:1px solid var(--line)}
+.vs h3{font-size:18px;padding:12px 16px 0}
+.vs canvas{height:240px}
+.crit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr);gap:8px 12px;align-items:center;font-size:13px}
+.crit .t{text-align:center;color:var(--ink-soft)}
+.crit .b{height:10px;border-radius:5px;background:var(--sunken);overflow:hidden;display:flex}
+.crit .b.l{justify-content:flex-end}
+.crit .b i{display:block;height:100%;border-radius:5px}
+.crit .b.l i{background:var(--fil)}.crit .b.r i{background:var(--pop)}
+.crit .h{font-weight:700;font-size:13px}.crit .h.r{text-align:right}
+
+.items{display:flex;flex-wrap:wrap;gap:8px}
+.bins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:700px){.bins{grid-template-columns:minmax(0,1fr)}}
+.bin{background:var(--sunken);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.bin>button{font-weight:700;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.bin>button:disabled{opacity:.5;cursor:default}
+.bin ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--ink-soft)}
+.bin li b{color:var(--ink);display:block}
+
+.q{display:flex;flex-direction:column;gap:8px}
+.q h3{font-size:18px;font-family:var(--f-body);font-weight:700}
+.q .why{font-size:14px;color:var(--ink-soft)}
+.score{font-family:var(--f-display);font-size:28px;color:var(--ui)}
+.navrow{display:flex;justify-content:space-between;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+footer{font-size:13px;color:var(--ink-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.modnav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;font-size:14px;margin-block:-8px -4px}
+.modnav a,.modnav .mn-off{color:var(--ink-soft);text-decoration:none;border-radius:999px;padding:6px 10px;min-width:0}
+.modnav a:hover{color:var(--ink);background:var(--surface)}
+.modnav a:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.modnav .mn-prev{justify-self:start}.modnav .mn-next{justify-self:end;text-align:right}
+.modnav .mn-home{justify-self:center;color:var(--ui-ink);background:var(--ui);font-weight:700;padding:6px 16px}
+.modnav .mn-home:hover{background:var(--ui);color:var(--ui-ink)}
+.modnav .mn-off{justify-self:end;opacity:.6}
+.modnav .sh{display:none}
+@media (max-width:480px){.modnav .lg{display:none}.modnav .sh{display:inline}}
+.steps{max-width:660px}
+@media (max-width:440px){.steps{gap:3px}.steps button{width:30px;height:30px;font-size:13px;border-width:1.5px}.steps i{min-width:3px}}
+.val{font-family:var(--f-mono);font-size:14px;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink);min-width:62px}
+.wiz{display:flex;flex-direction:column;gap:10px}
+.wq{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;background:var(--sunken);border-radius:12px;padding:10px 14px}
+.wq>span{flex:1;min-width:200px}
+.rec{background:var(--sunken);border-radius:var(--r);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.recm{font-family:var(--f-display);font-size:44px;line-height:1;color:var(--ui)}
+.listen{align-self:flex-start;padding:7px 14px;font-size:14px}
+.ftabw{overflow-x:auto}
+.ftab{width:100%;border-collapse:collapse;font-size:14px}
+.ftab th{text-align:left;font-weight:500;color:var(--ink-soft);padding:7px 10px 7px 0;border-top:1px solid var(--line)}
+.ftab td{text-align:right;font-weight:700;padding:7px 0;border-top:1px solid var(--line)}
+.ftab td.y{color:var(--pop)}.ftab td.n{color:var(--ink-soft)}.ftab td.m{color:var(--ui)}
+.cvT{aspect-ratio:4/3}
+@media (max-width:600px){.cvT{aspect-ratio:3/4}}
+.knobs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.knobs{grid-template-columns:minmax(0,1fr)}}
+.kn{background:var(--sunken);border-radius:12px;padding:10px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.kn b{font-size:14px}.kn .st{font-size:13px;color:var(--ui)}.kn .st.ok{color:var(--pop)}.kn .st.bad{color:var(--bad)}
+.kn .btn{padding:7px 14px;font-size:14px}
+.chipset button.right{border-color:var(--pop);color:var(--pop)}
+footer a{color:var(--ui)}
+.numin{width:120px;font:500 16px var(--f-mono);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:600px){.fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fgrid label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink-soft);min-width:0}
+.fgrid input{font:500 16px var(--f-body);background:var(--sunken);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0;width:100%;box-sizing:border-box}
+.numin:focus-visible,.fgrid input:focus-visible{outline:2px solid var(--ui);outline-offset:1px}
+.ftab td.l{text-align:left;font-weight:500;padding-right:10px;white-space:nowrap}
+.ftab .del{padding:4px 10px;font-size:13px;white-space:nowrap}
+.fgrid.f2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.kn .fgrid{margin-top:4px}
+h1 .en{display:inline-block;font-family:var(--f-body);font-size:max(14px,.4em);font-weight:500;letter-spacing:.02em;color:var(--ink-soft);vertical-align:.3em;white-space:nowrap}
+/* lectura: textos un poco más grandes y nota ligada al simulador */
+.note{font-size:16px;color:var(--ink);line-height:1.55;border-left:3px solid var(--pop);padding:2px 0 2px 12px}
+.msg{font-size:16px}
+.card p{font-size:16px}
+details.ficha .in{font-size:16px}
+.opts button,.chipset button{font-size:16px}
+.stepcap{font-size:15px}
+.reads dt{font-size:13px}
+.q .why{font-size:15px}
+.io div{font-size:15px}.stations button{font-size:15px}.prog-list{font-size:14px}
+.crit,.crit .h{font-size:14px}.bin ul{font-size:14px}.ftab{font-size:15px}
+/* fx: consigna, mensajes, sello y sonido */
+.mision{display:flex;gap:12px;align-items:flex-start;background:rgba(255,217,138,.09);border:1.5px solid rgba(255,217,138,.5);border-radius:14px;padding:11px 14px;transition:background .3s,border-color .3s}
+.mision .ic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ui);color:var(--ui-ink);font-size:16px;font-weight:700}
+.mision b{display:block;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--ui);margin-bottom:2px}
+.mision p{margin:0;font-size:16px;font-weight:500;color:var(--ink);line-height:1.45}
+.mision.done{background:rgba(143,224,204,.09);border-color:rgba(143,224,204,.55)}
+.mision.done .ic{background:var(--pop)}
+.mision.done b{color:var(--pop)}
+.msg.ok,.msg.bad{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+.msg.ok{background:rgba(143,224,204,.13);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5)}
+.msg.bad{background:rgba(255,154,154,.12);box-shadow:inset 0 0 0 1.5px rgba(255,154,154,.48)}
+.msg.ok::before,.msg.bad::before{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--ui-ink);margin-top:1px}
+.msg.ok::before{content:"\2714";background:var(--pop)}
+.msg.bad::before{content:"\2716";background:var(--bad)}
+.fx-shake{animation:fxShake .42s ease-in-out}
+.fx-pop{animation:fxPop .5s ease-out}
+@keyframes fxShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(2px)}}
+@keyframes fxPop{0%{transform:scale(1)}35%{transform:scale(1.025);box-shadow:inset 0 0 0 1.5px rgba(143,224,204,.5),0 0 0 6px rgba(143,224,204,.18)}100%{transform:scale(1)}}
+.fxhost{position:relative}
+.sello{position:absolute;top:12px;right:12px;z-index:2;pointer-events:none;transform:rotate(-7deg);border:2.5px solid var(--pop);color:var(--pop);background:rgba(24,32,49,.9);border-radius:9px;padding:4px 10px;font-family:var(--f-display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.sim>.sello{top:5px;right:14px;font-size:12px;padding:2px 8px;border-width:2px}
+.sello.anim{animation:fxStamp .6s cubic-bezier(.2,1.5,.4,1)}
+@keyframes fxStamp{0%{opacity:0;transform:rotate(-7deg) scale(2.3)}60%{opacity:1}100%{opacity:1;transform:rotate(-7deg) scale(1)}}
+.steps button.fx-nav{animation:fxNav .7s ease-out}
+@keyframes fxNav{0%{transform:scale(1)}30%{transform:scale(1.4);box-shadow:0 0 0 8px rgba(143,224,204,.25)}100%{transform:scale(1)}}
+.snd{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:grid;place-items:center}
+.snd:hover{background:var(--surface)}
+.snd:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.rstrow{display:flex;justify-content:flex-end}
+.rst{font-size:14px;padding:7px 14px;color:var(--ink-soft)}
+.rst.armed,.rstm.armed{border-color:var(--bad);color:var(--bad)}
+.rstm{flex:none;height:36px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink-soft);font:600 13px var(--f-body);padding:0 12px;cursor:pointer;white-space:nowrap}
+.rstm:hover{background:var(--surface);color:var(--ink)}
+.rstm:focus-visible,.rst:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+@media (max-width:480px){.prog .bar{width:70px}}
+.navrow{align-items:center}
+#next{max-width:70%;display:inline-flex;align-items:center;min-width:0}
+#next .nxl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nextmod{text-decoration:none;display:inline-flex;align-items:center}
+.modbot{margin-block:2px 0;padding-top:4px}
+.modbot .lg{display:inline!important}.modbot .sh{display:none!important}
+@media (max-width:480px){.modbot{font-size:13px}.modbot a{padding:6px 6px}}
+.cierre{background:linear-gradient(160deg,rgba(143,224,204,.14),rgba(255,217,138,.1));border:1.5px solid rgba(143,224,204,.5);border-radius:var(--r);padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cierre h2{margin:0;font-family:var(--f-display);font-size:clamp(22px,4vw,28px);line-height:1.2;text-wrap:balance}
+.cierre .cs{margin:0;color:var(--ink-soft);font-size:16px}
+.cierre .btn{text-decoration:none}
+.cierre .btn.big{font-size:17px;padding:12px 22px}
+@media (max-width:480px){#next{max-width:72%;font-size:14px}}
+/* alturas compactas */
+.cvT,.cv3{aspect-ratio:5/2}
+@media (max-width:600px){.cvT,.cv3,.cv1{aspect-ratio:1/1}}
+.lam{gap:12px;border-color:rgba(159,197,255,.45)}
+.lam .tag{color:#9FC5FF}
+.lamtabs button{font-size:14px}
+.lamlist{display:flex;flex-direction:column;gap:12px}
+.lr{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.lr .lt{margin:0;font-size:15px;color:var(--ink-soft)}.lr .lt b{color:var(--ink);font-size:16px}
+.lp{background:var(--sunken);border-radius:10px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.lp .es{font-weight:600;color:var(--ink);font-size:15px;overflow-wrap:anywhere}
+.lp .enp{font-family:var(--f-mono);font-size:13px;color:var(--ink-soft);overflow-wrap:anywhere}
+.lnote{margin:0;font-size:14px;color:var(--ink-soft)}
+.lamfoot{margin:0;font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:10px}
+@media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
+/* /fx */
+</style>
+<style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><i aria-hidden="true"><b></b><b></b><b></b></i>Capa a Capa</div>
+    <div class="prog"><span id="prog-txt">0 de 5 retos</span><div class="bar"><i id="prog-bar"></i></div></div>
+  </header>
+  <nav class="modnav" aria-label="Módulos del manual"><a class="mn-prev" href="capa-a-capa-modulo-9a.html">← <span class="lg">Módulo 9 · parte 1</span><span class="sh">Anterior</span></a><a class="mn-home" href="index.html">Inicio</a><a class="mn-next" href="capa-a-capa-glosario.html"><span class="lg">Módulo 10 · Glosario</span><span class="sh">Siguiente</span> →</a></nav>
+
+  <nav class="steps" id="nav" aria-label="Lecciones del módulo 9, segunda parte">
+    <button type="button" data-l="l1" aria-label="Lección 9.6, Un prompt imprimible">6</button><i></i>
+    <button type="button" data-l="l2" aria-label="Lección 9.7, Revisar el modelo de la IA">7</button><i></i>
+    <button type="button" data-l="l3" aria-label="Lección 9.8, El presupuesto profesional">8</button><i></i>
+    <button type="button" data-l="l4" aria-label="Lección 9.9, Cuándo decir que no">9</button><i></i>
+    <button type="button" data-l="l5" aria-label="Lección 9.10, Explicar el precio">10</button><i></i>
+    <button type="button" data-l="repaso" aria-label="Repaso">?</button>
+  </nav>
+  <p class="stepcap" id="stepcap"></p>
+
+  <!-- 9.6 -->
+  <section class="lesson" id="l1">
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Lección 9.6</p><h1>Un prompt imprimible <span class="en" lang="en">Text-to-3D prompt</span></h1>
+      <p>La inteligencia artificial puede generar un modelo 3D a partir de una descripción o una imagen. Pero generar una malla no es lo mismo que tener algo imprimible. Cuanto más concreto sea el pedido, menos tiene que inventar la IA.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es pedirle una torta a la pastelera. "Una torta linda" puede salir de tres pisos con flores de azúcar que no entran en la heladera. "Torta de un piso, chocolate, para 10, que entre en una caja de 30 cm" sale como la necesitás.</p></div>
+    <div class="sim"><span class="tag">Probalo</span>
+      <canvas id="c1" class="cvT" role="img" aria-label="Figura generada por la IA según el prompt"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Estilo</span><div class="chipset" id="p1a"><button type="button" data-v="vinilo" aria-pressed="false">Juguete de vinilo</button><button type="button" data-v="real" aria-pressed="true">Realista hiperdetallado</button></div></div>
+        <div class="row"><span>Geometría</span><div class="chipset" id="p1b"><button type="button" data-v="unido" aria-pressed="false">Brazos pegados y base integrada</button><button type="button" data-v="abierto" aria-pressed="true">Brazos abiertos, sin base</button></div></div>
+        <div class="row"><span>Detalles</span><div class="chipset" id="p1c"><button type="button" data-v="relieve" aria-pressed="false">En relieve, espesor mínimo 2 mm</button><button type="button" data-v="fino" aria-pressed="true">Pelo suelto, dedos separados, lazo fino</button></div></div>
+        <div class="row"><span>Condiciones</span><div class="chipset" id="p1d"><button type="button" data-v="fdm" aria-pressed="false">Una pieza para FDM, sin soportes ni partes flotantes</button><button type="button" data-v="nada" aria-pressed="true">Sin aclarar</button></div></div>
+        <p class="note" id="pr1"></p>
+        <p class="msg" id="m1"></p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El dragón con alas de papel</h3>
+        <p>"Un dragón épico" da un modelo espectacular en pantalla: alas finísimas, garras separadas, cola en el aire. Impreso, las alas se rompen al sacar el soporte. Con "alas pequeñas pegadas al cuerpo, cola apoyada en el piso, base ovalada" sale entero y sin soportes.</p></div>
+      <div class="card"><span class="tag">Mini reto</span><h3>Un modelo listo para imprimir</h3>
+        <p>Elegí los bloques del prompt para que la figura salga imprimible.</p><p class="msg" id="r1">Todavía no.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: prompt para impresión 3D</summary><div class="in">
+      <dl><dt>Seis bloques</dt><dd>Tipo de objeto, sujeto, estilo, geometría, condiciones de impresión y presentación (modelo centrado, vista completa, fondo neutro).</dd>
+      <dt>Palabras útiles</dt><dd>Resistencia: compacto, sólido, robusto, grueso, unido, base ancha. Menos soportes: brazos pegados, cola apoyada, alas plegadas, voladizos suaves. Evitar: pelo individual, dedos separados, cadenas, telas finas, transparencias y piezas flotantes.</dd>
+      <dt>Herramientas</dt><dd>Meshy, Tripo AI, Rodin de Hyper3D, entre otras. Cambian con el tiempo; el flujo de trabajo es el mismo.</dd>
+      <dt>Flujo</dt><dd>Definir el objeto, preparar la referencia, generar varias versiones, elegir la mejor geometría, reparar y simplificar, adaptar a FDM, crear base, verificar escala y espesores, exportar e imprimir una prueba.</dd>
+      <dt>Formatos</dt><dd>Guardá un GLB u OBJ como archivo maestro y un STL o 3MF para imprimir.</dd></dl></div></details>
+  </section>
+
+  <!-- 9.7 -->
+  <section class="lesson" id="l2" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Lección 9.7</p><h1>Revisar el modelo de la IA <span class="en" lang="en">360° model check</span></h1>
+      <p>La IA arma una interpretación del objeto, no una reconstrucción exacta. Por delante puede verse perfecta y por detrás tener agujeros, partes sueltas o una base torcida. Antes de laminar, se revisa desde todos los lados.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es la escenografía de una película: de frente es una casa, de costado son tablas apuntaladas. La IA a veces hace escenografía.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c2" class="cvT" role="img" aria-label="Figura generada vista desde distintos lados"></canvas>
+      <div class="simbody">
+        <div class="row"><span>Mirala desde</span><div class="chipset" id="v2"><button type="button" data-v="frente" aria-pressed="true">Frente</button><button type="button" data-v="lateral" aria-pressed="false">Lateral</button><button type="button" data-v="trasera" aria-pressed="false">Trasera</button><button type="button" data-v="inferior" aria-pressed="false">Abajo</button><button type="button" data-v="superior" aria-pressed="false">Arriba</button></div></div>
+        <div class="row"><span>¿Qué problema ves?</span><div class="chipset" id="pb2"></div></div>
+        <p class="msg" id="m2">Cada vista esconde un problema distinto. Encontralos en los cinco lados.</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>Los botones que no estaban</h3>
+        <p>Un modelo de un muñeco con chaleco y botones. En la pantalla se ven perfectos; impreso, el chaleco es liso. Los botones eran solo color de la textura, no volumen. En un modelo de un solo color, todo detalle tiene que existir en la forma.</p></div>
+      <div class="card"><span class="tag">Qué puede hacer mal</span><h3>Errores típicos</h3>
+        <p>Partes flotantes, dedos u orejas deformados, huecos y caras internas, espesores demasiado finos, bases inclinadas, detalles solo en la textura, geometría oculta incorrecta, demasiados polígonos y formas imposibles sin soportes.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: revisión en 360°</summary><div class="in">
+      <dl><dt>Frente</dt><dd>Silueta clara, partes unidas y rostro con volumen.</dd>
+      <dt>Lateral</dt><dd>Centro de gravedad, apoyos y ausencia de zonas flotantes.</dd>
+      <dt>Trasera</dt><dd>Que la IA no haya inventado agujeros o geometría incoherente.</dd>
+      <dt>Inferior</dt><dd>Base plana y sin cavidades ocultas.</dd>
+      <dt>Superior</dt><dd>Grosor de detalles, intersecciones y simetría.</dd>
+      <dt>Después</dt><dd>Reparar, remallar y simplificar (por ejemplo en Blender), crear base, verificar escala y espesores, e imprimir una prueba.</dd></dl></div></details>
+  </section>
+
+  <!-- 9.8 -->
+  <section class="lesson" id="l3" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Lección 9.8</p><h1>El presupuesto profesional <span class="en" lang="en">Professional quote</span></h1>
+      <p>Un presupuesto no es un número en un mensaje. Es un papel que deja claro qué se hace, en qué material, cuándo, qué incluye y qué no. Evita discusiones, y cuando aparecen, te protege.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el contrato del alquiler: nadie lo lee hasta que hay un problema. Ese día, todo lo que no estaba escrito es tu palabra contra la del otro.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c3" class="cvT" role="img" aria-label="Hoja de presupuesto que se completa"></canvas>
+      <div class="simbody">
+        <p class="note">Tocá lo que tiene que estar en el presupuesto. Ojo: hay dos cosas que no conviene prometer.</p>
+        <div class="chipset" id="opt3"></div>
+        <p class="msg" id="m3"></p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>"Yo pensé que venía pintado"</h3>
+        <p>Un presupuesto de "figura 20 cm: $X". El cliente esperaba la figura pintada, en una semana y con el archivo. Nada de eso estaba escrito. Con material, acabado, plazo y archivos entregables en el papel, no hubiera habido malentendido.</p></div>
+      <div class="card"><span class="tag">Antes de fabricar</span><h3>Prototipo aprobado por escrito</h3>
+        <p>Antes de un lote, dejá por escrito qué se aprueba: geometría, medidas, color, material, acabado y función. Una foto, un video, medidas verificadas o una muestra física.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: el presupuesto profesional</summary><div class="in">
+      <dl><dt>Contenido</dt><dd>Número y fecha, datos del proveedor y del cliente, descripción, cantidad, material, color y acabado, si incluye diseño, archivos entregables, precio, impuestos y transporte, plazo, validez y forma de pago, revisiones incluidas, tolerancias y limitaciones de uso.</dd>
+      <dt>Anticipo</dt><dd>Puede cubrir material, diseño, prototipos y reserva de tiempo.</dd>
+      <dt>Revisiones</dt><dd>Definir cuántas rondas de cambios están incluidas. Cambios de concepto o medidas principales se cotizan aparte.</dd>
+      <dt>Tolerancias</dt><dd>Ejemplo: "Tolerancia dimensional general estimada: ±0,30 mm, salvo dimensiones críticas acordadas". No prometer precisión absoluta.</dd>
+      <dt>Trazabilidad</dt><dd>Número de pedido y lote, impresora y perfil, material, marca, color y lote, fecha, operador, versión del archivo y control de calidad. Nombre de archivo: cliente_proyecto_pieza_v03_petg_2026-07-27.3mf.</dd></dl></div></details>
+  </section>
+
+  <!-- 9.9 -->
+  <section class="lesson" id="l4" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Lección 9.9</p><h1>Cuándo decir que no <span class="en" lang="en">Rejecting a job &amp; licenses</span></h1>
+      <p>No todo pedido es un buen pedido. Algunos no se pueden cumplir, otros ponen en riesgo a alguien y otros son copias que no te corresponde vender. Saber decir que no, o "sí, pero con estas condiciones", también es parte del oficio.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el mecánico que no te arregla el freno con alambre aunque se lo pidas. No porque no pueda, sino porque si falla, la responsabilidad es suya.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c4" class="cvT" role="img" aria-label="Mensaje de un cliente con un pedido"></canvas>
+      <div class="simbody">
+        <p class="note" id="ask4"></p>
+        <div class="chipset" id="opt4"><button type="button" data-v="si" aria-pressed="false">Acepto</button><button type="button" data-v="cond" aria-pressed="false">Acepto con condiciones</button><button type="button" data-v="no" aria-pressed="false">Rechazo</button></div>
+        <p class="msg" id="m4">¿Qué le respondés?</p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Caso real</span><h3>El STL gratis para vender</h3>
+        <p>Alguien descarga una figura gratis y vende copias en una feria. El autor la había publicado solo para uso personal. Comprar o descargar un STL no da automáticamente derecho a vender lo impreso.</p></div>
+      <div class="card"><span class="tag">Licencias</span><h3>Qué mirar</h3>
+        <p>Si permite uso personal o comercial, si se puede modificar, si se pueden vender piezas físicas y si se puede vender o distribuir el archivo. Son permisos distintos.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: cuándo rechazar un trabajo</summary><div class="in">
+      <dl><dt>Rechazar si</dt><dd>La función no está clara, se exige una precisión imposible, el material no es adecuado, hay riesgo de seguridad, no hay tiempo suficiente, el cliente no acepta prototipos, se piden copias sin derechos o la pieza puede causar daños importantes.</dd>
+      <dt>Piezas críticas</dt><dd>Médicas, cascos, mosquetones, soportes de carga o piezas de freno no deberían fabricarse sin diseño, validación, pruebas y certificación.</dd>
+      <dt>Urgencias</dt><dd>Pueden llevar recargo por reorganización y mayor supervisión, si el plazo es posible.</dd></dl></div></details>
+  </section>
+
+  <!-- 9.10 -->
+  <section class="lesson" id="l5" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Lección 9.10</p><h1>Explicar el precio <span class="en" lang="en">Perceived value</span></h1>
+      <p>El cliente no compra gramos de plástico. Compra una solución: ahorrar tiempo, personalizar, reparar algo, tenerlo rápido. Cuando explicás el precio, hablá de lo que incluye, no de lo que te cuesta.</p></div>
+    <div class="criollo"><span class="tag">En criollo</span><p>Es el cerrajero que te abre la puerta en dos minutos y te cobra caro. No pagás los dos minutos: pagás saber hacerlo en dos minutos sin romper la cerradura.</p></div>
+    <div class="sim"><span class="tag">Probalo · Mini reto</span>
+      <canvas id="c5" class="cvT" role="img" aria-label="Conversación con un cliente"></canvas>
+      <div class="simbody">
+        <p class="note" id="ask5"></p>
+        <div class="opts" id="opt5"></div>
+        <p class="msg" id="m5"></p>
+      </div>
+    </div>
+    <div class="duo">
+      <div class="card"><span class="tag">Estándar o a medida</span><h3>Dos negocios distintos</h3>
+        <p>Producto estándar: diseño probado, precio fijo y producción repetible. Trabajo a medida: más diseño, revisiones, riesgo y precio. Los personalizados (nombre, medida, color, logo) suman valor, pero también comunicación y versiones.</p></div>
+      <div class="card"><span class="tag">Dónde vender</span><h3>Directo o en plataformas</h3>
+        <p>Venta directa: más control y menos comisiones, pero exige marketing, pagos y atención. Plataformas: público y pagos integrados, con comisiones y competencia.</p></div>
+    </div>
+    <details class="ficha"><summary>Ficha: valor, entrega y garantía</summary><div class="in">
+      <dl><dt>Valor percibido</dt><dd>Solución, ahorro de tiempo, personalización, reparación, comodidad, rapidez y conocimiento técnico.</dd>
+      <dt>Cómo explicarlo</dt><dd>En lugar de "cuesta 40 porque tarda muchas horas": "incluye adaptación del modelo, impresión en PETG, cuatro perímetros, control dimensional, insertos y montaje".</dd>
+      <dt>Control de calidad</dt><dd>Aspecto, dimensiones, función y limpieza antes de entregar.</dd>
+      <dt>Embalaje y garantía</dt><dd>Proteger de golpes, humedad y pérdida de piezas; incluir instrucciones; definir qué cubre la garantía, por cuánto tiempo y qué usos quedan excluidos.</dd>
+      <dt>Diseño</dt><dd>Entregar el STL, el STEP o el archivo fuente no es lo mismo que entregar la pieza: el archivo tiene valor propio.</dd></dl></div></details>
+  </section>
+
+  <!-- Repaso -->
+  <section class="lesson" id="repaso" hidden>
+    <div class="lhead"><p class="eyebrow">Módulo 9 · Repaso de la segunda parte</p><h1>Cinco preguntas</h1>
+      <p>Sin apuro y sin nota. Si fallás una, la explicación te dice a qué lección volver.</p></div>
+    <div class="card" id="quiz"></div>
+    <p class="score" id="score" hidden></p>
+  </section>
+
+  <div class="navrow"><button class="btn ghost" id="prev" type="button">Anterior</button><button class="btn" id="next" type="button">Siguiente</button></div>
+  <footer>Contenido basado en los capítulos 15 y 19 del curso de impresión 3D de Quirón. Los simuladores son esquemas para entender la idea.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var C={fil:'#FFB38A',fil2:'#F2976E',plate:'#7C8AAE',ink:'#EEF1F7',soft:'#A9B4CC',ui:'#FFD98A',pop:'#8FE0CC',surf:'#28324A',sunk:'#182031',line:'#3E4A66',bad:'#FF9A9A'};
+  var reduce=false; // las animaciones son el contenido de la leccion: se muestran siempre
+  var LES=['l1','l2','l3','l4','l5'],ORDER=LES.concat(['repaso']),cur='l1',raf=0;
+  var LOOPFN=null,lastTick=0,shownAt=0,frames=0,lastErr='ninguno',rafSeen=false;window.addEventListener('error',function(e){lastErr=String(e.message||e)});
+  var done={};try{done=JSON.parse(localStorage.getItem('cac-m9b')||'{}')||{}}catch(e){}
+
+  var NAVB=$('nav').querySelectorAll('button'),TIT={l1:'<b>9.6</b> Un prompt imprimible',l2:'<b>9.7</b> Revisar el modelo de la IA',l3:'<b>9.8</b> El presupuesto profesional',l4:'<b>9.9</b> Cuándo decir que no',l5:'<b>9.10</b> Explicar el precio',repaso:'<b>Repaso</b> Cinco preguntas'};
+  function fit(cv){var c=cv.getContext('2d'),r=cv.getBoundingClientRect(),d=window.devicePixelRatio||1;if(cv.dataset.ar&&r.width>=8){var hh=Math.min(Math.round(r.width*cv.dataset.ar),+cv.dataset.max||1e9);if(Math.abs(r.height-hh)>1){cv.style.height=hh+'px';r=cv.getBoundingClientRect()}}if(r.width<8||r.height<8)return null;var w=Math.max(1,Math.round(r.width*d)),h=Math.max(1,Math.round(r.height*d));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h}c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,r.width,r.height);cv._ok=performance.now();return{c:c,w:r.width,h:r.height}}
+  function rr(c,x,y,w,h,r){if(w<=0||h<=0)return;r=Math.max(0,Math.min(r,w/2,h/2));c.beginPath();if(c.roundRect)c.roundRect(x,y,w,h,r);else c.rect(x,y,w,h);c.fill()}
+  function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+  function mixA(a,b,t){return[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function tone(a,k){return mixA(a,k>0?[255,255,255]:[0,0,0],Math.abs(k))}
+  function rgb(a,al){return'rgba('+Math.round(a[0])+','+Math.round(a[1])+','+Math.round(a[2])+','+(al==null?1:al)+')'}
+  var FIL=hex('#FFB38A'),FIL2=hex('#F2976E'),HOT=hex('#FFF0B8'),MINT=hex('#8FE0CC'),MINT2=hex('#74CDB8'),WOOD=hex('#D2AC84'),STEEL=hex('#AEB9D4');
+  // ----- 3DBenchy (dominio publico): perfil lateral en mm, 60 de largo por 48 de alto -----
+  var KB=20/48,TILT=.3,
+    BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+    BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+  function spansMM(y){var key=y.toFixed(2);if(SPM[key])return SPM[key];var xs=[];BPOLYS.forEach(function(P){for(var i=0;i<P.length;i++){var a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+    xs.sort(function(a,b){return a-b});var r=[];for(var i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+  function spans(z){return spansMM(z/KB).map(function(p){return[(p[0]-30)*KB,(p[1]-30)*KB]})}
+  function beam(x,y){if(y>=39.5){var d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+    var bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+  function bg(c,w,h){var g=c.createLinearGradient(0,0,0,h);g.addColorStop(0,'#2C3752');g.addColorStop(1,'#212A40');c.fillStyle=g;c.fillRect(0,0,w,h);
+    c.fillStyle='rgba(255,255,255,.04)';for(var y=12;y<h;y+=22)for(var x=12;x<w;x+=22)c.fillRect(x,y,1.5,1.5)}
+  function label(c,t,x,y,al){c.fillStyle=C.soft;c.font='700 13px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(t,x,y)}
+  function bed(c,ox,oy,s,half){c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(ox,oy+1.9*s,half*s*1.04,.8*s,0,0,7);c.fill();
+    var g=c.createLinearGradient(0,oy,0,oy+1.2*s);g.addColorStop(0,'#B3BFDC');g.addColorStop(1,'#62709A');c.fillStyle=g;rr(c,ox-half*s,oy,2*half*s,1.2*s,.5*s);
+    c.fillStyle='rgba(255,255,255,.4)';c.fillRect(ox-half*s+.6*s,oy+.14*s,2*half*s-1.2*s,Math.max(1,.12*s))}
+  function bead(c,x,y,w,ph,base,heat){if(w<=0)return;var col=mixA(base,HOT,heat*.85);
+    if(ph<3){c.fillStyle=rgb(col);c.fillRect(x,y,w,ph+.5);return}
+    var g=c.createLinearGradient(0,y,0,y+ph);g.addColorStop(0,rgb(tone(col,.3)));g.addColorStop(.45,rgb(col));g.addColorStop(1,rgb(tone(col,-.24)));
+    if(heat>.05){c.shadowColor=rgb(HOT,heat*.9);c.shadowBlur=14*heat}
+    c.fillStyle=g;rr(c,x,y+.5,w,ph-1,Math.min(ph/2,6));c.shadowBlur=0}
+  // capas del Benchy hasta "upto" (en capas); devuelve la posicion de la boquilla. Las ultimas capas brillan: estan calientes.
+  function layers(c,ox,oy,s,lh,upto,cool){var n=Math.ceil(20/lh),last=Math.min(n,Math.ceil(upto)),pos=null;
+    for(var i=0;i<last;i++){var z0=i*lh,z1=Math.min(20,z0+lh),sp=spans((z0+z1)/2),fr=Math.min(1,upto-i);if(!sp.length)continue;
+      var tot=0,k,dir=i%2,heat=cool?0:(fr<1?1:Math.max(0,1-(upto-i-1)/3));for(k=0;k<sp.length;k++)tot+=sp[k][1]-sp[k][0];var rem=tot*fr;
+      for(k=0;k<sp.length&&rem>1e-6;k++){var q=sp[dir?sp.length-1-k:k],len=q[1]-q[0],d=Math.min(len,rem),x0=dir?q[1]-d:q[0];
+        bead(c,ox+x0*s,oy-z1*s,d*s,(z1-z0)*s,i%2?FIL2:FIL,heat);rem-=d;if(fr<1&&rem<=1e-6)pos=[ox+(dir?q[1]-d:q[0]+d)*s,oy-z1*s-1]}}
+    return pos}
+  function outline(c,ox,oy,s){c.save();c.strokeStyle='rgba(238,241,247,.5)';c.lineWidth=1.3;c.setLineDash([5,5]);BPOLYS.forEach(function(P){c.beginPath();
+      P.forEach(function(p,i){var x=ox+(p[0]-30)*KB*s,y=oy-p[1]*KB*s;if(i)c.lineTo(x,y);else c.moveTo(x,y)});c.closePath();c.stroke()});c.restore()}
+  // Benchy en falso 3D: se apilan rodajas vistas desde arriba, de abajo hacia arriba
+  function benchy3d(c,ox,oy,s,rot,lh,zmax,A,B,al,edge){c.save();c.globalAlpha=al;var cs=Math.cos(rot),sn=Math.sin(rot),u=KB*s,li=0;
+    for(var y=0;y<zmax-1e-6;y+=lh,li++){var yt=Math.min(y+lh,zmax),sp=spansMM(y+lh/2).slice().sort(function(a,b){return((a[0]+a[1])/2-30)*sn-((b[0]+b[1])/2-30)*sn});
+      var base=li%2?B:A,copies=Math.max(1,Math.ceil((yt-y)*u/2));
+      sp.forEach(function(q){var pts=[],N=10,i,x,b;for(i=0;i<=N;i++){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,b])}for(i=N;i>=0;i--){x=q[0]+(q[1]-q[0])*i/N;b=beam(x,y+lh/2);pts.push([x-30,-b])}
+        function poly(zz){c.beginPath();pts.forEach(function(p,j){var px=ox+(p[0]*cs-p[1]*sn)*u,py=oy-zz*u+(p[0]*sn+p[1]*cs)*u*TILT;if(j)c.lineTo(px,py);else c.moveTo(px,py)});c.closePath()}
+        c.fillStyle=rgb(tone(base,-.3));for(var k=0;k<copies;k++){poly(y+(yt-y)*k/copies);c.fill()}
+        poly(yt);c.fillStyle=rgb(tone(base,.05+.2*y/48));c.fill();if(edge){c.strokeStyle='rgba(0,0,0,.16)';c.lineWidth=1;c.stroke()}})}
+    c.restore()}
+  // marco de la impresora: dos columnas y la base
+  function posts(c,ox,oy,s,top){c.fillStyle='#2F3A57';rr(c,ox-19.6*s,oy+1.2*s,39.2*s,1.1*s,.4*s);
+    [-1,1].forEach(function(k){var x=ox+k*18.2*s,g=c.createLinearGradient(x-.8*s,0,x+.8*s,0);g.addColorStop(0,'#4C5A7E');g.addColorStop(.5,'#5F6E95');g.addColorStop(1,'#3A4766');c.fillStyle=g;rr(c,x-.8*s,top,1.6*s,oy+1.4*s-top,.5*s)})}
+  // cabezal completo: riel, carro, ventilador, bloque calefactor y boquilla de bronce
+  function toolhead(c,px,py,u,t,x0,x1){var g;
+    if(x0!=null){g=c.createLinearGradient(0,py-8.4*u,0,py-7.1*u);g.addColorStop(0,'#7887AE');g.addColorStop(1,'#48567A');c.fillStyle=g;rr(c,x0,py-8.4*u,x1-x0,1.3*u,.6*u)}
+    c.strokeStyle=rgb(FIL);c.lineWidth=Math.max(1.5,.5*u);c.lineCap='round';c.beginPath();c.moveTo(px,py-9.2*u);c.bezierCurveTo(px,py-12*u,px+3*u,py-12*u,px+3.4*u,py-16*u);c.stroke();
+    g=c.createLinearGradient(px-3*u,0,px+3*u,0);g.addColorStop(0,'#4E5D83');g.addColorStop(1,'#34405E');c.fillStyle=g;rr(c,px-3*u,py-9.4*u,6*u,6.5*u,1.1*u);
+    c.fillStyle='#1A2133';c.beginPath();c.arc(px,py-6.3*u,2*u,0,7);c.fill();c.strokeStyle=rgb(STEEL,.9);c.lineWidth=Math.max(1,.32*u);
+    for(var k=0;k<5;k++){var a=t*9+k*1.2566;c.beginPath();c.arc(px,py-6.3*u,1.35*u,a,a+.75);c.stroke()}
+    c.fillStyle=C.ui;c.beginPath();c.arc(px,py-6.3*u,.42*u,0,7);c.fill();
+    g=c.createLinearGradient(0,py-3*u,0,py-1.5*u);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,px-1.8*u,py-3*u,3.6*u,1.6*u,.3*u);
+    c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(px-1*u,py-2.2*u,.38*u,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(px-.9*u,0,px+.9*u,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(px-.95*u,py-1.5*u);c.lineTo(px+.95*u,py-1.5*u);c.lineTo(px+.3*u,py);c.lineTo(px-.3*u,py);c.closePath();c.fill();
+    g=c.createRadialGradient(px,py,0,px,py,1.9*u);g.addColorStop(0,'rgba(255,236,170,.6)');g.addColorStop(1,'rgba(255,236,170,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,1.9*u,0,7);c.fill()}
+  function screen(c,w,h,title){var sw=Math.min(w-20,h*2.5),sx=(w-sw)/2,sy=8,sh=h-28;c.fillStyle='#3A4766';c.fillRect(w/2-sw*.04,sy+sh-2,sw*.08,12);rr(c,w/2-sw*.13,sy+sh+8,sw*.26,6,3);
+    c.fillStyle='#5A698F';rr(c,sx,sy,sw,sh,13);c.fillStyle='#141B2B';rr(c,sx+4,sy+4,sw-8,sh-8,10);
+    [C.bad,C.ui,C.pop].forEach(function(col,i){c.fillStyle=col;c.beginPath();c.arc(sx+18+i*13,sy+18,3.5,0,7);c.fill()});
+    c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
+    return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
+  // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
+  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  // ---------- progreso y navegacion ----------
+  function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
+    $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
+    [].forEach.call(NAVB,function(b){b.classList.toggle('done',!!done[b.dataset.l])});[].forEach.call($('nav').querySelectorAll('i'),function(el,i){el.classList.toggle('on',!!done[ORDER[i]])})}
+  function mark(k){if(done[k])return;done[k]=1;try{localStorage.setItem('cac-m9b',JSON.stringify(done))}catch(e){}paintProg()}
+  function show(k,push){if(ORDER.indexOf(k)<0)k='l1';cur=k;cancelAnimationFrame(raf);LOOPFN=null;shownAt=performance.now();
+    ORDER.forEach(function(id){$(id).hidden=id!==k});
+    [].forEach.call(NAVB,function(b){if(b.dataset.l===k)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current')});$('stepcap').innerHTML=TIT[k];
+    var i=ORDER.indexOf(k);$('prev').disabled=i===0;$('prev').style.visibility=i===0?'hidden':'visible';$('next').style.visibility=i===ORDER.length-1?'hidden':'visible';
+    if(push){try{location.hash=k}catch(e){}window.scrollTo(0,0)}
+    if(START[k])START[k]();}
+  $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b)show(b.dataset.l,true)});
+  $('prev').addEventListener('click',function(){show(ORDER[Math.max(0,ORDER.indexOf(cur)-1)],true)});
+  $('next').addEventListener('click',function(){show(ORDER[Math.min(ORDER.length-1,ORDER.indexOf(cur)+1)],true)});
+  window.addEventListener('hashchange',function(){var k=location.hash.slice(1);if(k&&k!==cur)show(k,false)});
+
+  // pregunta de opcion multiple
+  function mcq(box,msg,opts,right,ok,hints,onOk){opts.forEach(function(t,i){var b=document.createElement('button');b.type='button';b.textContent=t;
+    b.addEventListener('click',function(){msg.hidden=false;if(i===right){b.className='right';msg.className='msg ok';msg.textContent=ok;[].forEach.call(box.children,function(x){x.disabled=true});if(onOk)onOk()}
+      else{b.className='wrong';msg.className='msg bad';msg.textContent=hints[i]||'Probá con otra.'}});box.appendChild(b)})}
+
+  var START={};
+
+  // ---------- ayudas ----------
+  function pill(c,s,x,y,col){c.font='500 12px "DM Mono",ui-monospace,monospace';var tw=c.measureText(s).width;c.fillStyle='rgba(20,27,43,.88)';rr(c,x-tw/2-8,y-13,tw+16,20,10);c.fillStyle=col||C.ink;c.textAlign='center';c.fillText(s,x,y+1)}
+  function txt(c,s,x,y,al,col,sz,wt){c.fillStyle=col||C.soft;c.font=(wt||500)+' '+(sz||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign=al||'left';c.fillText(s,x,y)}
+  function chips(id,attr,fn){var box=$(id);box.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call(box.children,function(x){x.setAttribute('aria-pressed',String(x===b))});fn(b.dataset[attr],b)})}
+  function say(id,t,k){var m=$(id);m.className='msg'+(k?' '+k:'');m.textContent=t}
+  function num(v,d){return v.toFixed(d==null?1:d).replace('.',',')}
+  function sgn(v){return(v>0?'+':v<0?'−':'')+num(Math.abs(v),2)}
+  function rnd(i,k){var x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)}
+  function divider(c,w,h,vert){c.strokeStyle=C.line;c.lineWidth=1;c.beginPath();if(vert){c.moveTo(10,h/2);c.lineTo(w-10,h/2)}else{c.moveTo(w/2,10);c.lineTo(w/2,h-10)}c.stroke()}
+  function split(w,h){var v=w<520;return{v:v,A:v?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w/2,h:h},B:v?{x:0,y:h/2,w:w,h:h/2}:{x:w/2,y:0,w:w/2,h:h}}}
+  function bnc(t){var n=7.5625,d=2.75;if(t<1/d)return n*t*t;if(t<2/d){t-=1.5/d;return n*t*t+.75}if(t<2.5/d){t-=2.25/d;return n*t*t+.9375}t-=2.625/d;return n*t*t+.984375}
+  function hotMini(c,x,y,s){var g=c.createLinearGradient(0,y-7.4*s,0,y-3*s);g.addColorStop(0,'#93A1C4');g.addColorStop(1,'#66749A');c.fillStyle=g;for(var k=0;k<4;k++)rr(c,x-1.7*s,y-7.2*s+k*1.05*s,3.4*s,.7*s,.2*s);c.fillRect(x-.6*s,y-7.2*s,1.2*s,4.3*s);
+    g=c.createLinearGradient(0,y-3*s,0,y-1.4*s);g.addColorStop(0,'#DCE3F2');g.addColorStop(1,'#8E9BBB');c.fillStyle=g;rr(c,x-1.9*s,y-3*s,3.8*s,1.7*s,.3*s);c.shadowColor='#FF7A4D';c.shadowBlur=8;c.fillStyle='#FF8A5C';c.beginPath();c.arc(x-1.1*s,y-2.15*s,.38*s,0,7);c.fill();c.shadowBlur=0;
+    g=c.createLinearGradient(x-s,0,x+s,0);g.addColorStop(0,'#F4DA95');g.addColorStop(1,'#B5873A');c.fillStyle=g;c.beginPath();c.moveTo(x-s,y-1.4*s);c.lineTo(x+s,y-1.4*s);c.lineTo(x+.3*s,y);c.lineTo(x-.3*s,y);c.closePath();c.fill()}
+  // tramo de linea de primera capa segun la distancia boquilla-cama (mm). 0,10 a 0,13 es lo justo en la escala del papel.
+  function flSeg(c,x1,x2,y,lw,gap,ref){var hi=ref+.035,lo=ref-.035,yy1=y,yy2=y;
+    if(gap>hi){var k=Math.min(1,(gap-hi)/.15),a=k*lw*.35;c.strokeStyle=rgb(FIL);c.lineWidth=lw*(.75-.4*k);c.beginPath();c.moveTo(x1,y+a*Math.sin(x1/6));c.lineTo(x2,y+a*Math.sin(x2/6));c.stroke();return}
+    if(gap>=lo){c.strokeStyle=rgb(FIL);c.lineWidth=lw;c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();return}
+    var q=Math.min(1,(lo-gap)/.1);c.strokeStyle=rgb(FIL,.85-.5*q);c.lineWidth=lw*(1+.25*q);c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();
+    c.strokeStyle=rgb(tone(FIL2,-.35),.4+.4*q);c.lineWidth=1.2;c.beginPath();c.moveTo(x1,y-lw*.55);c.lineTo(x2,y-lw*.55);c.moveTo(x1,y+lw*.55);c.lineTo(x2,y+lw*.55);c.stroke()}
+
+  function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+  function chipsList(id,items,attr){var box=$(id);box.textContent='';items.forEach(function(it){var b=document.createElement('button');b.type='button';b.textContent=it[1];b.dataset[attr||'v']=it[0];b.setAttribute('aria-pressed','false');box.appendChild(b)})}
+  function note(c,x,y,w,h,txt0,col,fs){c.fillStyle='rgba(0,0,0,.25)';rr(c,x+3,y+3,w,h,8);c.fillStyle=col||'#FFF3D6';rr(c,x,y,w,h,8);c.fillStyle='#3A2418';c.font='600 '+(fs||12)+'px "DM Sans",system-ui,sans-serif';c.textAlign='left';
+    var words=txt0.split(' '),line='',ly=y+(fs||12)+6;words.forEach(function(wd){var t2=line?line+' '+wd:wd;if(c.measureText(t2).width>w-14&&line){c.fillText(line,x+7,ly);line=wd;ly+=(fs||12)+3}else line=t2});c.fillText(line,x+7,ly)}
+  function quiz(Q,fin){var box=$('quiz'),ans=0,good=0;Q.forEach(function(q,qi){var d=document.createElement('div');d.className='q';var hh=document.createElement('h3');hh.textContent=(qi+1)+'. '+q[0];var o=document.createElement('div');o.className='opts';var wy=document.createElement('p');wy.className='why';wy.hidden=true;
+      q[1].forEach(function(tx,i){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){[].forEach.call(o.children,function(x,j){x.disabled=true;if(j===q[2])x.className='right'});
+        if(i===q[2])good++;else b.className='wrong';wy.hidden=false;wy.textContent=q[3];ans++;if(ans===Q.length){var sc=$('score');sc.hidden=false;sc.textContent=good+' de '+Q.length+'. '+(good===Q.length?fin:good>=3?'Muy bien: repasá las que fallaste.':'Volvé a las lecciones marcadas y probá de nuevo.')}});o.appendChild(b)});
+      d.appendChild(hh);d.appendChild(o);d.appendChild(wy);box.appendChild(d)})}
+
+  function bubble(c,x,y,w,s,me,fs,col){fs=fs||14;c.font='500 '+fs+'px "DM Sans",system-ui,sans-serif';var words=s.split(' '),lines=[],line='';words.forEach(function(wd){var t2=line?line+' '+wd:wd;if(c.measureText(t2).width>w-24&&line){lines.push(line);line=wd}else line=t2});lines.push(line);
+    var lh=fs+5,bh=lines.length*lh+16,bw=0;lines.forEach(function(l){bw=Math.max(bw,c.measureText(l).width)});bw=Math.min(w,bw+24);var bx=me?x+w-bw:x;
+    c.fillStyle=col||(me?'#3D5C57':'#3A4566');rr(c,bx,y,bw,bh,14);c.fillStyle=C.ink;c.textAlign='left';lines.forEach(function(l,i){c.fillText(l,bx+12,y+8+fs+i*lh-2)});return bh}
+  function stamp(c,x,y,s,col,a){c.save();c.globalAlpha=a==null?1:a;c.translate(x,y);c.rotate(-.12);c.font='700 18px Fredoka,system-ui,sans-serif';var tw=c.measureText(s).width;c.strokeStyle=col;c.lineWidth=3;c.strokeRect(-tw/2-12,-18,tw+24,32);c.fillStyle=col;c.textAlign='center';c.fillText(s,0,5);c.restore()}
+
+  // ---------- 9.6 prompt ----------
+  var P1={a:'real',b:'abierto',c:'fino',d:'nada'},GOOD1={a:'vinilo',b:'unido',c:'relieve',d:'fdm'};
+  function upd1(){var bad=0;for(var k in GOOD1)if(P1[k]!==GOOD1[k])bad++;
+    $('pr1').textContent='Prompt: «Figura de un osito explorador'+(P1.a==='vinilo'?', estilo juguete de vinilo, formas compactas':', realista e hiperdetallado')+(P1.b==='unido'?', brazos pegados al cuerpo, base ovalada integrada':', brazos abiertos, sin base')+(P1.c==='relieve'?', detalles en relieve con espesor mínimo de 2 mm':', pelo suelto, dedos separados y lazo fino')+(P1.d==='fdm'?', una sola pieza para impresión FDM, sin soportes ni partes flotantes':'')+', modelo centrado, fondo neutro.»';
+    if(!bad){say('m1','Figura imprimible: compacta, apoyada en una base, con detalles gruesos y en una sola pieza.','ok');say('r1','¡Prompt listo para imprimir! Menos cosas que adivinar, menos sorpresas.','ok');mark('l1')}
+    else{say('m1',bad+(bad===1?' bloque todavía genera':' bloques todavía generan')+' problemas al imprimir. Mirá los carteles rojos en la figura.','bad');if(!done.l1)say('r1','Todavía no.')}}
+  chips('p1a','v',function(v){P1.a=v;upd1()});chips('p1b','v',function(v){P1.b=v;upd1()});chips('p1c','v',function(v){P1.c=v;upd1()});chips('p1d','v',function(v){P1.d=v;upd1()});
+  function draw1(now){var f=fit($('c1'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,k,V=w<520;bg(c,w,h);
+    var s=Math.min(w*(V?.24:.17),h*.2),cx=w/2,by=h*.86,real=P1.a==='real',body=FIL,sh=rgb(FIL2);
+    c.fillStyle='#7C8AAE';c.fillRect(w*.12,by,w*.76,6);
+    var tilt=P1.b==='abierto'?Math.sin(t*1.6)*.05+.06:0;c.save();c.translate(cx,by);c.rotate(tilt);
+    if(P1.b==='unido'){c.fillStyle=rgb(FIL2);c.beginPath();c.ellipse(0,-s*.12,s*1.15,s*.16,0,0,7);c.fill();c.fillRect(-s*1.15,-s*.12,s*2.3,s*.12)}
+    var oy=P1.b==='unido'?-s*.24:0;
+    c.fillStyle=rgb(body);[-1,1].forEach(function(d){c.beginPath();c.ellipse(d*s*.35,oy-s*.25,s*.26,s*.28,0,0,7);c.fill()});
+    c.beginPath();c.ellipse(0,oy-s*.95,s*.62,s*.72,0,0,7);c.fill();
+    if(P1.b==='unido'){[-1,1].forEach(function(d){c.fillStyle=sh;c.beginPath();c.ellipse(d*s*.55,oy-s*.95,s*.2,s*.42,d*.15,0,7);c.fill()})}
+    else{c.strokeStyle=rgb(body);c.lineCap='round';c.lineWidth=s*.26;[-1,1].forEach(function(d){c.beginPath();c.moveTo(d*s*.5,oy-s*1.3);c.lineTo(d*s*1.35,oy-s*1.55);c.stroke()})}
+    if(P1.c==='fino'){c.strokeStyle=rgb(FIL2);c.lineWidth=1.2;if(P1.b!=='unido')[-1,1].forEach(function(d){for(k=0;k<4;k++){c.beginPath();c.moveTo(d*s*1.42,oy-s*1.55);c.lineTo(d*s*(1.6+k*.02),oy-s*(1.75-k*.12));c.stroke()}});
+      for(k=0;k<14;k++){var a0=-2.6+k*.17;c.beginPath();c.moveTo(Math.cos(a0)*s*.5,oy-s*2.05+Math.sin(a0)*s*.45);c.lineTo(Math.cos(a0)*s*.75,oy-s*2.05+Math.sin(a0)*s*.75+Math.sin(t*3+k)*2);c.stroke()}
+      c.strokeStyle='#FF9A9A';c.lineWidth=1.5;c.beginPath();c.moveTo(-s*.25,oy-s*1.55);c.quadraticCurveTo(-s*.5,oy-s*1.75,-s*.3,oy-s*1.45);c.quadraticCurveTo(0,oy-s*1.5,s*.3,oy-s*1.45);c.quadraticCurveTo(s*.5,oy-s*1.75,s*.25,oy-s*1.55);c.stroke()}
+    else{c.fillStyle=rgb(FIL2);c.beginPath();c.ellipse(0,oy-s*.75,s*.3,s*.22,0,0,7);c.fill();c.fillStyle='#FFD98A';rr(c,-s*.28,oy-s*1.58,s*.56,s*.12,4)}
+    c.fillStyle=rgb(body);c.beginPath();c.arc(0,oy-s*2.05,s*.5,0,7);c.fill();[-1,1].forEach(function(d){c.beginPath();c.arc(d*s*.4,oy-s*2.45,s*.17,0,7);c.fill()});
+    c.fillStyle='#3A2418';[-1,1].forEach(function(d){c.beginPath();c.arc(d*s*.17,oy-s*2.1,s*.06,0,7);c.fill()});c.beginPath();c.ellipse(0,oy-s*1.92,s*.1,s*.07,0,0,7);c.fill();
+    if(real){c.strokeStyle='rgba(58,36,24,.45)';c.lineWidth=.8;for(k=0;k<60;k++){var rx=(rnd(k,1)-.5)*s*1.1,ry=oy-s*(.4+rnd(k,2)*1.9);c.beginPath();c.moveTo(rx,ry);c.lineTo(rx+2,ry-4);c.stroke()}}
+    if(P1.d==='nada'){var fy=oy-s*1.2+Math.sin(t*2)*4;c.fillStyle='#C9D2E6';c.save();c.translate(s*1.7,fy);c.rotate(.5);c.fillRect(-2,-s*.9,4,s*.9);c.fillStyle='#FFD98A';c.fillRect(-s*.15,0,s*.3,5);c.restore()}
+    c.restore();
+    var L=[],X=V?w*.5:w*.78;
+    if(real)L.push('detalles demasiado finos');if(P1.b==='abierto')L.push('brazos al aire: soportes');if(P1.b==='abierto')L.push('sin base: se cae');if(P1.c==='fino')L.push('pelo y lazo: se rompen');if(P1.d==='nada')L.push('espada flotante');
+    if(!L.length)pill(c,'✓ imprimible sin soportes',w/2,24,C.pop);else L.forEach(function(s2,i){pill(c,s2,V?w/2:(i%2?w*.78:w*.22),V?22+i*24:24+Math.floor(i/2)*26,C.bad)})}
+  START.l1=function(){upd1();loop(draw1)};
+
+  // ---------- 9.7 revisión 360 ----------
+  var VW2={frente:['Dedos deformados y fusionados','mano'],lateral:['Parte flotante, sin unión','flota'],trasera:['Agujero en la malla','hueco'],inferior:['Base inclinada, no apoya plana','base'],superior:['Detalle demasiado fino','fino']},
+    PB2=['Dedos deformados y fusionados','Parte flotante, sin unión','Agujero en la malla','Base inclinada, no apoya plana','Detalle demasiado fino'],G2={v:'frente',f:{},t0:0};
+  chipsList('pb2',PB2.map(function(x){return[x,x]}));
+  function upd2(){[].forEach.call($('v2').children,function(b){b.classList.toggle('right',!!G2.f[b.dataset.v])});[].forEach.call($('pb2').children,function(b){b.setAttribute('aria-pressed','false')})}
+  chips('v2','v',function(v){G2.v=v;upd2();say('m2',G2.f[v]?'Ya lo encontraste: '+VW2[v][0].toLowerCase()+'.':'Vista '+v+'. ¿Qué problema aparece?')});
+  $('pb2').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;[].forEach.call($('pb2').children,function(x){x.setAttribute('aria-pressed',String(x===b))});
+    if(b.dataset.v===VW2[G2.v][0]){G2.f[G2.v]=1;G2.t0=performance.now();upd2();var n=Object.keys(G2.f).length;if(n===5){say('m2','¡Revisión completa! Cinco problemas que una sola vista no muestra. Ahora toca reparar antes de laminar.','ok');mark('l2')}else say('m2','¡Sí! '+n+' de 5. Pasá a otra vista.','ok')}
+    else say('m2','Eso no está en esta vista. Mirá bien la zona marcada.','bad')});
+  function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,v=G2.v,p=VW2[v][1],s=Math.min(w*.17,h*.2),cx=w/2,cy=h*.55,k,hot=null;bg(c,w,h);
+    var col=rgb(FIL),dk=rgb(FIL2);c.fillStyle='#7C8AAE';
+    if(v==='inferior'){c.fillStyle=col;c.beginPath();c.ellipse(cx,cy,s*1.2,s*.8,0,0,7);c.fill();c.fillStyle=dk;c.beginPath();c.ellipse(cx+s*.3,cy+s*.1,s*.7,s*.45,0,0,7);c.fill();
+      c.save();c.translate(cx,h*.88);c.rotate(-.08);c.fillStyle=col;c.fillRect(-s*1.2,-10,s*2.4,10);c.restore();c.fillStyle='#7C8AAE';c.fillRect(w*.15,h*.9,w*.7,5);c.strokeStyle=C.bad;c.setLineDash([4,4]);c.beginPath();c.moveTo(cx+s*1.2,h*.9);c.lineTo(cx+s*1.2,h*.83);c.stroke();c.setLineDash([]);hot=[cx+s*1.1,h*.86,s*.4];txt(c,'vista de abajo y de costado de la base',w/2,h*.2,'center',C.soft,12,700)}
+    else if(v==='superior'){c.fillStyle=col;c.beginPath();c.ellipse(cx,cy,s*1.1,s*.9,0,0,7);c.fill();c.fillStyle=dk;c.beginPath();c.arc(cx,cy,s*.55,0,7);c.fill();[-1,1].forEach(function(d){c.fillStyle=col;c.beginPath();c.arc(cx+d*s*.45,cy-s*.4,s*.18,0,7);c.fill()});
+      c.strokeStyle=col;c.lineWidth=1;c.beginPath();c.moveTo(cx,cy-s*.5);c.quadraticCurveTo(cx+s*.4,cy-s*1.5,cx+s*.9,cy-s*1.6);c.stroke();c.fillStyle=col;c.beginPath();c.arc(cx+s*.9,cy-s*1.6,4,0,7);c.fill();hot=[cx+s*.5,cy-s*1.3,s*.5];if(G2.f[v])pill(c,'antena de 0,4 mm',cx+s*.9,cy-s*1.9,C.bad)}
+    else{var side=v==='lateral',back=v==='trasera';c.fillStyle='#7C8AAE';c.fillRect(w*.15,h*.9,w*.7,5);
+      c.fillStyle=dk;c.fillRect(cx-s*(side?.6:1),h*.9-s*.2,s*(side?1.2:2),s*.2);c.fillStyle=col;c.beginPath();c.ellipse(cx,h*.9-s*1.1,s*(side?.5:.7),s*.85,0,0,7);c.fill();c.beginPath();c.arc(cx,h*.9-s*2.25,s*(side?.45:.5),0,7);c.fill();
+      if(side){c.beginPath();c.arc(cx+s*.35,h*.9-s*2.2,s*.14,0,7);c.fill();c.fillStyle=dk;c.beginPath();c.ellipse(cx+s*.2,h*.9-s*1.2,s*.18,s*.42,.3,0,7);c.fill();
+        var fy=h*.9-s*1.05+Math.sin(t*2)*3;c.save();c.translate(cx+s*.75,fy);c.rotate(.2);c.fillStyle='#C9D2E6';c.fillRect(-3,-s*.9,6,s*1.1);c.restore();hot=[cx+s*.75,fy-s*.3,s*.55]}
+      else{[-1,1].forEach(function(d){c.fillStyle=col;c.beginPath();c.arc(cx+d*s*.4,h*.9-s*2.65,s*.16,0,7);c.fill();c.fillStyle=dk;c.beginPath();c.ellipse(cx+d*s*.78,h*.9-s*1.15,s*.17,s*.42,d*.15,0,7);c.fill()});
+        if(back){c.fillStyle='#141B2B';c.beginPath();c.moveTo(cx-s*.25,h*.9-s*1.3);c.lineTo(cx+s*.2,h*.9-s*1.45);c.lineTo(cx+s*.3,h*.9-s*1);c.lineTo(cx-s*.15,h*.9-s*.9);c.closePath();c.fill();hot=[cx,h*.9-s*1.2,s*.45]}
+        else{c.fillStyle='#3A2418';[-1,1].forEach(function(d){c.beginPath();c.arc(cx+d*s*.17,h*.9-s*2.3,s*.06,0,7);c.fill()});var hx=cx+s*.95,hy=h*.9-s*.8;c.fillStyle=col;for(k=0;k<7;k++){c.save();c.translate(hx,hy);c.rotate(-.9+k*.3+Math.sin(k*3)*.2);c.beginPath();c.ellipse(s*.18,0,s*(.1+rnd(k,4)*.12),s*.04,0,0,7);c.fill();c.restore()}hot=[hx+s*.1,hy,s*.4]}}}
+    if(hot){var a=G2.f[v]?1:.35+.25*Math.sin(t*3);c.strokeStyle=G2.f[v]?C.pop:C.ui;c.globalAlpha=a;c.lineWidth=2.5;c.setLineDash(G2.f[v]?[]:[6,5]);c.beginPath();c.arc(hot[0],hot[1],hot[2],0,7);c.stroke();c.setLineDash([]);c.globalAlpha=1}
+    txt(c,'Vista: '+v,14,24,'left',C.soft,13,700);pill(c,Object.keys(G2.f).length+' de 5 problemas',w-90,22,Object.keys(G2.f).length===5?C.pop:C.ui)}
+  START.l2=function(){upd2();loop(draw2)};
+
+  // ---------- 9.8 presupuesto ----------
+  var IT3=[['num','Número y fecha',1],['mat','Material, color y acabado',1],['cant','Cantidad y descripción',1],['plazo','Plazo de entrega',1],['precio','Precio, impuestos y envío',1],['valid','Validez y forma de pago',1],['rev','Revisiones incluidas',1],['arch','Archivos entregables',1],['tol','Tolerancia ±0,30 mm',1],['exacta','Precisión exacta garantizada',0],['ilim','Cambios ilimitados sin costo',0]],S3={};
+  chipsList('opt3',IT3.map(function(x){return[x[0],x[1]]}));
+  function upd3(){var ok=0,bad=[];IT3.forEach(function(x){if(S3[x[0]]){if(x[2])ok++;else bad.push(x[1].toLowerCase())}});var need=IT3.filter(function(x){return x[2]}).length;
+    if(bad.length)say('m3','Cuidado: '+bad.join(' y ')+'. Eso es prometer lo que no podés cumplir.','bad');
+    else if(ok===need){say('m3','¡Presupuesto completo! Todo lo que se hace, cuándo, cuánto y qué no está incluido, por escrito.','ok');mark('l3')}
+    else say('m3',ok+' de '+need+'. Faltan cosas que el cliente después te va a reclamar.',ok?'':'')}
+  $('opt3').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.v;S3[k]=!S3[k];b.setAttribute('aria-pressed',String(!!S3[k]));upd3()});
+  function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000;bg(c,w,h);
+    var pw=Math.min(w*.8,380),px=(w-pw)/2,py=h*.06,ph=h*.9;c.fillStyle='rgba(0,0,0,.25)';rr(c,px+4,py+4,pw,ph,10);c.fillStyle='#F6F1E6';rr(c,px,py,pw,ph,10);
+    c.fillStyle='#3A2418';c.font='700 '+Math.round(Math.min(20,pw*.06))+'px Fredoka,system-ui,sans-serif';c.textAlign='left';c.fillText('PRESUPUESTO',px+16,py+30);
+    var rows=IT3.filter(function(x){return S3[x[0]]}),lh=Math.min(24,(ph-60)/11),fs=Math.min(14,lh*.62);
+    IT3.forEach(function(x,i){var y=py+50+i*lh,on=S3[x[0]];c.fillStyle=on?(x[2]?'#3A2418':'#C0392B'):'rgba(58,36,24,.12)';if(on){c.font='500 '+fs+'px "DM Sans",system-ui,sans-serif';c.fillText((x[2]?'✓ ':'✗ ')+x[1],px+16,y+fs)}else rr(c,px+16,y+lh*.3,pw*(.3+rnd(i,2)*.4),lh*.3,3)});
+    var need=IT3.filter(function(x){return x[2]}).length,ok=IT3.filter(function(x){return x[2]&&S3[x[0]]}).length,bad=IT3.some(function(x){return !x[2]&&S3[x[0]]});
+    if(bad)stamp(c,px+pw*.72,py+ph*.86,'RIESGO','#D9443A');else if(ok===need)stamp(c,px+pw*.72,py+ph*.86,'CLARO','#2E8B74')}
+  START.l3=function(){upd3();loop(draw3)};
+
+  // ---------- 9.9 rechazar ----------
+  var CS4=[['Necesito un mosquetón impreso para escalar este fin de semana.','no','Pieza de seguridad: si falla, alguien se lastima. No se fabrica sin diseño, pruebas y certificación.'],
+    ['Quiero 50 llaveros con el escudo de un club de fútbol famoso para vender.','no','Sin licencia del club, son copias sin derechos. No te corresponde venderlas.'],
+    ['¿Me hacés un soporte para el celular del auto? Lo necesito para el martes.','si','Pieza simple, función clara, plazo razonable: adelante.'],
+    ['Necesito 10 piezas para mañana, es urgente.','cond','Si el plazo es posible, se acepta con recargo por urgencia: reorganizás la cola y supervisás más.'],
+    ['Se rompió un engranaje de mi licuadora, no tengo plano.','cond','Se acepta con condiciones: medir, hacer un prototipo y aclarar que la duración no está garantizada.'],
+    ['Necesito una pieza con tolerancia de 0,01 mm y sin prueba previa.','no','Precisión imposible para FDM y sin prototipo: un trabajo que no vas a poder cumplir.']],G4={i:0,a:null,t0:0};
+  function ask4(){$('ask4').textContent=G4.i<CS4.length?'Pedido '+(G4.i+1)+' de '+CS4.length+'.':'¡Listo!'}ask4();
+  var LB4={si:'Acepto',cond:'Acepto con condiciones',no:'Rechazo'};
+  $('opt4').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||G4.i>=CS4.length||G4.a)return;var s=CS4[G4.i];
+    if(b.dataset.v===s[1]){G4.a=s[1];G4.t0=performance.now();var fin=G4.i===CS4.length-1;say('m4','¡Bien! '+s[2]+(fin?' Seis pedidos, seis decisiones con criterio.':''),'ok');
+      setTimeout(function(){if(fin){mark('l4');G4.i++;ask4()}else{G4.i++;ask4();say('m4','¿Qué le respondés?')}G4.a=null},fin?2200:2200)}
+    else say('m4',s[1]==='no'?'Mejor no: este trabajo pone en riesgo a alguien o no te corresponde.':s[1]==='cond'?'Se puede, pero no así nomás: hacen falta condiciones.':'Este es un pedido normal: no hace falta tanta vuelta.','bad')});
+  function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,V=w<520,s=CS4[Math.min(G4.i,CS4.length-1)];bg(c,w,h);
+    var cw=Math.min(w-28,460),cx=(w-cw)/2,y=h*.14;c.fillStyle='#55628A';c.beginPath();c.arc(cx+16,y+16,16,0,7);c.fill();txt(c,'Cliente',cx+40,y+20,'left',C.soft,13,700);
+    var bh=bubble(c,cx,y+40,cw*.86,s[0],false,V?14:16);
+    if(G4.a){var a=clamp((now-G4.t0)/300,0,1);c.globalAlpha=a;bubble(c,cx,y+60+bh,cw*.8,LB4[G4.a]+'.',true,V?14:16);c.globalAlpha=1;stamp(c,w/2,h*.82,LB4[G4.a].toUpperCase(),G4.a==='no'?'#FF9A9A':G4.a==='cond'?'#FFD98A':'#8FE0CC',a)}
+    else{var k;for(k=0;k<3;k++){c.fillStyle='rgba(169,180,204,'+(.3+.5*Math.max(0,Math.sin(t*5-k)))+')';c.beginPath();c.arc(cx+cw-40+k*12,y+60+bh,4,0,7);c.fill()}}
+    txt(c,'Pedido '+(Math.min(G4.i,CS4.length-1)+1)+' de '+CS4.length,w-14,24,'right',C.soft,13,700)}
+  START.l4=function(){loop(draw4)};
+
+  // ---------- 9.10 explicar el precio ----------
+  var RD5=[['¿40 por esto? Si el plástico sale 2.',['Bueno, te lo dejo en 25.','Incluye adaptar el modelo, imprimirlo en PETG con cuatro perímetros, controlar las medidas y armarlo con insertos.','Es que la impresora tarda muchas horas.'],1,['Bajar el precio sin explicar nada le enseña que el precio era inventado.','','Las horas de máquina no le dicen nada al cliente. Hablá de lo que recibe.']],
+    ['En una plataforma venden uno parecido a 15.',['Entonces compralo ahí.','Te lo igualo.','Ese es un modelo estándar; el tuyo es a medida: tu medida, tu logo y dos revisiones incluidas.'],2,['Cortás la conversación y perdés al cliente.','Igualar a un producto estándar regala tu trabajo a medida.','']],
+    ['¿Y si se rompe?',['Nunca se rompe.','Ese es problema tuyo.','Tiene garantía de tres meses por defectos de impresión; no cubre golpes ni calor fuerte. Te paso instrucciones de uso.'],2,['Prometer que nunca se rompe es meterte en un problema.','Sin garantía clara, el cliente no confía.','']]],G5={i:0,log:[],v:0};
+  function ask5(){var box=$('opt5');box.textContent='';if(G5.i>=RD5.length){$('ask5').textContent='¡Cliente convencido!';return}var r=RD5[G5.i];$('ask5').textContent='Objeción '+(G5.i+1)+' de '+RD5.length+': «'+r[0]+'»';
+    r[1].forEach(function(tx,j){var b=document.createElement('button');b.type='button';b.textContent=tx;b.addEventListener('click',function(){if(b.disabled)return;
+      if(j===r[2]){G5.log.push([r[0],tx]);G5.v++;var fin=G5.i===RD5.length-1;[].forEach.call(box.children,function(x){x.disabled=true});b.className='right';say('m5',fin?'¡Cerrado! Hablaste de lo que el cliente recibe, no de lo que te cuesta.':'¡Bien! Eso explica el valor.','ok');setTimeout(function(){G5.i++;if(fin)mark('l5');ask5();if(!fin)say('m5','¿Qué le contestás?')},1600)}
+      else{b.disabled=true;b.className='wrong';say('m5',r[3][j],'bad')}});box.appendChild(b)})}
+  ask5();say('m5','¿Qué le contestás?');
+  function draw5(now){var f=fit($('c5'));if(!f)return;var c=f.c,w=f.w,h=f.h,V=w<520,fs=V?13:15;bg(c,w,h);
+    var cw=Math.min(w-28,520),cx=(w-cw)/2,y=16,items=G5.log.slice(-2),r=RD5[Math.min(G5.i,RD5.length-1)];
+    items.forEach(function(it){y+=bubble(c,cx,y,cw*.8,it[0],false,fs)+8;y+=bubble(c,cx,y,cw*.85,it[1],true,fs)+12});
+    if(G5.i<RD5.length)bubble(c,cx,y,cw*.8,r[0],false,fs);
+    var mw=Math.min(w*.6,300),mx=(w-mw)/2,my=h-30;c.fillStyle='#182031';rr(c,mx,my,mw,12,6);c.fillStyle=C.pop;rr(c,mx,my,mw*G5.v/RD5.length,12,6);txt(c,'Confianza del cliente',w/2,my-8,'center',C.soft,12,700)}
+  START.l5=function(){loop(draw5)};
+
+  quiz([['¿Qué prompt da un modelo más fácil de imprimir?',['«Un dragón épico»','«Dragón compacto, alas plegadas, cola apoyada, base ovalada, una sola pieza para FDM»','«Dragón realista con escamas individuales»'],1,'Cuanto más concreto, menos inventa la IA. Lección 9.6.'],
+    ['El modelo de la IA se ve perfecto de frente. ¿Ya podés laminarlo?',['Sí, si se ve bien','No: revisalo desde los cinco lados y repará','Sí, el laminador lo arregla'],1,'Atrás, abajo y arriba suelen esconder problemas. Lección 9.7.'],
+    ['¿Qué tolerancia conviene escribir en un presupuesto?',['Precisión exacta','Una estimada, por ejemplo ±0,30 mm, salvo medidas críticas acordadas','Ninguna'],1,'No prometas precisión absoluta. Lección 9.8.'],
+    ['Te piden un mosquetón para escalar. ¿Qué hacés?',['Lo imprimo con 100 % de relleno','Lo rechazo: es una pieza de seguridad','Lo imprimo en PETG'],1,'Piezas críticas: sin diseño, pruebas y certificación, no. Lección 9.9.'],
+    ['El cliente dice que el plástico sale 2. ¿Cómo explicás el precio?',['Con lo que incluye: adaptación, material, control y armado','Bajando el precio','Con las horas de máquina'],0,'El cliente compra una solución. Lección 9.10.']],'¡Módulo 9 completo!');
+  // ---------- audio: lee el comienzo de cada leccion con la voz del navegador ----------
+  var SY=window.speechSynthesis,speaking=null;
+  function stopAudio(){try{if(SY)SY.cancel()}catch(e){}if(speaking){speaking.textContent='▶ Escuchar';speaking.setAttribute('aria-pressed','false');speaking=null}}
+  function voice(){var v=[];try{v=SY.getVoices()||[]}catch(e){}var pr=['es-ar','es-419','es-mx','es-us','es-es','es'];for(var i=0;i<pr.length;i++)for(var j=0;j<v.length;j++)if(v[j].lang&&v[j].lang.replace('_','-').toLowerCase().indexOf(pr[i])===0)return v[j];return null}
+  if(SY&&window.SpeechSynthesisUtterance){[].forEach.call(document.querySelectorAll('section.lesson'),function(sec){var hd=sec.querySelector('.lhead'),cr=sec.querySelector('.criollo p');if(!hd||!cr)return;var lead=hd.querySelectorAll('p')[1];
+      var b=document.createElement('button');b.type='button';b.className='btn ghost listen';b.textContent='▶ Escuchar';b.setAttribute('aria-pressed','false');
+      b.addEventListener('click',function(){if(speaking===b){stopAudio();return}stopAudio();var u=new SpeechSynthesisUtterance(hd.querySelector('h1').textContent+'. '+(lead?lead.textContent:'')+' '+cr.textContent),v=voice();
+        u.lang=v?v.lang:'es-AR';if(v)u.voice=v;u.rate=.98;u.onend=u.onerror=function(){if(speaking===b)stopAudio()};speaking=b;b.textContent='■ Detener';b.setAttribute('aria-pressed','true');try{SY.speak(u)}catch(e){stopAudio()}});
+      hd.appendChild(b)});try{SY.getVoices()}catch(e){}}
+  var show0=show;show=function(k,p){stopAudio();show0(k,p)};
+
+  // ---------- arranque ----------
+  setInterval(function(){var now=performance.now();if(LOOPFN&&now-lastTick>150){frames++;try{LOOPFN(now)}catch(e){lastErr=String(e)}}},50);
+  paintProg();var h0='';try{h0=location.hash.slice(1)}catch(e){}show(h0||'l1',false);
+})();
+</script>
+
+<!--fx--><script>
+(function(){
+  // ---------- misiones por modulo ----------
+  var MIS={
+  'cac-m1':{l1:'Mové el avance y compará cuánto material se desperdicia sumando y tallando. Después respondé el mini reto.',l2:'Tocá las etapas en el orden correcto, del archivo a la pieza.',l3:'Dibujá un cuadrado cerrado de 20 mm con el generador de G-code.',l4:'Mirá cómo trabajan FDM y resina, y después respondé el mini reto.',l5:'Ubicá los nueve objetos en la caja que corresponde.'},
+  'cac-m2':{l1:'Mové los ejes X, Y y Z hasta llevar la boquilla al anillo punteado.',l2:'Compará cómo se mueven la cama móvil y el CoreXY, y después respondé el mini reto.',l3:'Dejá el carro exactamente en 30 mm.',l4:'Dejá la correa en su punto justo: ni floja ni pasada de tensión.',l5:'Probá el homing y después respondé el mini reto.'},
+  'cac-m2b':{l1:'Compará Bowden y directo, y después respondé el mini reto.',l2:'Provocá un atasco en el hotend y después destrabalo.',l3:'Probá distintas boquillas y después respondé el mini reto.',l4:'Lográ que el PETG pegue bien y se suelte sin romper nada.',l5:'Recorré la electrónica y después respondé el mini reto.',l6:'Mirá cómo actúa la protección térmica y después respondé el mini reto.'},
+  'cac-m3':{l1:'Explorá los materiales y después adiviná cuál es por su etiqueta.',l2:'Elegí un material rígido que aguante el auto al sol.',l3:'Encontrá una buena temperatura para PETG.',l4:'Imprimí la caja de ABS sin que se levante.',l5:'Arruiná un nylon con humedad y después recuperalo.',l6:'Probá la refrigeración con cada material y después respondé el mini reto.',l7:'Explorá los materiales especiales y después respondé el mini reto.',l8:'Elegí el material para un soporte de celular en el tablero del auto.'},
+  'cac-m4a':{l1:'Recorré las capas hasta encontrar una con dos islas separadas.',l2:'Ubicá los nueve ajustes en el perfil donde se guardan.',l3:'Mirá qué guarda cada tipo de archivo y después respondé el mini reto.',l4:'Encontrá la orientación que aguanta toda la carga sin usar soportes.',l5:'Ajustá la altura de capa para dejarla lista para una miniatura.',l6:'Probá la altura de capa variable y después respondé el mini reto.'},
+  'cac-m4b':{l1:'Dejá el ancho de línea en el rango habitual para una boquilla de 0,4.',l2:'Reforzá la pieza sin tocar el relleno.',l3:'Cerrá la tapa con 1 mm de techo.',l4:'Elegí el relleno para una figura decorativa.',l5:'Lográ que un voladizo de 70° salga bien.',l6:'Cruzá un puente de 40 mm o más sin que cuelgue.'},
+  'cac-m4c':{l1:'Lográ que la torre aguante el empujón gastando poco plástico.',l2:'Limpiá las torres en Bowden con la menor retracción posible.',l3:'Dá una vuelta en menos de 1 segundo, con ondas apenas visibles.',l4:'Lográ una punta nítida en PLA.',l5:'Probá dónde cae la costura y después respondé el mini reto.',l6:'Revisá la vista previa de cada pieza, capa por capa, y encontrá qué problema tiene.'},
+  'cac-m5a':{l1:'Tocá las calibraciones en el orden en que conviene hacerlas.',l2:'Dejá las cuatro esquinas rozando el papel.',l3:'Medí la cama, probá la malla y después respondé el mini reto.',l4:'Dejá la primera capa justa.',l5:'Elegí la mejor temperatura para esta bobina de PLA.'},
+  'cac-m5b':{l1:'Pedí 100 mm, calculá el valor nuevo y hacé que 100 mm sean 100 mm.',l2:'Dejá la pared en 0,45 mm moviendo el flujo.',l3:'Encontrá el avance de presión que deja las esquinas limpias.',l4:'Elegí la menor distancia de retracción que deja la torre limpia.',l5:'Completá y guardá una ficha con, al menos, impresora y filamento.'},
+  'cac-m9a':{l1:'Calculá el precio que te deja un margen real del 30 % sobre un coste de 20.',l2:'Cargá tus precios, mirá cuánto cuestan material y luz, y respondé el mini reto.',l3:'Calculá cuánto cobra la máquina por hora y respondé el mini reto.',l4:'Armá un precio que cubra al menos 5 % de riesgo y deje 30 % de margen real.',l5:'Con una eficiencia realista, decidí si el pedido entra esta semana.'},'cac-m9b':{l1:'Elegí los cuatro bloques del prompt para que la figura salga imprimible, sin carteles rojos.',l2:'Recorré las cinco vistas y marcá el problema que aparece en cada una.',l3:'Marcá todo lo que tiene que estar en el presupuesto, sin las dos promesas peligrosas.',l4:'Decidí si aceptás, aceptás con condiciones o rechazás cada uno de los seis pedidos.',l5:'Respondé las tres objeciones del cliente explicando el valor.'},
+  'cac-m8b':{l1:'Decidí qué hacer en cada una de las ocho situaciones.',l2:'Elegí dónde y cómo imprimir ABS de forma responsable.',l3:'Elegí la mejora que resuelve cada uno de los seis problemas.',l4:'Respondé las tres preguntas y mirá qué impresora te conviene.',l5:'Marcá las señales de alerta de la impresora usada y decidí.'},
+  'cac-m8a':{l1:'Elegí la herramienta justa para cada una de las ocho tareas.',l2:'Ubicá cada tarea de mantenimiento en su frecuencia.',l3:'Armá la caja de repuestos con lo que frena la máquina, sin pasarte del presupuesto.',l4:'Revisá en orden, de lo simple a lo complejo, y hacé que vuelva a encender.',l5:'Encontrá los seis riesgos alrededor de la impresora.'},
+  'cac-m7b':{l1:'Elegí una unión y abrila y cerrala 10 veces sin que se gaste la rosca.',l2:'Ajustá largo, espesor, capas y radio para que el snap fit trabe sin romperse.',l3:'Elegí bisagra y material para una caja que se abre todos los días.',l4:'Elegí el perfil más eficiente para cada uno de los dos pedidos.',l5:'Elegí el recurso de diseño para cada una de las ocho necesidades.'},
+  'cac-m7a':{l1:'Mirá cómo se deforma la barra y reconocé las cinco fuerzas.',l2:'Cambiá la forma de la esquina para que la escuadra aguante 6 kg.',l3:'Lográ que el soporte se doble menos de 1 mm con menos de 25 g de plástico.',l4:'Rediseñá el agujero y el saliente para imprimirlos sin soportes.',l5:'Elegí la holgura justa para cada uno de los tres pedidos y probala.'},
+  'cac-m6b':{l1:'Dejá el frente limpio y sin hilos hacia la columnita.',l2:'Lográ que el voladizo de 60° y el puente salgan derechos, sin soporte.',l3:'Elegí la distancia del soporte y el juego del encastre, y probá: soporte limpio y perno justo.',l4:'Lográ dos horas de impresión sin atascos y sin fugas.',l5:'Diagnosticá cuatro piezas: qué defecto tienen y qué revisar primero.'},
+  'cac-m6a':{l1:'Dejá la prueba limpia cambiando una sola cosa por vez.',l2:'Lográ una base plana, sin esquinas levantadas ni pata de elefante.',l3:'Revisá de lo simple a lo complejo, encontrá el tapón y sacalo.',l4:'Dejá la torre sin capas corridas, sin bandas y sin ondas.',l5:'Lográ paredes sin grietas y un techo cerrado.'}};
+  var KEY=document.documentElement.getAttribute('data-cac')||'',M=MIS[KEY]||{};
+  function $q(s,r){return(r||document).querySelector(s)}
+  function $a(s,r){return[].slice.call((r||document).querySelectorAll(s))}
+
+  // ---------- sonido ----------
+  var snd=true;try{snd=localStorage.getItem('cac-sound')!=='0'}catch(e){}
+  var AC=null;function ac(){try{if(!AC){var A=window.AudioContext||window.webkitAudioContext;if(!A)return null;AC=new A()}if(AC.state==='suspended')AC.resume()}catch(e){return null}return AC}
+  function tn(f,t0,d,ty,v){var a=ac();if(!a)return;var o=a.createOscillator(),g=a.createGain(),n=a.currentTime+t0;o.type=ty;o.frequency.setValueAtTime(f,n);g.gain.setValueAtTime(0.0001,n);g.gain.linearRampToValueAtTime(v,n+.012);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.connect(g);g.connect(a.destination);o.start(n);o.stop(n+d+.05)}
+  var lastS=0;function play(k){if(!snd)return;var n=performance.now();if(k!=='win'&&n-lastS<250)return;lastS=n;try{
+    if(k==='ok'){tn(880,0,.2,'sine',.12);tn(1320,.08,.3,'sine',.09)}
+    else if(k==='bad'){tn(240,0,.2,'triangle',.16);tn(170,.09,.28,'triangle',.14)}
+    else if(k==='win'){tn(784,0,.18,'sine',.11);tn(988,.11,.18,'sine',.11);tn(1319,.22,.5,'sine',.11);tn(1568,.22,.5,'sine',.05)}}catch(e){}}
+  (function(){var top=$q('header.top');if(!top)return;var b=document.createElement('button');b.type='button';b.className='snd';
+    function paint(){b.textContent=snd?'🔊':'🔇';b.setAttribute('aria-label',snd?'Sonido activado. Tocá para silenciar':'Sonido silenciado. Tocá para activar');b.setAttribute('aria-pressed',String(!snd))}
+    b.addEventListener('click',function(){snd=!snd;try{localStorage.setItem('cac-sound',snd?'1':'0')}catch(e){}paint();if(snd)play('ok')});paint();var pr=$q('.prog',top);(pr||top).appendChild(b)})();
+
+  // ---------- que fue el usuario ----------
+  var lastAct=0,lastType='';
+  ['pointerdown','keydown','input','change'].forEach(function(ev){document.addEventListener(ev,function(e){var t=e.target;
+    if(t&&t.closest&&t.closest('#nav,.navrow,.modnav,.snd,details,.listen')){lastAct=0;return}lastAct=performance.now();lastType=(e.type==='input'&&t&&t.type==='range')?'slide':e.type},true)});
+  function user(){return performance.now()-lastAct<12000}
+
+  // ---------- misiones ----------
+  $a('section.lesson').forEach(function(sec){var tx=M[sec.id],sb=$q('.sim .simbody',sec)||$q('.sim .gside',sec);if(!tx||!sb)return;
+    var d=document.createElement('div');d.className='mision';d.innerHTML='<span class="ic" aria-hidden="true">🎯</span><div><b>Tu misión</b><p></p></div>';$q('p',d).textContent=tx;sb.insertBefore(d,sb.firstChild)});
+
+  // ---------- mensajes ----------
+  var ST=new WeakMap(),pend=[],sch=false;
+  function anim(el,c){el.classList.remove('fx-shake','fx-pop');void el.offsetWidth;el.classList.add(c);setTimeout(function(){el.classList.remove(c)},650)}
+  function proc(){sch=false;var now=performance.now(),list=pend;pend=[];var fired={};
+    list.forEach(function(m){if(m.__d)return;m.__d=1;var c=m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t=m.textContent,p=ST.get(m)||{c:'',t:'',at:0},go=false;
+      if(c&&!m.hidden){if(c!==p.c)go=true;else if((t!==p.t||m.__t)&&lastType!=='slide'&&now-p.at>700)go=true}
+      if(go&&user()){anim(m,c==='ok'?'fx-pop':'fx-shake');fired[c]=1;p.at=now}
+      p.c=c;p.t=t;ST.set(m,p)});
+    list.forEach(function(m){m.__d=0;m.__t=0});
+    if(fired.ok)play('ok');else if(fired.bad)play('bad')}
+  function msgOf(n){var e=n.nodeType===1?n:n.parentNode;return e&&e.closest?e.closest('.msg'):null}
+  function strip(v){return String(v||'').replace(/\s*fx-\S+/g,'').trim()}
+  var mo=new MutationObserver(function(rs){rs.forEach(function(r){var m=msgOf(r.target);if(!m)return;if(r.type==='attributes'&&r.attributeName==='class'){var o=r.oldValue||'',n=m.className;if(/fx-/.test(o+' '+n))return;if(o===n)m.__t=1}pend.push(m)});if(pend.length&&!sch){sch=true;Promise.resolve().then(proc)}});
+  $a('.msg').forEach(function(m){ST.set(m,{c:m.classList.contains('ok')?'ok':m.classList.contains('bad')?'bad':'',t:m.textContent,at:0})});
+  mo.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeOldValue:true,attributeFilter:['class','hidden']});
+
+  // ---------- repaso ----------
+  var qz=$q('#quiz');if(qz)qz.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;setTimeout(function(){var q=b.closest('.q');if(b.classList.contains('wrong')){play('bad');if(q)anim(q,'fx-shake')}else if(b.classList.contains('right')){play('ok');if(q)anim(q,'fx-pop')}},0)});
+
+
+  // ---------- reiniciar ----------
+  function arm(b,lab,ask,fn){b.addEventListener('click',function(){if(b.dataset.arm){fn();return}b.dataset.arm='1';b.textContent=ask;b.classList.add('armed');setTimeout(function(){if(b.isConnected){delete b.dataset.arm;b.textContent=lab;b.classList.remove('armed')}},4000)})}
+  function wipe(k){try{if(k){var d=JSON.parse(localStorage.getItem(KEY)||'{}');delete d[k];localStorage.setItem(KEY,JSON.stringify(d))}else localStorage.removeItem(KEY)}catch(e){}}
+  function go(h){try{if(location.hash==='#'+h)location.reload();else{location.hash=h;location.reload()}}catch(e){location.reload()}}
+  $a('section.lesson').forEach(function(sec){var b=document.createElement('button');b.type='button';b.className='btn ghost rst';var lab='↺ Volver a hacer esta lección';b.textContent=lab;
+    var w=document.createElement('div');w.className='rstrow';w.appendChild(b);sec.appendChild(w);arm(b,lab,'¿Seguro? Tocá de nuevo para empezarla de cero',function(){wipe(sec.id);go(sec.id)})});
+  (function(){var pr=$q('header.top .prog');if(!pr||!KEY)return;var b=document.createElement('button');b.type='button';b.className='rstm';var lab='↺ Reiniciar';b.textContent=lab;b.setAttribute('aria-label','Reiniciar el progreso de este módulo');
+    pr.insertBefore(b,$q('.snd',pr));arm(b,lab,'¿Todo el módulo? Tocá otra vez',function(){wipe(null);go('l1')})})();
+
+  // ---------- navegacion clara al pie ----------
+  (function(){var nb=$a('#nav button'),nr=$q('.navrow'),nx=$q('#next'),top=$q('.modnav');if(!nb.length||!nr||!nx)return;
+    function tl(b){var a=b.getAttribute('aria-label')||'';var m=a.match(/^Lecci[oó]n\s+([\d.]+),\s*(.+)$/);return m?m[1]+' '+m[2]:a}
+    var mn=top&&$q('a.mn-next',top),nl=mn?(($q('.lg',mn)||mn).textContent.trim()):'',nh=mn?mn.getAttribute('href'):'index.html',
+      mod=(($q('#nav')||{}).getAttribute&&$q('#nav').getAttribute('aria-label')||'').replace(/^Lecciones del /,'');
+    var lab=document.createElement('span');lab.className='nxl';nx.textContent='';nx.appendChild(lab);
+    var go=document.createElement('a');go.className='btn nextmod';go.href=nh;go.textContent=mn?'Ir al '+nl+' →':'Volver al inicio →';go.hidden=true;nr.appendChild(go);
+    if(top){var bot=top.cloneNode(true);bot.classList.add('modbot');bot.setAttribute('aria-label','Módulos del manual, al pie');var ft=$q('footer');(ft&&ft.parentNode||nr.parentNode).insertBefore(bot,ft||null)}
+    var rp=document.getElementById('repaso');if(rp){var cd=document.createElement('div');cd.className='cierre';cd.innerHTML='<p class="eyebrow">Fin de esta parte</p><h2></h2><p class="cs"></p><div class="row"></div>';
+      var b1=document.createElement('a');b1.className='btn big';b1.href=nh;b1.textContent=mn?'Seguir con el '+nl+' →':'Volver al inicio →';var b2=document.createElement('a');b2.className='btn ghost';b2.href='index.html';b2.textContent='Volver al inicio';
+      $q('.row',cd).appendChild(b1);if(mn)$q('.row',cd).appendChild(b2);rp.appendChild(cd)}
+    function paint(){var cur=null;nb.forEach(function(b){var sec=document.getElementById(b.dataset.l);if(sec&&!sec.hidden)cur=b});if(!cur)return;var i=nb.indexOf(cur),last=i===nb.length-1;
+      var nt='Siguiente: '+tl(nb[last?i:i+1])+' →';if(!last&&lab.textContent!==nt)lab.textContent=nt;if(go.hidden!==!last)go.hidden=!last;if(nx.hidden!==last)nx.hidden=last;
+      if(rp&&last){var pt=($q('#prog-txt')||{}).textContent||'',sc=$q('#score'),fin=sc&&!sc.hidden,h=fin?'¡Terminaste el '+mod+'!':'Cuando termines el repaso, seguí por acá',cs=pt+(fin?' · repaso: '+sc.textContent.split('.')[0]:'')+(mn?'':' · el próximo módulo está en preparación');if($q('h2',cd).textContent!==h)$q('h2',cd).textContent=h;if($q('.cs',cd).textContent!==cs)$q('.cs',cd).textContent=cs}}
+    paint();new MutationObserver(paint).observe(document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});var pt=$q('#prog-txt');if(pt)new MutationObserver(paint).observe(pt,{childList:true,subtree:true,characterData:true})})();
+  // ---------- en tu laminador ----------
+  (function(){var SLD={"cac-m4a":{"l5":[{"t":"Altura de capa","d":"Más baja: más detalle y más tiempo. Más alta: más rápido y escalones más visibles.","s":{"cura":[["Quality › Layer Height","Calidad › Altura de capa"],["Quality › Initial Layer Height","Calidad › Altura de capa inicial"]],"prusa":[["Print Settings › Layers and perimeters › Layer height","Configuración de Impresión › Capas y perímetros › Altura de la capa"],["Print Settings › Layers and perimeters › First layer height","Configuración de Impresión › Capas y perímetros › Altura de la primera capa"]],"orca":[["Process › Quality › Layer height","Proceso › Calidad › Altura de la capa"],["Process › Quality › First layer height","Proceso › Calidad › Altura de la primera capa"]],"creality":[["Process › Quality › Layer height","Proceso › Calidad › Altura de la capa"],["Process › Quality › Initial layer height","Proceso › Calidad › Altura de la primera capa"]]},"h":{}}],"l6":[{"t":"Altura de capa variable","d":"Capas finas solo donde hay curvas o detalle.","s":{"cura":[["Experimental › Use Adaptive Layers","Experimental › Utilizar capas de adaptación"]],"prusa":[["Variable layer height","Altura de capa variable"]],"orca":[["Variable layer height","Altura de capa variable"]],"creality":[["Variable layer height","Altura de capa variable"]]},"h":{"prusa":"Herramienta en la barra superior, con la pieza seleccionada.","orca":"Herramienta en la barra superior, con la pieza seleccionada.","creality":"Herramienta en la barra superior, con la pieza seleccionada."}}]},"cac-m4b":{"l1":[{"t":"Ancho de línea","d":"Habitual para boquilla de 0,4: entre 0,4 y 0,5 mm.","s":{"cura":[["Quality › Line Width","Calidad › Ancho de línea"]],"prusa":[["Print Settings › Advanced › Default extrusion width","Configuración de Impresión › Avanzado › Ancho de extrusión por defecto"]],"orca":[["Process › Quality › Line width › Default","Proceso › Calidad › Ancho de linea › Por defecto"]],"creality":[["Process › Quality › Line width › Default","Proceso › Calidad › Ancho de extrusión › Por defecto"]]},"h":{}}],"l2":[{"t":"Paredes","d":"Más paredes suman resistencia más que el relleno.","s":{"cura":[["Walls › Wall Line Count","Paredes › Recuento de líneas de pared"]],"prusa":[["Print Settings › Layers and perimeters › Perimeters","Configuración de Impresión › Capas y perímetros › Perímetros"]],"orca":[["Process › Strength › Wall loops","Proceso › Fuerza › Bucles de perímetro"]],"creality":[["Process › Strength › Wall loops","Proceso › Fuerza › Bucles de perímetro"]]},"h":{}}],"l3":[{"t":"Capas superiores e inferiores","d":"Que el techo cierre: en general, 4 o más capas arriba.","s":{"cura":[["Top/Bottom › Top Layers","Superior o inferior › Capas superiores"],["Top/Bottom › Bottom Layers","Superior o inferior › Capas inferiores"]],"prusa":[["Print Settings › Layers and perimeters › Top solid layers","Configuración de Impresión › Capas y perímetros › Capas solidas superiores"],["Print Settings › Layers and perimeters › Bottom solid layers","Configuración de Impresión › Capas y perímetros › Capas sólidas inferiores"]],"orca":[["Process › Strength › Top solid layers","Proceso › Fuerza › Capas sólidas superiores"],["Process › Strength › Bottom shell layers","Proceso › Fuerza › Capas inferiores de cubierta"]],"creality":[["Process › Strength › Top solid layers","Proceso › Fuerza › Capas solidas arriba"],["Process › Strength › Bottom shell layers","Proceso › Fuerza › Cubiertas inferiores de cubierta"]]},"h":{}}],"l4":[{"t":"Relleno","d":"Densidad y patrón.","s":{"cura":[["Infill › Infill Density","Relleno › Densidad de relleno"],["Infill › Infill Pattern","Relleno › Patrón de relleno"]],"prusa":[["Print Settings › Infill › Fill density","Configuración de Impresión › Relleno › Densidad de relleno"],["Print Settings › Infill › Fill pattern","Configuración de Impresión › Relleno › Patrón de relleno"]],"orca":[["Process › Strength › Sparse infill density","Proceso › Fuerza › Densidad de relleno de baja densidad"],["Process › Strength › Sparse infill pattern","Proceso › Fuerza › Patrón de relleno de baja densidad"]],"creality":[["Process › Strength › Sparse infill density","Proceso › Fuerza › Densidad de relleno de baja densidad"],["Process › Strength › Sparse infill pattern","Proceso › Fuerza › Patrón de relleno de baja densidad"]]},"h":{}}],"l5":[{"t":"Soportes","d":"Activarlos y elegir desde qué inclinación se generan.","s":{"cura":[["Support › Generate Support","Soporte › Generar soporte"],["Support › Support Overhang Angle","Soporte › Ángulo de voladizo del soporte"]],"prusa":[["Print Settings › Support material › Generate support material","Configuración de Impresión › Material de soporte › Generar material de soporte"],["Print Settings › Support material › Overhang threshold","Configuración de Impresión › Material de soporte › Umbral de voladizos"]],"orca":[["Process › Support › Enable support","Proceso › Soportes › Habilitar los soportes"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]],"creality":[["Process › Support › Enable support","Proceso › Soportes › Habilitar el soporte"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]]},"h":{}}],"l6":[{"t":"Puentes","d":"Más ventilador en los puentes y, si cuelgan, menos flujo.","s":{"cura":[["Experimental › Enable Bridge Settings","Experimental › Habilitar ajustes del puente"],["Experimental › Bridge Fan Speed","Experimental › Velocidad del ventilador del puente"]],"prusa":[["Filament Settings › Cooling › Bridges fan speed","Configuración del filamento › Enfriamiento › Velocidad del ventilador para puentes"],["Print Settings › Advanced › Bridge flow ratio","Configuración de Impresión › Avanzado › Relación de flujo del puente"]],"orca":[["Filament settings › Cooling › Overhangs and external bridges fan speed","Ajustes del filamento › Refrigeración › Velocidad del ventilador para salientes y puentes externos"],["Process › Quality › Bridge flow ratio","Proceso › Calidad › Factor de flujo en puentes"]],"creality":[["Filament settings › Cooling › Fan speed for overhang","Ajustes del filamento › Refrigeración › Velocidad del ventilador para el voladizo"],["Process › Quality › Bridge flow ratio","Proceso › Calidad › Ratio de caudal en puentes"]]},"h":{}},{"t":"Ventilador de capa","d":"Más aire: mejores puentes y detalles. Menos aire: mejor unión entre capas.","s":{"cura":[["Cooling › Fan Speed","Refrigeración › Velocidad del ventilador"]],"prusa":[["Filament Settings › Cooling › Fan settings","Configuración del filamento › Enfriamiento › Configuración del ventilador"]],"orca":[["Filament settings › Cooling › Part cooling fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador de refrigeración de piezas › Velocidad del ventilador"]],"creality":[["Filament settings › Cooling › Model fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador modelo › Fan speed"]]},"h":{}}]},"cac-m4c":{"l1":[{"t":"Falda, ala y balsa","d":"Ayudas de adherencia alrededor o debajo de la pieza.","s":{"cura":[["Build Plate Adhesion › Build Plate Adhesion Type","Adherencia de la placa de impresión › Tipo adherencia de la placa de impresión"]],"prusa":[["Print Settings › Skirt and brim › Skirt Loops","Configuración de Impresión › Falda y balsa › Vueltas de la falda"],["Print Settings › Skirt and brim › Brim type","Configuración de Impresión › Falda y balsa › Tipo de balsa"],["Print Settings › Support material › Raft layers","Configuración de Impresión › Material de soporte › Capas de balsa"]],"orca":[["Process › Others › Skirt loops","Proceso › Otros › Bucles de la falda"],["Process › Others › Brim type","Proceso › Otros › Tipo de borde de adherencia"],["Process › Support › Raft layers","Proceso › Soportes › Capas de balsa (base de impresión)"]],"creality":[["Process › Others › Skirt loops","Proceso › Otros › Contorno de la falda"],["Process › Others › Brim type","Proceso › Otros › Tipo de borde de adherencia"],["Process › Support › Raft layers","Proceso › Soportes › Capas de balsa (base de impresión)"]]},"h":{"prusa":"Ojo: en la versión en español, \"brim\" figura como \"balsa\"."}}],"l2":[{"t":"Retracción","d":"Distancia y velocidad.","s":{"cura":[["Travel › Retraction Distance","Desplazamiento › Distancia de retracción"],["Travel › Retraction Speed","Desplazamiento › Velocidad de retracción"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Length","Configuración de la Impresora › Extrusor 1 › Retracción › Largo"],["Printer Settings › Extruder 1 › Retraction › Speed","Configuración de la Impresora › Extrusor 1 › Retracción › Velocidad"]],"orca":[["Printer settings › Extruder › Retraction › Retraction Length","Ajustes de la impresora › Extrusor › Retracción › Longitud de retracción"],["Printer settings › Extruder › Retraction › Retraction speed","Ajustes de la impresora › Extrusor › Retracción › Velocidad de retracción"]],"creality":[["Printer settings › Extruder 1 › Retraction › Retraction Length","Ajustes de la impresora › Extrusor 1 › Retracción › Longitud de retracción"],["Printer settings › Extruder 1 › Retraction › Retraction Speed","Ajustes de la impresora › Extrusor 1 › Retracción › Velocidad de retracción"]]},"h":{"orca":"También se puede pisar por filamento en Ajustes del filamento › Sobreescribir ajustes de impresora."}}],"l3":[{"t":"Velocidad y aceleración","d":"Bajar la aceleración reduce las ondas.","s":{"cura":[["Speed › Print Speed","Velocidad › Velocidad de impresión"],["Speed › Enable Acceleration Control","Velocidad › Activar control de aceleración"],["Speed › Print Acceleration","Velocidad › Aceleración de la impresión"]],"prusa":[["Print Settings › Speed › Speed for print moves","Configuración de Impresión › Velocidad › Velocidad para movimientos de impresión"],["Print Settings › Speed › Acceleration control (advanced)","Configuración de Impresión › Velocidad › Control de aceleración (avanzado)"]],"orca":[["Process › Speed › Other layers speed › Outer wall","Proceso › Velocidad › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Velocidad › Aceleración › Impresión normal"]],"creality":[["Process › Speed › Other layers speed › Outer wall","Proceso › Speed › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Speed › Aceleración › Impresión normal"]]},"h":{}}],"l4":[{"t":"Ventilador de capa","d":"Más aire: mejores puentes y detalles. Menos aire: mejor unión entre capas.","s":{"cura":[["Cooling › Fan Speed","Refrigeración › Velocidad del ventilador"]],"prusa":[["Filament Settings › Cooling › Fan settings","Configuración del filamento › Enfriamiento › Configuración del ventilador"]],"orca":[["Filament settings › Cooling › Part cooling fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador de refrigeración de piezas › Velocidad del ventilador"]],"creality":[["Filament settings › Cooling › Model fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador modelo › Fan speed"]]},"h":{}}],"l5":[{"t":"Costura","d":"Dónde empieza cada vuelta: alineada, atrás, en esquinas o al azar.","s":{"cura":[["Walls › Z Seam Alignment","Paredes › Alineación de costuras en Z"]],"prusa":[["Print Settings › Layers and perimeters › Seam position","Configuración de Impresión › Capas y perímetros › Posición de la costura"]],"orca":[["Process › Quality › Seam position","Proceso › Calidad › Posición de la costura"]],"creality":[["Process › Quality › Seam position","Proceso › Calidad › Posición de la costura"]]},"h":{}}]},"cac-m5a":{"l3":[{"t":"Malla de nivelación","d":"","s":{"cura":{"note":"Es del firmware de la impresora. El laminador solo la llama desde el G-code inicial (en Marlin, G29 para medir o M420 S1 para usar una malla guardada)."},"prusa":{"note":"Es del firmware de la impresora. El laminador solo la llama desde el G-code inicial (en Marlin, G29 para medir o M420 S1 para usar una malla guardada)."},"orca":{"note":"Es del firmware de la impresora. El laminador solo la llama desde el G-code inicial (en Marlin, G29 para medir o M420 S1 para usar una malla guardada)."},"creality":{"note":"Es del firmware de la impresora. El laminador solo la llama desde el G-code inicial (en Marlin, G29 para medir o M420 S1 para usar una malla guardada)."}},"h":{}}],"l4":[{"t":"Offset Z","d":"","s":{"cura":{"note":"Cura no tiene este ajuste: se hace en la pantalla de la impresora (o con un complemento del Marketplace)."},"prusa":[["Printer Settings › General › Z offset","Configuración de la Impresora › General › Ajuste en altura Z"]],"orca":[["Printer settings › Basic information › Z offset","Ajustes de la impresora › Información básica › Desplazamiento de Z"]],"creality":[["Printer settings › Basic information › Z offset","Ajustes de la impresora › Información básica › Desplazamiento de Z"]]},"h":{"prusa":"Lo más común es ajustarlo en la pantalla de la impresora; este valor se suma.","orca":"Lo más común es ajustarlo en la pantalla de la impresora; este valor se suma.","creality":"Lo más común es ajustarlo en la pantalla de la impresora; este valor se suma."}}],"l5":[{"t":"Temperatura de boquilla","d":"Se ajusta por filamento.","s":{"cura":[["Material › Printing Temperature","Material › Temperatura de impresión"]],"prusa":[["Filament Settings › Filament › Nozzle temperature","Configuración del filamento › Filamento › Temperatura de la boquilla"]],"orca":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]],"creality":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]]},"h":{}},{"t":"Torre de temperatura","d":"","s":{"cura":{"note":"Cura no la trae: se descarga una torre y se cambia la temperatura por altura con un posprocesado o complemento."},"prusa":{"note":"PrusaSlicer no la trae: se descarga una torre y se cambia la temperatura por altura con modificadores de rango de altura o G-code personalizado."},"orca":[["Calibration › Temperature","Calibración › Temperatura"]],"creality":[["Calibration › Temperature","Calibración › Temperatura"]]},"h":{}}]},"cac-m5b":{"l1":[{"t":"Pasos del extrusor","d":"","s":{"cura":{"note":"No está en el laminador: se guarda en la impresora (en Marlin, M92 E y el valor, y M500; en Klipper, rotation_distance en printer.cfg)."},"prusa":{"note":"No está en el laminador: se guarda en la impresora (en Marlin, M92 E y el valor, y M500; en Klipper, rotation_distance en printer.cfg)."},"orca":{"note":"No está en el laminador: se guarda en la impresora (en Marlin, M92 E y el valor, y M500; en Klipper, rotation_distance en printer.cfg)."},"creality":{"note":"No está en el laminador: se guarda en la impresora (en Marlin, M92 E y el valor, y M500; en Klipper, rotation_distance en printer.cfg)."}},"h":{}}],"l2":[{"t":"Flujo","d":"100 % es lo calculado; se corrige un poco por bobina.","s":{"cura":[["Material › Flow","Material › Flujo"]],"prusa":[["Filament Settings › Filament › Extrusion multiplier","Configuración del filamento › Filamento › Multiplicador de extrusión"]],"orca":[["Filament settings › Filament › Flow ratio","Ajustes del filamento › Filamento › Factor de flujo"]],"creality":[["Filament settings › Filament › Flow ratio","Ajustes del filamento › Filamento › Proporción de caudal"]]},"h":{"prusa":"Es un multiplicador: 0,96 equivale a 96 %.","orca":"Es un factor: 0,96 equivale a 96 %.","creality":"Es un factor: 0,96 equivale a 96 %."}},{"t":"Prueba de flujo","d":"","s":{"cura":{"note":"Cura no la trae: se imprime un cubo de flujo descargado y se mide."},"prusa":{"note":"PrusaSlicer no la trae: se imprime un cubo de flujo descargado y se mide."},"orca":[["Calibration › Flow ratio","Calibración › Factor de flujo"]],"creality":[["Calibration › Flow rate","Calibración › Test de caudal"]]},"h":{}}],"l3":[{"t":"Avance de presión","d":"","s":{"cura":{"note":"En la mayoría de las impresoras Cura no muestra este ajuste (solo lo habilitan algunas máquinas de UltiMaker, como \"Pressure advance factor\"). Con Marlin se agrega M900 K y el valor en el G-code inicial de la impresora, o se usa un complemento del Marketplace."},"prusa":{"note":"No tiene un ajuste propio. Se agrega M900 K y el valor (Marlin) en Configuración del filamento › Código G personalizado › Código G inicial."},"orca":[["Filament settings › Filament › Enable pressure advance","Ajustes del filamento › Filamento › Activar Pressure Advance"],["Filament settings › Filament › Pressure advance","Ajustes del filamento › Filamento › Pressure Advance"]],"creality":[["Filament settings › Filament › Enable pressure advance","Ajustes del filamento › Filamento › Activar Avance de Presión Lineal"],["Filament settings › Filament › Pressure advance","Ajustes del filamento › Filamento › Avance de Presión Lineal"]]},"h":{}},{"t":"Prueba de avance de presión","d":"","s":{"cura":{"note":"Cura no la trae: se usa un generador externo de patrón de Linear Advance."},"prusa":{"note":"PrusaSlicer no la trae: se usa un generador externo de patrón de Linear Advance."},"orca":[["Calibration › Pressure advance","Calibración › Pressure Advance"]],"creality":[["Calibration › Pressure advance","Calibración › Avance de Presión Lineal"]]},"h":{}}],"l4":[{"t":"Retracción","d":"Distancia y velocidad.","s":{"cura":[["Travel › Retraction Distance","Desplazamiento › Distancia de retracción"],["Travel › Retraction Speed","Desplazamiento › Velocidad de retracción"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Length","Configuración de la Impresora › Extrusor 1 › Retracción › Largo"],["Printer Settings › Extruder 1 › Retraction › Speed","Configuración de la Impresora › Extrusor 1 › Retracción › Velocidad"]],"orca":[["Printer settings › Extruder › Retraction › Retraction Length","Ajustes de la impresora › Extrusor › Retracción › Longitud de retracción"],["Printer settings › Extruder › Retraction › Retraction speed","Ajustes de la impresora › Extrusor › Retracción › Velocidad de retracción"]],"creality":[["Printer settings › Extruder 1 › Retraction › Retraction Length","Ajustes de la impresora › Extrusor 1 › Retracción › Longitud de retracción"],["Printer settings › Extruder 1 › Retraction › Retraction Speed","Ajustes de la impresora › Extrusor 1 › Retracción › Velocidad de retracción"]]},"h":{"orca":"También se puede pisar por filamento en Ajustes del filamento › Sobreescribir ajustes de impresora."}},{"t":"Torre de retracción","d":"","s":{"cura":{"note":"Cura no la trae: se descarga una torre y se usa el posprocesado o un complemento para cambiar la retracción por altura."},"prusa":{"note":"PrusaSlicer no la trae: se descarga una torre y se cambia la retracción por altura con modificadores de rango de altura."},"orca":[["Calibration › Retraction","Calibración › Retracción"]],"creality":[["Calibration › Retraction test","Calibración › Test de retracción"]]},"h":{}}]},"cac-m6a":{"l1":[{"t":"Temperatura de boquilla","d":"Se ajusta por filamento.","s":{"cura":[["Material › Printing Temperature","Material › Temperatura de impresión"]],"prusa":[["Filament Settings › Filament › Nozzle temperature","Configuración del filamento › Filamento › Temperatura de la boquilla"]],"orca":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]],"creality":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]]},"h":{}},{"t":"Retracción","d":"Distancia y velocidad.","s":{"cura":[["Travel › Retraction Distance","Desplazamiento › Distancia de retracción"],["Travel › Retraction Speed","Desplazamiento › Velocidad de retracción"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Length","Configuración de la Impresora › Extrusor 1 › Retracción › Largo"],["Printer Settings › Extruder 1 › Retraction › Speed","Configuración de la Impresora › Extrusor 1 › Retracción › Velocidad"]],"orca":[["Printer settings › Extruder › Retraction › Retraction Length","Ajustes de la impresora › Extrusor › Retracción › Longitud de retracción"],["Printer settings › Extruder › Retraction › Retraction speed","Ajustes de la impresora › Extrusor › Retracción › Velocidad de retracción"]],"creality":[["Printer settings › Extruder 1 › Retraction › Retraction Length","Ajustes de la impresora › Extrusor 1 › Retracción › Longitud de retracción"],["Printer settings › Extruder 1 › Retraction › Retraction Speed","Ajustes de la impresora › Extrusor 1 › Retracción › Velocidad de retracción"]]},"h":{"orca":"También se puede pisar por filamento en Ajustes del filamento › Sobreescribir ajustes de impresora."}}],"l2":[{"t":"Temperatura de cama","d":"Se ajusta por filamento.","s":{"cura":[["Material › Build Plate Temperature","Material › Temperatura de la placa de impresión"]],"prusa":[["Filament Settings › Filament › Bed temperature","Configuración del filamento › Filamento › Temperatura de la base"]],"orca":[["Filament settings › Filament › Bed temperature","Ajustes del filamento › Filamento › Temperatura de cama"]],"creality":[["Filament settings › Filament › Bed temperature","Ajustes del filamento › Filamento › Temperatura de la cama"]]},"h":{"orca":"Orca tiene un valor por tipo de placa (fría, texturada, lisa).","creality":"Hay un valor por tipo de placa."}},{"t":"Ala (brim)","d":"Agranda la base pegada a la cama y ayuda contra el warping.","s":{"cura":[["Build Plate Adhesion › Build Plate Adhesion Type","Adherencia de la placa de impresión › Tipo adherencia de la placa de impresión"]],"prusa":[["Print Settings › Skirt and brim › Brim type","Configuración de Impresión › Falda y balsa › Tipo de balsa"],["Print Settings › Skirt and brim › Brim width","Configuración de Impresión › Falda y balsa › Ancho de la balsa"]],"orca":[["Process › Others › Brim type","Proceso › Otros › Tipo de borde de adherencia"],["Process › Others › Brim width","Proceso › Otros › Ancho del borde de adherencia"]],"creality":[["Process › Others › Brim type","Proceso › Otros › Tipo de borde de adherencia"],["Process › Others › Brim width","Proceso › Otros › Ancho del borde de adherencia"]]},"h":{"cura":"Elegí \"Brim\" en el tipo de adherencia.","prusa":"Ojo: en la versión en español, \"brim\" figura como \"balsa\"."}},{"t":"Compensación de pata de elefante","d":"Achica un poco la primera capa para que la base no salga más ancha.","s":{"cura":[["Walls › Initial Layer Horizontal Expansion","Paredes › Expansión horizontal de la capa inicial"]],"prusa":[["Print Settings › Advanced › Elephant foot compensation","Configuración de Impresión › Avanzado › Compensación del pie de elefante"]],"orca":[["Process › Quality › Elephant foot compensation","Proceso › Calidad › Compensación de Pata de elefante"]],"creality":[["Process › Quality › Elephant foot compensation","Proceso › Calidad › Compensación del pata de elefante"]]},"h":{"cura":"Se pone un valor negativo, por ejemplo -0,1 mm."}}],"l3":[{"t":"Temperatura de boquilla","d":"Se ajusta por filamento.","s":{"cura":[["Material › Printing Temperature","Material › Temperatura de impresión"]],"prusa":[["Filament Settings › Filament › Nozzle temperature","Configuración del filamento › Filamento › Temperatura de la boquilla"]],"orca":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]],"creality":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]]},"h":{}},{"t":"Flujo","d":"100 % es lo calculado; se corrige un poco por bobina.","s":{"cura":[["Material › Flow","Material › Flujo"]],"prusa":[["Filament Settings › Filament › Extrusion multiplier","Configuración del filamento › Filamento › Multiplicador de extrusión"]],"orca":[["Filament settings › Filament › Flow ratio","Ajustes del filamento › Filamento › Factor de flujo"]],"creality":[["Filament settings › Filament › Flow ratio","Ajustes del filamento › Filamento › Proporción de caudal"]]},"h":{"prusa":"Es un multiplicador: 0,96 equivale a 96 %.","orca":"Es un factor: 0,96 equivale a 96 %.","creality":"Es un factor: 0,96 equivale a 96 %."}},{"t":"Velocidad y aceleración","d":"Bajar la aceleración reduce las ondas.","s":{"cura":[["Speed › Print Speed","Velocidad › Velocidad de impresión"],["Speed › Enable Acceleration Control","Velocidad › Activar control de aceleración"],["Speed › Print Acceleration","Velocidad › Aceleración de la impresión"]],"prusa":[["Print Settings › Speed › Speed for print moves","Configuración de Impresión › Velocidad › Velocidad para movimientos de impresión"],["Print Settings › Speed › Acceleration control (advanced)","Configuración de Impresión › Velocidad › Control de aceleración (avanzado)"]],"orca":[["Process › Speed › Other layers speed › Outer wall","Proceso › Velocidad › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Velocidad › Aceleración › Impresión normal"]],"creality":[["Process › Speed › Other layers speed › Outer wall","Proceso › Speed › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Speed › Aceleración › Impresión normal"]]},"h":{}}],"l4":[{"t":"Velocidad y aceleración","d":"Bajar la aceleración reduce las ondas.","s":{"cura":[["Speed › Print Speed","Velocidad › Velocidad de impresión"],["Speed › Enable Acceleration Control","Velocidad › Activar control de aceleración"],["Speed › Print Acceleration","Velocidad › Aceleración de la impresión"]],"prusa":[["Print Settings › Speed › Speed for print moves","Configuración de Impresión › Velocidad › Velocidad para movimientos de impresión"],["Print Settings › Speed › Acceleration control (advanced)","Configuración de Impresión › Velocidad › Control de aceleración (avanzado)"]],"orca":[["Process › Speed › Other layers speed › Outer wall","Proceso › Velocidad › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Velocidad › Aceleración › Impresión normal"]],"creality":[["Process › Speed › Other layers speed › Outer wall","Proceso › Speed › Velocidad de otras capas › Perímetro externo"],["Process › Speed › Acceleration › Normal printing","Proceso › Speed › Aceleración › Impresión normal"]]},"h":{}}],"l5":[{"t":"Temperatura de boquilla","d":"Se ajusta por filamento.","s":{"cura":[["Material › Printing Temperature","Material › Temperatura de impresión"]],"prusa":[["Filament Settings › Filament › Nozzle temperature","Configuración del filamento › Filamento › Temperatura de la boquilla"]],"orca":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]],"creality":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]]},"h":{}},{"t":"Ventilador de capa","d":"Más aire: mejores puentes y detalles. Menos aire: mejor unión entre capas.","s":{"cura":[["Cooling › Fan Speed","Refrigeración › Velocidad del ventilador"]],"prusa":[["Filament Settings › Cooling › Fan settings","Configuración del filamento › Enfriamiento › Configuración del ventilador"]],"orca":[["Filament settings › Cooling › Part cooling fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador de refrigeración de piezas › Velocidad del ventilador"]],"creality":[["Filament settings › Cooling › Model fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador modelo › Fan speed"]]},"h":{}},{"t":"Capas superiores e inferiores","d":"Que el techo cierre: en general, 4 o más capas arriba.","s":{"cura":[["Top/Bottom › Top Layers","Superior o inferior › Capas superiores"],["Top/Bottom › Bottom Layers","Superior o inferior › Capas inferiores"]],"prusa":[["Print Settings › Layers and perimeters › Top solid layers","Configuración de Impresión › Capas y perímetros › Capas solidas superiores"],["Print Settings › Layers and perimeters › Bottom solid layers","Configuración de Impresión › Capas y perímetros › Capas sólidas inferiores"]],"orca":[["Process › Strength › Top solid layers","Proceso › Fuerza › Capas sólidas superiores"],["Process › Strength › Bottom shell layers","Proceso › Fuerza › Capas inferiores de cubierta"]],"creality":[["Process › Strength › Top solid layers","Proceso › Fuerza › Capas solidas arriba"],["Process › Strength › Bottom shell layers","Proceso › Fuerza › Cubiertas inferiores de cubierta"]]},"h":{}}]},"cac-m6b":{"l1":[{"t":"Costura","d":"Dónde empieza cada vuelta: alineada, atrás, en esquinas o al azar.","s":{"cura":[["Walls › Z Seam Alignment","Paredes › Alineación de costuras en Z"]],"prusa":[["Print Settings › Layers and perimeters › Seam position","Configuración de Impresión › Capas y perímetros › Posición de la costura"]],"orca":[["Process › Quality › Seam position","Proceso › Calidad › Posición de la costura"]],"creality":[["Process › Quality › Seam position","Proceso › Calidad › Posición de la costura"]]},"h":{}},{"t":"Wipe","d":"Pasa la boquilla sobre lo impreso al terminar la vuelta.","s":{"cura":[["Walls › Outer Wall Wipe Distance","Paredes › Distancia de pasada de la pared exterior"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Wipe while retracting","Configuración de la Impresora › Extrusor 1 › Retracción › Limpiar mientras se retrae"]],"orca":[["Printer settings › Extruder › Retraction › Wipe while retracting","Ajustes de la impresora › Extrusor › Retracción › Purgar mientras se retrae"]],"creality":[["Printer settings › Extruder 1 › Retraction › Wipe while retracting","Ajustes de la impresora › Extrusor 1 › Retracción › Limpiar mientras se retrae"]]},"h":{}},{"t":"Temperatura de boquilla","d":"Se ajusta por filamento.","s":{"cura":[["Material › Printing Temperature","Material › Temperatura de impresión"]],"prusa":[["Filament Settings › Filament › Nozzle temperature","Configuración del filamento › Filamento › Temperatura de la boquilla"]],"orca":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]],"creality":[["Filament settings › Filament › Nozzle temperature","Ajustes del filamento › Filamento › Temperatura de la boquilla"]]},"h":{}},{"t":"Retracción","d":"Distancia y velocidad.","s":{"cura":[["Travel › Retraction Distance","Desplazamiento › Distancia de retracción"],["Travel › Retraction Speed","Desplazamiento › Velocidad de retracción"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Length","Configuración de la Impresora › Extrusor 1 › Retracción › Largo"],["Printer Settings › Extruder 1 › Retraction › Speed","Configuración de la Impresora › Extrusor 1 › Retracción › Velocidad"]],"orca":[["Printer settings › Extruder › Retraction › Retraction Length","Ajustes de la impresora › Extrusor › Retracción › Longitud de retracción"],["Printer settings › Extruder › Retraction › Retraction speed","Ajustes de la impresora › Extrusor › Retracción › Velocidad de retracción"]],"creality":[["Printer settings › Extruder 1 › Retraction › Retraction Length","Ajustes de la impresora › Extrusor 1 › Retracción › Longitud de retracción"],["Printer settings › Extruder 1 › Retraction › Retraction Speed","Ajustes de la impresora › Extrusor 1 › Retracción › Velocidad de retracción"]]},"h":{"orca":"También se puede pisar por filamento en Ajustes del filamento › Sobreescribir ajustes de impresora."}}],"l2":[{"t":"Ventilador de capa","d":"Más aire: mejores puentes y detalles. Menos aire: mejor unión entre capas.","s":{"cura":[["Cooling › Fan Speed","Refrigeración › Velocidad del ventilador"]],"prusa":[["Filament Settings › Cooling › Fan settings","Configuración del filamento › Enfriamiento › Configuración del ventilador"]],"orca":[["Filament settings › Cooling › Part cooling fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador de refrigeración de piezas › Velocidad del ventilador"]],"creality":[["Filament settings › Cooling › Model fan › Fan speed","Ajustes del filamento › Refrigeración › Ventilador modelo › Fan speed"]]},"h":{}},{"t":"Puentes","d":"Más ventilador en los puentes y, si cuelgan, menos flujo.","s":{"cura":[["Experimental › Enable Bridge Settings","Experimental › Habilitar ajustes del puente"],["Experimental › Bridge Fan Speed","Experimental › Velocidad del ventilador del puente"]],"prusa":[["Filament Settings › Cooling › Bridges fan speed","Configuración del filamento › Enfriamiento › Velocidad del ventilador para puentes"],["Print Settings › Advanced › Bridge flow ratio","Configuración de Impresión › Avanzado › Relación de flujo del puente"]],"orca":[["Filament settings › Cooling › Overhangs and external bridges fan speed","Ajustes del filamento › Refrigeración › Velocidad del ventilador para salientes y puentes externos"],["Process › Quality › Bridge flow ratio","Proceso › Calidad › Factor de flujo en puentes"]],"creality":[["Filament settings › Cooling › Fan speed for overhang","Ajustes del filamento › Refrigeración › Velocidad del ventilador para el voladizo"],["Process › Quality › Bridge flow ratio","Proceso › Calidad › Ratio de caudal en puentes"]]},"h":{}},{"t":"Soportes","d":"Activarlos y elegir desde qué inclinación se generan.","s":{"cura":[["Support › Generate Support","Soporte › Generar soporte"],["Support › Support Overhang Angle","Soporte › Ángulo de voladizo del soporte"]],"prusa":[["Print Settings › Support material › Generate support material","Configuración de Impresión › Material de soporte › Generar material de soporte"],["Print Settings › Support material › Overhang threshold","Configuración de Impresión › Material de soporte › Umbral de voladizos"]],"orca":[["Process › Support › Enable support","Proceso › Soportes › Habilitar los soportes"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]],"creality":[["Process › Support › Enable support","Proceso › Soportes › Habilitar el soporte"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]]},"h":{}}],"l3":[{"t":"Distancia entre soporte y pieza","d":"Más distancia: sale más fácil. Demasiada: la cara de abajo se cae.","s":{"cura":[["Support › Support Z Distance","Soporte › Distancia en Z del soporte"]],"prusa":[["Print Settings › Support material › Top contact Z distance","Configuración de Impresión › Material de soporte › Distancia Z de contacto superior"]],"orca":[["Process › Support › Top Z distance","Proceso › Soportes › Distancia Z superior"]],"creality":[["Process › Support › Top Z distance","Proceso › Soportes › Distancia Z superior"]]},"h":{}},{"t":"Compensación de agujeros","d":"Agranda los agujeros para que encastren.","s":{"cura":[["Walls › Hole Horizontal Expansion","Paredes › Expansión horizontal de orificios"]],"prusa":[["Print Settings › Advanced › XY Size Compensation","Configuración de Impresión › Avanzado › Compensación de tamaño XY"]],"orca":[["Process › Quality › X-Y hole compensation","Proceso › Calidad › Compensación en X-Y de huecos"]],"creality":[["Process › Quality › X-Y hole compensation","Proceso › Calidad › Compensación de huecos X-Y"]]},"h":{"prusa":"Ojo: en PrusaSlicer afecta toda la pieza, no solo los agujeros."}}],"l4":[{"t":"Retracción","d":"Distancia y velocidad.","s":{"cura":[["Travel › Retraction Distance","Desplazamiento › Distancia de retracción"],["Travel › Retraction Speed","Desplazamiento › Velocidad de retracción"]],"prusa":[["Printer Settings › Extruder 1 › Retraction › Length","Configuración de la Impresora › Extrusor 1 › Retracción › Largo"],["Printer Settings › Extruder 1 › Retraction › Speed","Configuración de la Impresora › Extrusor 1 › Retracción › Velocidad"]],"orca":[["Printer settings › Extruder › Retraction › Retraction Length","Ajustes de la impresora › Extrusor › Retracción › Longitud de retracción"],["Printer settings › Extruder › Retraction › Retraction speed","Ajustes de la impresora › Extrusor › Retracción › Velocidad de retracción"]],"creality":[["Printer settings › Extruder 1 › Retraction › Retraction Length","Ajustes de la impresora › Extrusor 1 › Retracción › Longitud de retracción"],["Printer settings › Extruder 1 › Retraction › Retraction Speed","Ajustes de la impresora › Extrusor 1 › Retracción › Velocidad de retracción"]]},"h":{"orca":"También se puede pisar por filamento en Ajustes del filamento › Sobreescribir ajustes de impresora."}}]},"cac-m7a":{"l3":[{"t":"Paredes","d":"Más paredes suman resistencia más que el relleno.","s":{"cura":[["Walls › Wall Line Count","Paredes › Recuento de líneas de pared"]],"prusa":[["Print Settings › Layers and perimeters › Perimeters","Configuración de Impresión › Capas y perímetros › Perímetros"]],"orca":[["Process › Strength › Wall loops","Proceso › Fuerza › Bucles de perímetro"]],"creality":[["Process › Strength › Wall loops","Proceso › Fuerza › Bucles de perímetro"]]},"h":{}},{"t":"Relleno","d":"Densidad y patrón.","s":{"cura":[["Infill › Infill Density","Relleno › Densidad de relleno"],["Infill › Infill Pattern","Relleno › Patrón de relleno"]],"prusa":[["Print Settings › Infill › Fill density","Configuración de Impresión › Relleno › Densidad de relleno"],["Print Settings › Infill › Fill pattern","Configuración de Impresión › Relleno › Patrón de relleno"]],"orca":[["Process › Strength › Sparse infill density","Proceso › Fuerza › Densidad de relleno de baja densidad"],["Process › Strength › Sparse infill pattern","Proceso › Fuerza › Patrón de relleno de baja densidad"]],"creality":[["Process › Strength › Sparse infill density","Proceso › Fuerza › Densidad de relleno de baja densidad"],["Process › Strength › Sparse infill pattern","Proceso › Fuerza › Patrón de relleno de baja densidad"]]},"h":{}}],"l4":[{"t":"Soportes","d":"Activarlos y elegir desde qué inclinación se generan.","s":{"cura":[["Support › Generate Support","Soporte › Generar soporte"],["Support › Support Overhang Angle","Soporte › Ángulo de voladizo del soporte"]],"prusa":[["Print Settings › Support material › Generate support material","Configuración de Impresión › Material de soporte › Generar material de soporte"],["Print Settings › Support material › Overhang threshold","Configuración de Impresión › Material de soporte › Umbral de voladizos"]],"orca":[["Process › Support › Enable support","Proceso › Soportes › Habilitar los soportes"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]],"creality":[["Process › Support › Enable support","Proceso › Soportes › Habilitar el soporte"],["Process › Support › Threshold angle","Proceso › Soportes › Pendiente máxima"]]},"h":{}}],"l5":[{"t":"Compensación de agujeros","d":"Agranda los agujeros para que encastren.","s":{"cura":[["Walls › Hole Horizontal Expansion","Paredes › Expansión horizontal de orificios"]],"prusa":[["Print Settings › Advanced › XY Size Compensation","Configuración de Impresión › Avanzado › Compensación de tamaño XY"]],"orca":[["Process › Quality › X-Y hole compensation","Proceso › Calidad › Compensación en X-Y de huecos"]],"creality":[["Process › Quality › X-Y hole compensation","Proceso › Calidad › Compensación de huecos X-Y"]]},"h":{"prusa":"Ojo: en PrusaSlicer afecta toda la pieza, no solo los agujeros."}}]}},D=SLD[KEY];if(!D)return;
+    var NM={cura:'Cura',prusa:'PrusaSlicer',orca:'OrcaSlicer / Bambu Studio',creality:'Creality Print'},ORD=['cura','prusa','orca','creality'],
+      FOOT={cura:'En Cura, abrí la configuración de impresión en modo Personalizado. Si no ves un ajuste, escribí su nombre en el buscador de ajustes.',prusa:'Algunos ajustes solo aparecen en modo Experto (arriba a la derecha).',orca:'Algunos ajustes solo aparecen con el modo avanzado activado. En Bambu Studio el nombre en inglés es casi siempre el mismo; la traducción puede cambiar.',creality:'Está basado en OrcaSlicer. Algunos ajustes solo aparecen con el modo avanzado activado.'},
+      sel='orca';try{var v=localStorage.getItem('cac-slicer');if(NM[v])sel=v}catch(e){}
+    var cards=[];
+    Object.keys(D).forEach(function(l){var sec=document.getElementById(l),sim=sec&&$q('.sim',sec);if(!sim)return;
+      var cd=document.createElement('div');cd.className='card lam';cd.innerHTML='<span class="tag">En tu laminador</span><div class="chipset lamtabs" role="group" aria-label="Elegí tu laminador"></div><div class="lamlist"></div><p class="lamfoot"></p>';
+      var tabs=$q('.lamtabs',cd);ORD.forEach(function(k){var b=document.createElement('button');b.type='button';b.dataset.s=k;b.textContent=NM[k];tabs.appendChild(b)});
+      tabs.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;sel=b.dataset.s;try{localStorage.setItem('cac-slicer',sel)}catch(e){}cards.forEach(paint)});
+      cd.__l=l;sim.parentNode.insertBefore(cd,sim.nextSibling);cards.push(cd)});
+    function paint(cd){[].forEach.call($q('.lamtabs',cd).children,function(b){b.setAttribute('aria-pressed',String(b.dataset.s===sel))});var box=$q('.lamlist',cd);box.textContent='';
+      D[cd.__l].forEach(function(it){var r=document.createElement('div');r.className='lr';var h=document.createElement('p');h.className='lt';var b=document.createElement('b');b.textContent=it.t;h.appendChild(b);if(it.d){var sp=document.createElement('span');sp.textContent=' · '+it.d;h.appendChild(sp)}r.appendChild(h);
+        var s=it.s[sel];if(s&&s.note){var n=document.createElement('p');n.className='lnote';n.textContent=s.note;r.appendChild(n)}
+        else if(s){s.forEach(function(p){var d=document.createElement('div');d.className='lp';var es=document.createElement('span');es.className='es';es.textContent=p[1];var en=document.createElement('span');en.className='enp';en.lang='en';en.textContent=p[0];d.appendChild(es);if(p[1]!==p[0])d.appendChild(en);r.appendChild(d)})}
+        if(it.h&&it.h[sel]){var hh=document.createElement('p');hh.className='lnote';hh.textContent=it.h[sel];r.appendChild(hh)}box.appendChild(r)});
+      $q('.lamfoot',cd).textContent=FOOT[sel]}
+    cards.forEach(paint)})();
+  // ---------- /laminador ----------
+  // ---------- sello de reto cumplido ----------
+  function host(sec){var cs=$a('.card',sec).filter(function(c){var t=$q('.tag',c);return t&&/reto/i.test(t.textContent)});return cs[0]||$q('.sim',sec)}
+  function sync(animate){$a('#nav button').forEach(function(b){if(!b.classList.contains('done'))return;var sec=document.getElementById(b.dataset.l);if(!sec||sec.id==='repaso'||sec.__sello)return;sec.__sello=1;
+      var h=host(sec);if(h){h.classList.add('fxhost');var s=document.createElement('span');s.className='sello'+(animate?' anim':'');s.textContent='Reto cumplido';h.appendChild(s)}
+      var mi=$q('.mision',sec);if(mi){mi.classList.add('done');$q('b',mi).textContent='Misión cumplida';$q('.ic',mi).textContent='✔'}
+      if(animate){b.classList.remove('fx-nav');void b.offsetWidth;b.classList.add('fx-nav');setTimeout(function(){play('win')},180)}})}
+  sync(false);
+  var pt=$q('#prog-txt');if(pt)new MutationObserver(function(){sync(true)}).observe(pt,{childList:true,characterData:true,subtree:true});
+})();
+</script><!--/fx-->
+</body>
+</html>

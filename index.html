@@ -120,8 +120,8 @@ footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     {n:6,t:'Errores y diagnóstico',d:'Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.',parts:[['capa-a-capa-modulo-6a.html','Parte 1 · lecciones 6.1 a 6.5','cac-m6a',5],['capa-a-capa-modulo-6b.html','Parte 2 · lecciones 6.6 a 6.10','cac-m6b',5]]},
     {n:7,t:'Diseño de piezas funcionales',d:'Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.',parts:[['capa-a-capa-modulo-7a.html','Parte 1 · lecciones 7.1 a 7.5','cac-m7a',5],['capa-a-capa-modulo-7b.html','Parte 2 · lecciones 7.6 a 7.10','cac-m7b',5]]},
     {n:8,t:'El taller',d:'Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora.',parts:[['capa-a-capa-modulo-8a.html','Parte 1 · lecciones 8.1 a 8.5','cac-m8a',5],['capa-a-capa-modulo-8b.html','Parte 2 · lecciones 8.6 a 8.10','cac-m8b',5]]},
-    {n:9,t:'Del hobby al negocio',d:'Modelos con IA, costos, márgenes y presupuestos.'},
-    {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.'}];
+    {n:9,t:'Del hobby al negocio',d:'Costos, márgenes, presupuestos, capacidad, modelos con IA y cómo vender.',parts:[['capa-a-capa-modulo-9a.html','Parte 1 · lecciones 9.1 a 9.5','cac-m9a',5],['capa-a-capa-modulo-9b.html','Parte 2 · lecciones 9.6 a 9.10','cac-m9b',5]]},
+    {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];
   function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
   var box=document.getElementById('mods'),TOT=0,DONE=0;
   MODS.forEach(function(m){var li=document.createElement('li'),ready=m.parts&&m.parts.every(function(p){return p[0]}),some=m.parts&&m.parts.some(function(p){return p[0]});li.className='mod'+(some?'':' soon');
@@ -129,10 +129,10 @@ footer{font-size:13px;color:var(--ink-soft);border-top:1px solid var(--line);pad
     var meta=document.createElement('div');meta.className='meta';var tg=document.createElement('span');tg.className='tag '+(ready?'ok':some?'half':'no');tg.textContent=ready?'Listo':some?'En curso':'Próximamente';meta.appendChild(tg);li.appendChild(meta);
     if(m.parts){var ps=document.createElement('div');ps.className='parts';m.parts.forEach(function(q){var a=document.createElement(q[0]?'a':'div');a.className='part'+(q[0]?'':' off');if(q[0])a.href=q[0];
         var l=document.createElement('span');l.className='nm';l.textContent=q[1];var g=document.createElement('span');g.className='go';
-        if(q[0]){var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;var sm=document.createElement('small');sm.textContent=c+' de '+q[3]+' retos';l.appendChild(sm);var br=document.createElement('div');br.className='bar';var bi=document.createElement('i');bi.style.width=(c/q[3]*100)+'%';br.appendChild(bi);l.appendChild(br);g.textContent=c===q[3]?'Repasar →':c?'Seguir →':'Abrir →'}else g.textContent='Pronto';
+        if(q[0]&&!q[3]){var sm0=document.createElement('small');sm0.textContent='Fichas, lecciones y ajustes, en español y en inglés';l.appendChild(sm0);g.textContent='Abrir →'}else if(q[0]){var c=got(q[2],q[3]);TOT+=q[3];DONE+=c;var sm=document.createElement('small');sm.textContent=c+' de '+q[3]+' retos';l.appendChild(sm);var br=document.createElement('div');br.className='bar';var bi=document.createElement('i');bi.style.width=(c/q[3]*100)+'%';br.appendChild(bi);l.appendChild(br);g.textContent=c===q[3]?'Repasar →':c?'Seguir →':'Abrir →'}else g.textContent='Pronto';
         a.appendChild(l);a.appendChild(g);ps.appendChild(a)});li.appendChild(ps)}
     box.appendChild(li)});
-  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos.':'Hay '+TOT+' lecciones listas en '+MODS.filter(function(m){return m.parts}).length+' módulos.';
+  document.getElementById('prog-all').textContent=DONE?'Llevás '+DONE+' de '+TOT+' retos resueltos.':'Hay '+TOT+' lecciones listas en '+MODS.filter(function(m){return m.parts&&m.parts[0][3]}).length+' módulos.';
   var st=document.getElementById('stack'),wd=[86,94,78,98,70,90,82];for(var i=0;i<7;i++){var b=document.createElement('i');b.style.width=wd[i]+'%';b.style.maxWidth='300px';b.style.animationDelay=(i*.09)+'s';st.appendChild(b)}
 })();
 </script>
