@@ -253,6 +253,9 @@ details.ficha .in{font-size:16px}
 .cierre .btn{text-decoration:none}
 .cierre .btn.big{font-size:17px;padding:12px 22px}
 @media (max-width:480px){#next{max-width:72%;font-size:14px}}
+/* alturas compactas */
+.cvT,.cv3{aspect-ratio:5/2}
+@media (max-width:600px){.cvT,.cv3,.cv1{aspect-ratio:1/1}}
 @media (prefers-reduced-motion:reduce){.fx-shake,.fx-pop,.sello.anim,.steps button.fx-nav{animation:none}}
 /* /fx */
 </style>
@@ -653,8 +656,8 @@ details.ficha .in{font-size:16px}
     var ok=!K4.clog&&K4.tight;say('m4',m.join(' '),ok?'ok':'bad');if(ok){say('r4','¡Dos horas limpias! Frío arriba, caliente abajo y sin fugas.','ok');mark('l4')}else if(!done.l4)say('r4','Todavía no.')}
   function draw4(now){var f=fit($('c4'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,k,g,V=w<520;bg(c,w,h);
     var e=K4.t0<0?0:clamp((now-K4.t0)/5000,0,1),min=Math.round(e*120),clogE=K4.clog?K4.clog/120:2,stopped=K4.ran&&e>=clogE,el=stopped?clogE:e,r=risk4();
-    var cx=w/2,top=46,hw=Math.min(w*.28,150),sinkH=h*.3,neckH=h*.1,blkH=h*.14,blkY=top+sinkH+neckH,tipY=blkY+blkH+h*.07;
-    if(K4.enc==='cerrado'){c.save();c.strokeStyle='rgba(255,179,138,.35)';c.setLineDash([6,6]);c.lineWidth=2;c.strokeRect(w*.05,30,w*.9,h-70);c.restore();c.fillStyle='rgba(255,138,92,.05)';c.fillRect(w*.05,30,w*.9,h-70);txt(c,'cerramiento',w*.05+8,48,'left','rgba(255,179,138,.8)',12,700)}
+    var cx=V?w*.6:w/2,top=46,hw=Math.min(w*(V?.24:.28),150),sinkH=h*.3,neckH=h*.1,blkH=h*.14,blkY=top+sinkH+neckH,tipY=blkY+blkH+h*.07;
+    if(K4.enc==='cerrado'){c.save();c.strokeStyle='rgba(255,179,138,.35)';c.setLineDash([6,6]);c.lineWidth=2;c.strokeRect(w*.05,30,w*.9,h-70);c.restore();c.fillStyle='rgba(255,138,92,.05)';c.fillRect(w*.05,30,w*.9,h-70);txt(c,'cerramiento',w*.05+8,h-48,'left','rgba(255,179,138,.8)',12,700)}
     // disipador
     for(k=0;k<7;k++){g=c.createLinearGradient(cx-hw/2,0,cx+hw/2,0);g.addColorStop(0,'#93A1C4');g.addColorStop(1,'#66749A');c.fillStyle=g;rr(c,cx-hw/2,top+k*sinkH/7,hw,sinkH/7*.55,3)}
     c.fillStyle='#66749A';c.fillRect(cx-hw*.12,top,hw*.24,sinkH);fanIco(c,cx+hw/2+30,top+sinkH/2,Math.min(26,sinkH*.3),K4.fan==='gira',t);
@@ -667,10 +670,10 @@ details.ficha .in{font-size:16px}
     // filamento y zona blanda
     var fx=hw*.05,soft=blkY-(K4.ran?el:0)*r*(neckH+sinkH*.9)*1.1-neckH*.15;c.fillStyle=rgb(FIL);c.fillRect(cx-fx,0,fx*2,blkY+blkH);
     g=c.createLinearGradient(0,soft,0,blkY+blkH);g.addColorStop(0,'rgba(255,90,60,0)');g.addColorStop(.25,'rgba(255,110,70,.85)');g.addColorStop(1,'rgba(255,90,60,1)');c.fillStyle=g;c.fillRect(cx-fx-1,soft,fx*2+2,blkY+blkH-soft);
-    if(stopped){c.fillStyle=rgb(tone(FIL2,-.15));c.beginPath();c.ellipse(cx,soft+10,fx*2.2,8,0,0,7);c.fill();pill(c,'atasco',cx+hw/2+56,soft+10,C.bad)}
+    if(stopped){c.fillStyle=rgb(tone(FIL2,-.15));c.beginPath();c.ellipse(cx,soft+10,fx*2.2,8,0,0,7);c.fill();pill(c,'atasco',Math.min(cx+hw/2+56,w-40),soft+10,C.bad)}
     // fuga
-    if(!K4.tight&&K4.ran){var lk=clamp(el*1.2,0,1);c.fillStyle='rgba(122,74,48,'+(.5+.4*lk)+')';c.beginPath();c.ellipse(cx+hw*.1,blkY+blkH*.9,hw*.62*lk+4,blkH*.55*lk+3,0,0,7);c.fill();c.fillStyle='rgba(40,24,16,.7)';for(k=0;k<Math.round(lk*8);k++){c.beginPath();c.arc(cx-hw*.4+rnd(k,2)*hw,blkY+blkH*(.6+rnd(k,4)*.6),2.2,0,7);c.fill()}if(lk>.3)pill(c,'fuga por la rosca',cx+hw*.75+30,blkY+blkH+18,C.bad)}
-    if(!V||true){txt(c,'disipador: debe estar frío',cx-hw/2-12,top+12,'right',C.soft,12,700);txt(c,'heatbreak',cx-hw*.1-12,top+sinkH+neckH/2+4,'right',C.soft,12,700);txt(c,'bloque caliente',cx-hw*.55-10,blkY+blkH/2+4,'right',C.soft,12,700)}
+    if(!K4.tight&&K4.ran){var lk=clamp(el*1.2,0,1);c.fillStyle='rgba(122,74,48,'+(.5+.4*lk)+')';c.beginPath();c.ellipse(cx+hw*.1,blkY+blkH*.9,hw*.62*lk+4,blkH*.55*lk+3,0,0,7);c.fill();c.fillStyle='rgba(40,24,16,.7)';for(k=0;k<Math.round(lk*8);k++){c.beginPath();c.arc(cx-hw*.4+rnd(k,2)*hw,blkY+blkH*(.6+rnd(k,4)*.6),2.2,0,7);c.fill()}if(lk>.3)pill(c,'fuga por la rosca',Math.min(cx+hw*.75+30,w-74),blkY+blkH+18,C.bad)}
+    if(!V||true){txt(c,'disipador frío',cx-hw/2-12,top+12,'right',C.soft,12,700);txt(c,'heatbreak',cx-hw*.1-12,top+sinkH+neckH/2+4,'right',C.soft,12,700);txt(c,'bloque caliente',cx-hw*.55-10,blkY+blkH/2+4,'right',C.soft,12,700)}
     // barra de tiempo
     var bx=w*.12,bw2=w*.76,yb=h-22;c.fillStyle=C.sunk;rr(c,bx,yb-5,bw2,10,5);c.fillStyle=stopped?C.bad:e>=1?C.pop:C.ui;rr(c,bx,yb-5,bw2*el,10,5);txt(c,(K4.ran?Math.round(el*120):0)+' de 120 min',bx+bw2,yb-12,'right',C.soft,12,700);
     txt(c,'Hotend en corte',14,22,'left',C.soft,13,700)}
