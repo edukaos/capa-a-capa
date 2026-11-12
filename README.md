@@ -23,7 +23,7 @@ Abrí `index.html` en cualquier navegador. No hace falta instalar nada. En el ce
 | 6. Errores y diagnóstico | `capa-a-capa-modulo-6a.html`, `capa-a-capa-modulo-6b.html` |
 | 7. Diseño de piezas funcionales | `capa-a-capa-modulo-7a.html`, `capa-a-capa-modulo-7b.html` |
 | 8. Impresoras de nueva generación | `capa-a-capa-modulo-8.html` |
-| 9. Multicolor y multimaterial | En preparación |
+| 9. Multicolor y multimaterial | `capa-a-capa-modulo-9.html` |
 | 10. Glosario | `capa-a-capa-glosario.html` |
 
 ## Archivos compartidos
@@ -50,6 +50,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.0-material3` | Rediseño Material 3 con narración y mini retos arreglados. |
 | `version-2.1-app` | Lo anterior más íconos unificados, archivos compartidos, avance entre dispositivos, vista previa al compartir y modo sin conexión. |
 | `version-2.2-modulo-8` | Módulo 8 nuevo, Impresoras de nueva generación, en lugar de los módulos de taller y negocio. |
+| `version-2.3-modulo-9` | Módulo 9 nuevo, Multicolor y multimaterial. |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.
