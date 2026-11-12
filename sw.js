@@ -2,7 +2,7 @@
    Las páginas se piden primero a internet (así siempre llega la última versión) y, si no hay conexión, salen de la copia guardada.
    El resto (imágenes, estilo, tipografías) sale de la copia y se actualiza en segundo plano.
    Al cambiar archivos, subí el número de VERSION para renovar la copia. */
-var VERSION='cac-v5';
+var VERSION='cac-v6';
 var ARCHIVOS=['./','index.html','tema.css','comun.js','registro-sw.js','manifest.webmanifest',
   'capa-a-capa-glosario.html','capa-a-capa-modulo-1.html','capa-a-capa-modulo-2.html','capa-a-capa-modulo-2b.html','capa-a-capa-modulo-3.html',
   'capa-a-capa-modulo-4a.html','capa-a-capa-modulo-4b.html','capa-a-capa-modulo-4c.html','capa-a-capa-modulo-5a.html','capa-a-capa-modulo-5b.html',
