@@ -1,0 +1,13 @@
+/* Capa a Capa · lista de módulos, compartida por la portada y Mi avance.
+   Cada parte: [página, nombre, clave del avance, cantidad de retos, preguntas del repaso]. */
+window.CAC_MODS=[
+    {n:1,t:'Cómo funciona una impresora 3D',d:'Del archivo a la pieza, el G-code y las dos grandes tecnologías.',parts:[['capa-a-capa-modulo-1.html','Lecciones 1.1 a 1.5','cac-m1',5,5]]},
+    {n:2,t:'La máquina por dentro',d:'Ejes, motores, correas, extrusor, hotend, cama y electrónica.',parts:[['capa-a-capa-modulo-2.html','Parte 1 · lecciones 2.1 a 2.5','cac-m2',5,5],['capa-a-capa-modulo-2b.html','Parte 2 · lecciones 2.6 a 2.11','cac-m2b',6,6]]},
+    {n:3,t:'Filamentos y materiales',d:'PLA, PETG, ABS y TPU, temperaturas, humedad y cómo elegir.',parts:[['capa-a-capa-modulo-3.html','Lecciones 3.1 a 3.8','cac-m3',8,6]]},
+    {n:4,t:'El laminador',d:'Perfiles, capas, paredes, relleno, soportes, retracción y vista previa.',parts:[['capa-a-capa-modulo-4a.html','Parte 1 · lecciones 4.1 a 4.6','cac-m4a',6,6],['capa-a-capa-modulo-4b.html','Parte 2 · lecciones 4.7 a 4.12','cac-m4b',6,6],['capa-a-capa-modulo-4c.html','Parte 3 · lecciones 4.13 a 4.18','cac-m4c',6,6]]},
+    {n:5,t:'Calibración',d:'Nivelación, offset Z, temperatura, extrusor, flujo y retracción.',parts:[['capa-a-capa-modulo-5a.html','Parte 1 · lecciones 5.1 a 5.5','cac-m5a',5,5],['capa-a-capa-modulo-5b.html','Parte 2 · lecciones 5.6 a 5.10','cac-m5b',5,5]]},
+    {n:6,t:'Errores y diagnóstico',d:'Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.',parts:[['capa-a-capa-modulo-6a.html','Parte 1 · lecciones 6.1 a 6.5','cac-m6a',5,5],['capa-a-capa-modulo-6b.html','Parte 2 · lecciones 6.6 a 6.10','cac-m6b',5,5]]},
+    {n:7,t:'Diseño de piezas funcionales',d:'Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.',parts:[['capa-a-capa-modulo-7a.html','Parte 1 · lecciones 7.1 a 7.5','cac-m7a',5,5],['capa-a-capa-modulo-7b.html','Parte 2 · lecciones 7.6 a 7.10','cac-m7b',5,5]]},
+    {n:8,t:'Impresoras de nueva generación',d:'CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3.',parts:[['capa-a-capa-modulo-8.html','Lecciones 8.1 a 8.6','cac-m8',6,6]]},
+    {n:9,t:'Multicolor y multimaterial',d:'Cambio de color por capa, AMS, purga, pintar el modelo, multicabezal y piezas que mezclan materiales.',parts:[['capa-a-capa-modulo-9.html','Lecciones 9.1 a 9.6','cac-m9',6,6]]},
+    {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];

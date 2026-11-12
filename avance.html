@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capa a Capa Mi avance</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+[hidden]{display:none!important}
+/* Mi avance, tema Material 3 oscuro. Azul = se toca · ámbar = tu avance · verde = salió bien. */
+:root{
+  --bg:#141A27; --surface:#1F273A; --low:#1A2131; --hi:#273147; --hi2:#313C55; --line:#3A455C; --outline:#56627D;
+  --ink:#E4E8F3; --ink-soft:#B9C2D8; --ui:#FFB95E; --ui-ink:#472A00; --pop:#86D9B5;
+  --pri:#A9C7FF; --on-pri:#08305E; --pri-c:#254777; --on-pri-c:#D6E3FF;
+  --f-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;margin:0;padding-left:96px}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.1;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+a{color:inherit}
+a:focus-visible{outline:3px solid var(--ui);outline-offset:3px}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+.m3rail{position:fixed;z-index:20;left:0;top:0;bottom:0;width:96px;display:flex;flex-direction:column;align-items:center;gap:8px;padding:22px 0;background:var(--bg)}
+.m3rail .lg{display:flex;flex-direction:column;gap:4px;align-items:flex-start;margin-bottom:22px}
+.m3rail .lg b{display:block;height:5px;border-radius:3px}
+.m3rail .lg b:nth-child(1){width:16px;background:#FFB95E}.m3rail .lg b:nth-child(2){width:24px;background:#FF9E70}.m3rail .lg b:nth-child(3){width:32px;background:#EE8455}
+.m3rail a{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:72px;padding:6px 0;text-decoration:none;color:var(--ink-soft);font:500 12px var(--f-body);border-radius:16px}
+.m3rail a span{display:grid;place-items:center;width:56px;height:32px;border-radius:16px;transition:background .15s ease-out}
+.m3rail a:hover span{background:var(--hi)}
+.m3rail a[aria-current="page"]{color:var(--ink);font-weight:700}
+.m3rail a[aria-current="page"] span{background:var(--pri-c);color:var(--on-pri-c)}
+.m3rail svg{width:22px;height:22px}
+@media (max-width:860px){
+  body{padding-left:0;padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+  .m3rail{top:auto;right:0;width:auto;flex-direction:row;justify-content:space-around;padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px));background:var(--low);border-top:1px solid var(--line)}
+  .m3rail .lg{display:none}
+}
+
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:44px}
+.hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);background:var(--surface);border-radius:32px;overflow:hidden;min-height:440px}
+.hero .txt{padding:48px 44px;display:flex;flex-direction:column;gap:20px;justify-content:center;align-items:flex-start}
+.kick{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ui)}
+.hero h1{font-size:clamp(48px,6.4vw,84px);line-height:1}
+.hero .lead{font-size:19px;color:var(--ink-soft);max-width:44ch}
+.acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+.cta{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 28px;border-radius:26px;background:var(--pri);color:var(--on-pri);font-weight:700;text-decoration:none;transition:background .15s ease-out}
+.cta:hover{background:#C3D8FF}
+.cta svg{width:20px;height:20px;stroke-width:2.4}
+.cta.tonal{background:var(--hi2);color:var(--ink);padding:0 24px}
+.cta.tonal:hover{background:#3C4864}
+.note{font-size:14px;color:var(--ink-soft)}
+.hero .ph{position:relative;min-height:260px}
+.hero .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:72% 50%;display:block}
+@media (max-width:860px){.hero{grid-template-columns:minmax(0,1fr)}.hero .txt{padding:32px 24px}.hero .ph{order:-1;min-height:200px}}
+
+.sec{display:flex;flex-direction:column;gap:16px;scroll-margin-top:20px}
+.sec h2{font-size:30px;line-height:1.15}
+.sec>p{color:var(--ink-soft);margin-top:-10px}
+.how{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin:0;padding:0;list-style:none}
+@media (max-width:1100px){.how{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:600px){.how{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.how li{background:var(--low);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.how .ic{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--pri-c);color:var(--on-pri-c)}
+.how .ic.reto{background:#5C3B08;color:#FFDDB5}
+.how .ic svg{width:22px;height:22px}
+.how small{font:400 13px var(--f-mono);color:var(--ink-soft)}
+.how b{font:700 19px var(--f-display);letter-spacing:-.01em}
+.how span.d{font-size:14px;color:var(--ink-soft)}
+
+.mods{list-style:none;margin:0;padding:0;display:grid;align-items:start;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+@media (max-width:1100px){.mods{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.mods{grid-template-columns:minmax(0,1fr)}}
+.mod{background:var(--surface);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.mph{position:relative;height:168px}
+.mph img{width:100%;height:100%;object-fit:cover;object-position:70% 55%;display:block}
+.num{position:absolute;left:16px;bottom:-22px;display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--ui);color:var(--ui-ink);font:700 21px var(--f-display)}
+.mbody{padding:34px 20px 20px;display:flex;flex-direction:column;gap:14px}
+.mbody h3{font-size:22px;line-height:1.15}
+.mbody>p{font-size:14px;color:var(--ink-soft);margin-top:-8px}
+.parts{display:flex;flex-direction:column;gap:8px}
+.part{display:flex;align-items:center;gap:12px;min-height:60px;padding:8px 8px 8px 16px;border-radius:18px;background:var(--hi);text-decoration:none;transition:background .15s ease-out}
+.part:hover{background:var(--hi2)}
+.part.soon{background:transparent;border:1.5px dashed var(--outline);cursor:default}
+.part.soon:hover{background:transparent}
+.part .nm{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;font-weight:700;font-size:14px}
+.part .st{display:flex;align-items:center;gap:10px;font:400 12px var(--f-mono);color:var(--ink-soft);white-space:nowrap}
+.part .st.txt{font-family:var(--f-body);white-space:normal}
+.bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ui);border-radius:3px}
+.part.full .bar i{background:var(--pop)}
+.part .go{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:22px;background:var(--pri-c);color:var(--on-pri-c)}
+.part .go svg{width:20px;height:20px;stroke-width:2.4}
+.part.full .go{background:#12402F;color:var(--pop)}
+footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);padding-top:18px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+
+/* llevar el avance a otro dispositivo */
+.avance{background:var(--low);border-radius:28px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px 28px;scroll-margin-top:20px}
+@media (max-width:860px){.avance{grid-template-columns:minmax(0,1fr)}}
+.avance h2{font-size:24px}
+.avance .col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.avance p{color:var(--ink-soft);font-size:15px}
+.avance .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.avance input{flex:1 1 200px;min-width:0;min-height:48px;padding:0 16px;border-radius:14px;border:1px solid var(--outline);background:var(--bg);color:var(--ink);font:400 14px var(--f-mono)}
+.avance input:focus-visible{outline:3px solid var(--ui);outline-offset:2px}
+.avance label{font-weight:700;font-size:14px}
+.avance .col>input{flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border:0;border-radius:24px;background:var(--pri);color:var(--on-pri);font:700 15px var(--f-body);cursor:pointer}
+.btn:hover{background:#C3D8FF}
+.btn.tonal{background:var(--hi2);color:var(--ink)}
+.btn.tonal:hover{background:#3C4864}
+.btn:focus-visible{outline:3px solid var(--ui);outline-offset:3px}
+.aviso{font-size:14px;font-weight:600;border-radius:14px;padding:10px 14px}
+.aviso.ok{background:rgba(134,217,181,.12);color:#C9F2DF;box-shadow:inset 0 0 0 1.5px rgba(134,217,181,.5)}
+.aviso.bad{background:rgba(255,180,171,.12);color:#FFDAD6;box-shadow:inset 0 0 0 1.5px rgba(255,180,171,.5)}
+.llega{position:sticky;top:12px;z-index:30;background:var(--pri-c);color:var(--on-pri-c);border-radius:24px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.llega p{margin:0;font-weight:600;color:#fff}
+.llega .row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Mi avance */
+.res{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:24px;background:var(--surface);border-radius:32px;padding:36px 40px}
+@media (max-width:960px){.res{grid-template-columns:minmax(0,1fr);padding:28px 22px}}
+.res .txt{display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center}
+.big{display:flex;align-items:baseline;gap:6px;font:700 clamp(72px,9vw,112px)/.9 var(--f-display);letter-spacing:-.04em;color:var(--ui)}
+.big small{font-size:.42em;letter-spacing:0}
+.nivel{display:inline-flex;align-items:center;gap:8px;min-height:36px;padding:0 16px;border-radius:18px;background:#5C3B08;color:#FFDDB5;font:700 15px var(--f-body)}
+.nivel svg{width:18px;height:18px}
+.res.todo .nivel{background:#12402F;color:#C9F2DF}
+.res .lead{font-size:17px;color:var(--ink-soft);max-width:42ch}
+.stats{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-content:center}
+.stat{background:var(--low);border-radius:20px;padding:16px 18px;display:flex;flex-direction:column;gap:10px}
+.stat .hd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.stat b{font:700 17px var(--f-display);letter-spacing:-.01em}
+.stat .n{font:500 15px var(--f-mono);color:var(--ink);white-space:nowrap}
+.stat .n span{color:var(--ink-soft)}
+.stat small{font-size:13px;color:var(--ink-soft)}
+.stat .bar{flex:none;height:8px;border-radius:4px}
+.stat.full .bar i{background:var(--pop)}
+.lvl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.lvl{grid-template-columns:minmax(0,1fr)}}
+.lvl li{background:var(--low);border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;min-width:0}
+.lvl .ic{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--hi);color:var(--ink-soft)}
+.lvl .ic svg{width:22px;height:22px}
+.lvl b{display:block;font:700 18px var(--f-display);letter-spacing:-.01em}
+.lvl small{font:400 13px var(--f-mono);color:var(--ink-soft)}
+.lvl li.ok .ic{background:#12402F;color:var(--pop)}
+.lvl li.now{box-shadow:inset 0 0 0 2px var(--ui)}
+.lvl li.now .ic{background:#5C3B08;color:#FFDDB5}
+.mod.full .num{background:var(--pop);color:#0B3324}
+.pt{display:flex;flex-direction:column;gap:10px;padding:14px 16px;border-radius:18px;background:var(--hi)}
+.pt .hd{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:700;font-size:14px}
+.pill{flex:none;font:500 12px var(--f-mono);padding:3px 10px;border-radius:12px;background:var(--hi2);color:var(--ink-soft)}
+.pt.full .pill{background:#12402F;color:var(--pop)}
+.ln{display:grid;grid-template-columns:64px minmax(0,1fr) auto;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft)}
+.ln .v{font:400 12px var(--f-mono);color:var(--ink);white-space:nowrap}
+.ln .v.no{color:var(--ink-soft)}
+.falta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13px;color:var(--ink-soft)}
+.falta a{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border-radius:16px;background:var(--pri-c);color:var(--on-pri-c);font:500 13px var(--f-mono);text-decoration:none;transition:background .15s ease-out}
+.falta a:hover{background:#2E5590}
+.falta a:focus-visible{outline:3px solid var(--ui);outline-offset:2px}
+.mods{align-items:start}
+.ln.full .bar i,.pt.full .bar i{background:var(--pop)}
+</style>
+<meta name="description" content="Tu avance en Capa a Capa: retos resueltos, puntaje de los repasos y lo que te falta en cada módulo.">
+<meta name="theme-color" content="#141A27">
+<link rel="icon" href="img/icono.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icono-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<nav class="m3rail" aria-label="Navegación principal">
+  <div class="lg" aria-hidden="true"><b></b><b></b><b></b></div>
+  <a href="index.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>Inicio</a>
+  <a href="index.html#modulos"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>Módulos</a>
+  <a href="capa-a-capa-glosario.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M9 9h6M9 13h4"/></svg></span>Glosario</a>
+  <a href="avance.html" aria-current="page"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4"/><path d="M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20h7"/></svg></span>Mi avance</a>
+</nav>
+
+<div class="wrap">
+  <section class="res" id="res" aria-labelledby="res-t">
+    <div class="txt">
+      <p class="kick" id="res-t">Mi avance</p>
+      <p class="big" aria-live="polite"><span id="pct">0</span><small>%</small></p>
+      <span class="nivel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4"/><path d="M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20h7"/></svg><span id="nivel">Aprendiz</span></span>
+      <p class="lead" id="frase"></p>
+      <div class="acts"><a class="cta" id="seguir" href="capa-a-capa-modulo-1.html"><span id="seguir-t">Empezar el módulo 1</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <section class="sec" aria-labelledby="lv-t">
+    <h2 id="lv-t">Cómo se calcula</h2>
+    <p id="regla">Cada reto resuelto vale un punto, y cada respuesta correcta en un repaso, otro.</p>
+    <ol class="lvl" id="lvl"></ol>
+  </section>
+
+  <section class="sec" aria-labelledby="pm-t">
+    <h2 id="pm-t">Por módulo</h2>
+    <p>Tocá una lección o un repaso pendiente para ir directo.</p>
+    <ol class="mods" id="mods"></ol>
+  </section>
+
+  <footer>Tu avance se guarda en este navegador. Para seguir en otro dispositivo, <a href="index.html#avance">copiá el enlace desde la portada</a>.</footer>
+</div>
+
+<script src="modulos.js"></script>
+<script>
+(function(){
+  var MODS=window.CAC_MODS||[],REP={};try{REP=JSON.parse(localStorage.getItem('cac-rep')||'{}')||{}}catch(e){}
+  var LV=[['Aprendiz',0],['Maker',40],['Experto',80]],CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  function leer(k){try{return JSON.parse(localStorage.getItem(k)||'{}')||{}}catch(e){return {}}}
+  function bar(p){var b=el('span','bar'),i=el('i');i.style.width=Math.round(p*100)+'%';b.appendChild(i);return b}
+  var R=0,RT=0,Q=0,QT=0,RH=0,RN=0,MC=0,MT=0,next=null,box=document.getElementById('mods');
+  MODS.forEach(function(m){
+    var ps=m.parts.filter(function(q){return q[0]&&q[3]});if(!ps.length)return;MT++;
+    var li=el('li','mod'),ph=el('div','mph'),im=el('img');im.src='img/m'+m.n+'.webp';im.alt='';im.loading='lazy';ph.appendChild(im);ph.appendChild(el('span','num',m.n));li.appendChild(ph);
+    var bd=el('div','mbody');bd.appendChild(el('h3',null,m.t));var wrap=el('div','parts'),full=true;
+    ps.forEach(function(q){
+      var o=leer(q[2]),c=0,miss=[],mm=(q[1].match(/(\d+)\.(\d+) a/)||[0,m.n,1]),st=+mm[2];
+      for(var i=1;i<=q[3];i++){if(o['l'+i])c++;else miss.push([m.n+'.'+(st+i-1),q[0]+'#l'+i])}
+      var rp=REP[q[2]],ok=rp?Math.min(rp.ok,q[4]):0;R+=c;RT+=q[3];QT+=q[4];RN++;if(rp){Q+=ok;RH++}else miss.push(['Repaso',q[0]+'#repaso'])
+      var done=!miss.length;if(!done){full=false;if(!next)next={h:miss[0][1],t:miss[0][0]==='Repaso'?'Hacer el repaso '+(ps.length>1?'de la parte':'del módulo')+' '+(ps.length>1?q[1].split(' ·')[0].replace('Parte ','')+' del módulo '+m.n:m.n):'Seguir en la lección '+miss[0][0]}}
+      var pt=el('div','pt'+(done?' full':'')),hd=el('div','hd');hd.appendChild(el('span',null,q[1]));hd.appendChild(el('span','pill',done?'Completa':Math.round((c+ok)/(q[3]+q[4])*100)+' %'));pt.appendChild(hd);
+      var l1=el('div','ln');l1.appendChild(el('span',null,'Retos'));l1.appendChild(bar(c/q[3]));l1.appendChild(el('span','v',c+' de '+q[3]));pt.appendChild(l1);
+      var l2=el('div','ln');l2.appendChild(el('span',null,'Repaso'));l2.appendChild(bar(rp?ok/q[4]:0));l2.appendChild(el('span','v'+(rp?'':' no'),rp?ok+' de '+q[4]:'sin hacer'));pt.appendChild(l2);
+      if(c===q[3])l1.classList.add('full');
+      if(!done){var f=el('div','falta');f.appendChild(el('span',null,'Te falta:'));miss.forEach(function(x){var a=el('a',null,x[0]);a.href=x[1];a.setAttribute('aria-label',(x[0]==='Repaso'?'Hacer el repaso de ':'Ir a la lección '+x[0]+' de ')+q[1]);f.appendChild(a)});pt.appendChild(f)}
+      wrap.appendChild(pt)});
+    if(full){MC++;li.className+=' full'}
+    bd.appendChild(wrap);li.appendChild(bd);box.appendChild(li)});
+  var P=R+Q,T=RT+QT,pc=T?Math.floor(P/T*100):0,lv=0;for(var i=0;i<LV.length;i++)if(pc>=LV[i][1])lv=i;
+  document.getElementById('pct').textContent=pc;document.getElementById('nivel').textContent=P===T?'Manual completo':LV[lv][0];
+  var fr=document.getElementById('frase');
+  if(!P)fr.textContent='Todavía no hay avance en este navegador. Empezá por el módulo 1 o traé tu avance desde otro dispositivo.';
+  else if(P===T){fr.textContent='Resolviste todos los retos y acertaste todas las preguntas de los repasos. ¡Felicitaciones!';document.getElementById('res').classList.add('todo')}
+  else{var nx=LV[lv+1],need=nx?Math.ceil(nx[1]/100*T)-P:T-P;fr.textContent='Llevás '+P+' de '+T+' puntos. '+(nx?'Te faltan '+need+' para llegar a '+nx[0]+'.':'Te faltan '+need+' para completar el manual.')}
+  var sg=document.getElementById('seguir');
+  if(next){sg.href=next.h;document.getElementById('seguir-t').textContent=P?next.t:'Empezar el módulo 1'}
+  else if(P===T)sg.hidden=true;
+  else{sg.href='capa-a-capa-modulo-1.html#repaso';document.getElementById('seguir-t').textContent='Mejorar un repaso'}
+  // si todo está hecho pero algún repaso no es perfecto, ir al primero mejorable
+  if(!next&&P<T){for(var j=0;j<MODS.length;j++){var hit=null;MODS[j].parts.forEach(function(q){if(!hit&&q[3]&&REP[q[2]]&&REP[q[2]].ok<q[4])hit=q});if(hit){sg.href=hit[0]+'#repaso';document.getElementById('seguir-t').textContent='Mejorar el repaso del módulo '+MODS[j].n;break}}}
+  var stats=document.getElementById('stats');
+  [['Retos resueltos',R,RT,'Uno por lección.'],['Respuestas correctas en los repasos',Q,QT,RH+' de '+RN+' repasos hechos. Cuenta tu mejor intento.'],['Módulos completos',MC,MT,'Todos los retos y el repaso hechos.']].forEach(function(s){
+    var d=el('div','stat'+(s[1]===s[2]?' full':'')),hd=el('div','hd'),n=el('span','n');hd.appendChild(el('b',null,s[0]));n.textContent=s[1]+' ';n.appendChild(el('span',null,'de '+s[2]));hd.appendChild(n);d.appendChild(hd);d.appendChild(bar(s[2]?s[1]/s[2]:0));d.appendChild(el('small',null,s[3]));stats.appendChild(d)});
+  document.getElementById('regla').textContent='Cada reto resuelto vale un punto, y cada respuesta correcta en un repaso, otro: '+RT+' retos y '+QT+' preguntas, '+T+' puntos en total. Si repetís un repaso, cuenta tu mejor intento.';
+  var lb=document.getElementById('lvl');
+  LV.forEach(function(v,i){var li=el('li',i<lv||P===T?'ok':i===lv?'now':''),ic=el('span','ic');ic.innerHTML=i<lv||P===T?CHECK:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4"/><path d="M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20h7"/></svg>';li.appendChild(ic);var t=el('div');t.appendChild(el('b',null,v[0]));t.appendChild(el('small',null,i<LV.length-1?v[1]+' a '+(LV[i+1][1]-1)+' %':v[1]+' % o más'));li.appendChild(t);if(i===lv&&P<T)li.setAttribute('aria-current','step');lb.appendChild(li)});
+})();
+</script>
+<script src="registro-sw.js"></script>
+</body>
+</html>

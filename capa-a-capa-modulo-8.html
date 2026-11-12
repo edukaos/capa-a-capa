@@ -316,12 +316,12 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
-<meta name="description" content="Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
+<meta name="description" content="CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Capa a Capa">
 <meta property="og:title" content="Capa a Capa Módulo 8">
-<meta property="og:description" content="Herramientas, mantenimiento, repuestos, seguridad, mejoras y cómo elegir impresora. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
+<meta property="og:description" content="CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta property="og:url" content="https://edukaos.github.io/capa-a-capa/capa-a-capa-modulo-8.html">
 <meta property="og:image" content="https://edukaos.github.io/capa-a-capa/img/compartir.jpg">
 <meta property="og:image:width" content="1200">
@@ -338,6 +338,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   <a href="index.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>Inicio</a>
   <a href="index.html#modulos" aria-current="page"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>Módulos</a>
   <a href="capa-a-capa-glosario.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M9 9h6M9 13h4"/></svg></span>Glosario</a>
+  <a href="avance.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4"/><path d="M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20h7"/></svg></span>Mi avance</a>
 </nav>
 
 
@@ -974,7 +975,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 
   // ---------- reiniciar ----------
   function arm(b,lab,ask,fn){b.addEventListener('click',function(){if(b.dataset.arm){fn();return}b.dataset.arm='1';b.textContent=ask;b.classList.add('armed');setTimeout(function(){if(b.isConnected){delete b.dataset.arm;b.textContent=lab;b.classList.remove('armed')}},4000)})}
-  function wipe(k){try{if(k){var d=JSON.parse(localStorage.getItem(KEY)||'{}');delete d[k];localStorage.setItem(KEY,JSON.stringify(d))}else localStorage.removeItem(KEY)}catch(e){}}
+  function wipe(k){try{if(k){var d=JSON.parse(localStorage.getItem(KEY)||'{}');delete d[k];localStorage.setItem(KEY,JSON.stringify(d))}else{localStorage.removeItem(KEY);var R=JSON.parse(localStorage.getItem('cac-rep')||'{}')||{};delete R[KEY];localStorage.setItem('cac-rep',JSON.stringify(R))}}catch(e){}}
   function go(h){try{if(location.hash==='#'+h)location.reload();else{location.hash=h;location.reload()}}catch(e){location.reload()}}
   $a('section.lesson').forEach(function(sec){var b=document.createElement('button');b.type='button';b.className='btn ghost rst';var lab='↺ Volver a hacer esta lección';b.textContent=lab;
     var w=document.createElement('div');w.className='rstrow';w.appendChild(b);sec.appendChild(w);arm(b,lab,'¿Seguro? Tocá de nuevo para empezarla de cero',function(){wipe(sec.id);go(sec.id)})});

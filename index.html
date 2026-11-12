@@ -145,6 +145,7 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
   <a href="index.html" aria-current="page"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>Inicio</a>
   <a href="#modulos"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>Módulos</a>
   <a href="capa-a-capa-glosario.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4z"/><path d="M9 9h6M9 13h4"/></svg></span>Glosario</a>
+  <a href="avance.html"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5.5a2.5 2.5 0 0 0 2.6 4"/><path d="M16 6h2.5a2.5 2.5 0 0 1-2.6 4"/><path d="M12 13v4M8.5 20h7"/></svg></span>Mi avance</a>
 </nav>
 
 <div class="wrap">
@@ -199,19 +200,10 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
   <footer>Basado en el curso de impresión 3D de Quirón. Cada módulo guarda tu avance en este navegador; podés llevarlo a otro dispositivo desde la sección de arriba.</footer>
 </div>
 
+<script src="modulos.js"></script>
 <script>
 (function(){
-  var MODS=[
-    {n:1,t:'Cómo funciona una impresora 3D',d:'Del archivo a la pieza, el G-code y las dos grandes tecnologías.',parts:[['capa-a-capa-modulo-1.html','Lecciones 1.1 a 1.5','cac-m1',5]]},
-    {n:2,t:'La máquina por dentro',d:'Ejes, motores, correas, extrusor, hotend, cama y electrónica.',parts:[['capa-a-capa-modulo-2.html','Parte 1 · lecciones 2.1 a 2.5','cac-m2',5],['capa-a-capa-modulo-2b.html','Parte 2 · lecciones 2.6 a 2.11','cac-m2b',6]]},
-    {n:3,t:'Filamentos y materiales',d:'PLA, PETG, ABS y TPU, temperaturas, humedad y cómo elegir.',parts:[['capa-a-capa-modulo-3.html','Lecciones 3.1 a 3.8','cac-m3',8]]},
-    {n:4,t:'El laminador',d:'Perfiles, capas, paredes, relleno, soportes, retracción y vista previa.',parts:[['capa-a-capa-modulo-4a.html','Parte 1 · lecciones 4.1 a 4.6','cac-m4a',6],['capa-a-capa-modulo-4b.html','Parte 2 · lecciones 4.7 a 4.12','cac-m4b',6],['capa-a-capa-modulo-4c.html','Parte 3 · lecciones 4.13 a 4.18','cac-m4c',6]]},
-    {n:5,t:'Calibración',d:'Nivelación, offset Z, temperatura, extrusor, flujo y retracción.',parts:[['capa-a-capa-modulo-5a.html','Parte 1 · lecciones 5.1 a 5.5','cac-m5a',5],['capa-a-capa-modulo-5b.html','Parte 2 · lecciones 5.6 a 5.10','cac-m5b',5]]},
-    {n:6,t:'Errores y diagnóstico',d:'Método, base, extrusión, movimiento, capas, hilos, voladizos, soportes y encastres.',parts:[['capa-a-capa-modulo-6a.html','Parte 1 · lecciones 6.1 a 6.5','cac-m6a',5],['capa-a-capa-modulo-6b.html','Parte 2 · lecciones 6.6 a 6.10','cac-m6b',5]]},
-    {n:7,t:'Diseño de piezas funcionales',d:'Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras.',parts:[['capa-a-capa-modulo-7a.html','Parte 1 · lecciones 7.1 a 7.5','cac-m7a',5],['capa-a-capa-modulo-7b.html','Parte 2 · lecciones 7.6 a 7.10','cac-m7b',5]]},
-    {n:8,t:'Impresoras de nueva generación',d:'CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3.',parts:[['capa-a-capa-modulo-8.html','Lecciones 8.1 a 8.6','cac-m8',6]]},
-    {n:9,t:'Multicolor y multimaterial',d:'Cambio de color por capa, AMS, purga, pintar el modelo, multicabezal y piezas que mezclan materiales.',parts:[['capa-a-capa-modulo-9.html','Lecciones 9.1 a 9.6','cac-m9',6]]},
-    {n:10,t:'Glosario',d:'Todas las fichas del curso en un buscador, en español y en inglés.',parts:[['capa-a-capa-glosario.html','Buscador de términos y ajustes del laminador',null,0]]}];
+  var MODS=window.CAC_MODS;
   var ARROW='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',CHECK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
   function got(key,n){try{var o=JSON.parse(localStorage.getItem(key)||'{}')||{},c=0;for(var i=1;i<=n;i++)if(o['l'+i])c++;return c}catch(e){return 0}}
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -237,17 +229,17 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
 /* Llevar el avance a otro dispositivo: el avance viaja dentro del enlace, sin cuentas ni servidor. */
 (function(){
   var $=function(id){return document.getElementById(id)},BASE='https://edukaos.github.io/capa-a-capa/index.html';
-  function leer(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^cac-m/.test(k)){var v=JSON.parse(localStorage.getItem(k)||'{}');if(v&&typeof v==='object')o[k]=v}}}catch(e){}return o}
-  function contar(o){var n=0;for(var k in o)for(var l in o[k])if(o[k][l])n++;return n}
+  function leer(){var o={};try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(/^cac-(m|rep$)/.test(k)){var v=JSON.parse(localStorage.getItem(k)||'{}');if(v&&typeof v==='object')o[k]=v}}}catch(e){}return o}
+  function contar(o){var n=0;for(var k in o)if(k!=='cac-rep')for(var l in o[k])if(o[k][l])n++;return n}
   function cod(o){var s=unescape(encodeURIComponent(JSON.stringify(o)));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')}
   function decod(c){c=String(c||'').trim();var m=c.match(/avance=([A-Za-z0-9_-]+)/);if(m)c=m[1];c=c.replace(/-/g,'+').replace(/_/g,'/');while(c.length%4)c+='=';
-    var o=JSON.parse(decodeURIComponent(escape(atob(c))));if(!o||typeof o!=='object')throw 0;for(var k in o)if(!/^cac-m[\w]+$/.test(k)||typeof o[k]!=='object')throw 0;return o}
-  function sumar(o){var n=0;try{for(var k in o){var cur=JSON.parse(localStorage.getItem(k)||'{}')||{};for(var l in o[k])if(o[k][l]&&!cur[l]){cur[l]=o[k][l];n++}localStorage.setItem(k,JSON.stringify(cur))}}catch(e){return -1}return n}
+    var o=JSON.parse(decodeURIComponent(escape(atob(c))));if(!o||typeof o!=='object')throw 0;for(var k in o)if(!/^cac-(m[\w]+|rep)$/.test(k)||!o[k]||typeof o[k]!=='object')throw 0;return o}
+  function sumar(o){var n=0;try{for(var k in o){var cur=JSON.parse(localStorage.getItem(k)||'{}')||{};for(var l in o[k]){var v=o[k][l];if(k==='cac-rep'){if(v&&typeof v.ok==='number'&&(!cur[l]||v.ok>cur[l].ok)){cur[l]={ok:v.ok,t:v.t};n++}}else if(v&&!cur[l]){cur[l]=v;n++}}localStorage.setItem(k,JSON.stringify(cur))}}catch(e){return -1}return n}
   function msg(el,t,ok){el.hidden=false;el.textContent=t;el.className='aviso '+(ok?'ok':'bad')}
   function cargar(o,el){var n=sumar(o);if(n<0){msg(el,'No se pudo guardar en este navegador. Puede que esté en modo privado.',false);return false}
-    msg(el,n?'Listo: se sumaron '+n+' retos. Recargando…':'Ya tenías todo eso en este dispositivo.',true);if(n)setTimeout(function(){location.href='index.html'},1200);return true}
+    msg(el,n?'Listo: se sumó tu avance. Recargando…':'Ya tenías todo eso en este dispositivo.',true);if(n)setTimeout(function(){location.href='index.html'},1200);return true}
   $('av-share').addEventListener('click',function(){var o=leer(),n=contar(o),m=$('av-msg');
-    if(!n){msg(m,'Todavía no resolviste ningún reto en este navegador.',false);return}
+    if(!n&&!o['cac-rep']){msg(m,'Todavía no resolviste ningún reto en este navegador.',false);return}
     var url=BASE+'#avance='+cod(o),inp=$('av-link');inp.value=url;inp.hidden=false;
     function ok(){msg(m,'Enlace copiado con tus '+n+' retos. Abrilo en el otro dispositivo.',true)}
     function manual(){inp.focus();inp.select();msg(m,'Copiá el enlace de arriba y abrilo en el otro dispositivo.',true)}
@@ -258,10 +250,10 @@ footer{font-size:14px;color:var(--ink-soft);border-top:1px solid var(--line);pad
   var h='';try{h=location.hash}catch(e){}if(h.indexOf('avance=')<0)return;var o;try{o=decod(h)}catch(e){return}
   var b=document.createElement('div');b.className='llega';b.setAttribute('role','dialog');b.setAttribute('aria-label','Avance de otro dispositivo');
   b.innerHTML='<p></p><div class="row"><button class="btn" type="button">Sumar a este dispositivo</button><button class="btn tonal" type="button">Ahora no</button></div>';
-  b.querySelector('p').textContent='Este enlace trae '+contar(o)+' retos resueltos en otro dispositivo.';
+  var nr=0;for(var r in (o['cac-rep']||{}))nr++;b.querySelector('p').textContent='Este enlace trae '+contar(o)+' retos resueltos'+(nr?' y '+nr+(nr>1?' repasos':' repaso'):'')+' de otro dispositivo.';
   var bs=b.querySelectorAll('button');
   bs[0].addEventListener('click',function(){var p=b.querySelector('p');var n=sumar(o);if(n<0){p.textContent='No se pudo guardar en este navegador.';return}
-    p.textContent=n?'Listo: se sumaron '+n+' retos.':'Ya tenías todo eso en este dispositivo.';bs[0].hidden=true;bs[1].textContent='Cerrar';try{history.replaceState(null,'','index.html')}catch(e){}setTimeout(function(){location.reload()},900)});
+    p.textContent=n?'Listo: se sumó tu avance.':'Ya tenías todo eso en este dispositivo.';bs[0].hidden=true;bs[1].textContent='Cerrar';try{history.replaceState(null,'','index.html')}catch(e){}setTimeout(function(){location.reload()},900)});
   bs[1].addEventListener('click',function(){b.remove();try{history.replaceState(null,'','index.html')}catch(e){}});
   var w=document.querySelector('.wrap');w.insertBefore(b,w.firstChild);
 })();

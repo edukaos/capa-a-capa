@@ -9,7 +9,8 @@ Sitio publicado: https://edukaos.github.io/capa-a-capa/
 Abrí `index.html` en cualquier navegador. No hace falta instalar nada. En el celular se puede agregar a la pantalla de inicio como una app, y después de la primera visita funciona sin internet.
 
 - **Narración:** cada lección se puede escuchar con la voz del navegador. Arranca sola al cambiar de lección y se pausa o reanuda desde el botón de arriba. La voz depende de cada dispositivo.
-- **Avance:** los retos resueltos se guardan en el navegador de cada persona. Para seguir en otro dispositivo, desde la portada se copia un enlace con el avance y se abre allá.
+- **Avance:** los retos resueltos y el mejor puntaje de cada repaso se guardan en el navegador de cada persona. Para seguir en otro dispositivo, desde la portada se copia un enlace con el avance y se abre allá.
+- **Mi avance:** la página `avance.html` junta todo: porcentaje y nivel (Aprendiz, Maker, Experto), retos, repasos y módulos completos, y lo que falta en cada módulo con enlaces directos a cada lección.
 
 ## Contenido
 
@@ -33,7 +34,8 @@ Cada página de módulo tiene su propio contenido y simuladores, y comparte esto
 | Archivo | Para qué sirve |
 | --- | --- |
 | `tema.css` | El diseño Material 3: colores, botones, tarjetas, riel de navegación y barra superior. Cambiar algo acá lo cambia en todos los módulos y el glosario. |
-| `comun.js` | Nombres de los pasos, narración y confirmación de Reiniciar. |
+| `comun.js` | Nombres de los pasos, narración, confirmación de Reiniciar, guardado del puntaje del repaso y enlaces directos a una lección (`#l3`, `#repaso`). |
+| `modulos.js` | La lista de módulos, partes, retos y preguntas de cada repaso. La usan la portada y Mi avance: al sumar un módulo, se agrega acá. |
 | `sw.js` y `registro-sw.js` | Modo sin conexión. Al cambiar archivos, subí el número de `VERSION` en `sw.js`. |
 | `manifest.webmanifest` e `img/icono-*` | Nombre e ícono al instalarlo como app. |
 | `img/compartir.jpg` | Imagen que aparece al compartir el enlace. |
@@ -51,6 +53,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.1-app` | Lo anterior más íconos unificados, archivos compartidos, avance entre dispositivos, vista previa al compartir y modo sin conexión. |
 | `version-2.2-modulo-8` | Módulo 8 nuevo, Impresoras de nueva generación, en lugar de los módulos de taller y negocio. |
 | `version-2.3-modulo-9` | Módulo 9 nuevo, Multicolor y multimaterial. |
+| `version-2.4-mi-avance` | Página Mi avance con puntaje total, niveles y repasos guardados. |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.

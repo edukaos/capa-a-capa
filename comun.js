@@ -1,4 +1,4 @@
-/* Capa a Capa · código común de las lecciones: nombres de los pasos, narración y confirmación de Reiniciar. */
+/* Capa a Capa · código común de las lecciones: nombres de los pasos, narración, confirmación de Reiniciar, puntaje del repaso y enlaces a una lección. */
 (function(){ // nombres de lección debajo de cada paso
   var nv=document.getElementById('nav');if(!nv)return;var b=nv.querySelectorAll('button');
   nv.style.setProperty('--n',b.length);nv.style.setProperty('--lw',b.length>7?'104px':b.length>6?'128px':'150px');
@@ -47,4 +47,13 @@
 (function(){ // en el celular, Reiniciar es solo un ícono: la pregunta de confirmación se muestra como globo
   var r=document.querySelector('.rstm');if(!r)return;
   new MutationObserver(function(){if(r.classList.contains('armed'))r.setAttribute('data-ask',r.textContent.trim());else r.removeAttribute('data-ask')}).observe(r,{attributes:true,attributeFilter:['class']});
+})();
+(function(){
+  // Guarda el mejor puntaje del repaso de esta parte (para Mi avance) y abre la lección que pide el enlace: #l3, #repaso.
+  var K=document.documentElement.getAttribute('data-cac'),sc=document.getElementById('score');
+  if(K&&sc&&window.MutationObserver){var save=function(){if(sc.hidden)return;var m=(sc.textContent||'').match(/^(\d+) de (\d+)/);if(!m)return;
+    try{var R=JSON.parse(localStorage.getItem('cac-rep')||'{}')||{},ok=+m[1],t=+m[2];if(!R[K]||ok>R[K].ok){R[K]={ok:ok,t:t};localStorage.setItem('cac-rep',JSON.stringify(R))}}catch(e){}};
+    new MutationObserver(save).observe(sc,{attributes:true,childList:true,characterData:true,subtree:true})}
+  var h='';try{h=location.hash.slice(1)}catch(e){}
+  if(/^(l\d+|repaso)$/.test(h)){var b=document.querySelector('#nav button[data-l="'+h+'"]');if(b)setTimeout(function(){b.click();window.scrollTo(0,0)},0)}
 })();
