@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m5a">
+<html lang="es" data-d3="m5a" data-d3-l="l1 l2 l3 l4 l5" data-cac="cac-m5a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -332,6 +332,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Nivelación, offset Z, temperatura, extrusor, flujo y retracción. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -603,7 +604,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -649,7 +650,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.strokeStyle=rgb(tone(FIL2,-.35),.4+.4*q);c.lineWidth=1.2;c.beginPath();c.moveTo(x1,y-lw*.55);c.lineTo(x2,y-lw*.55);c.moveTo(x1,y+lw*.55);c.lineTo(x2,y+lw*.55);c.stroke()}
 
   // ---------- 5.1 por que calibrar ----------
-  var O1={got:0,t0:0,wob:0},ST1=['Revisión mecánica','Nivelación de cama','Offset Z','Temperatura','Extrusor','Flujo'],
+  window.CACS=window.CACS||{};var O1=CACS.l1={got:0,t0:0,wob:0},ST1=['Revisión mecánica','Nivelación de cama','Offset Z','Temperatura','Extrusor','Flujo'],
     WHY1=['Primero la máquina tiene que estar firme: correas, tornillos y ruedas. Si algo baila, ningún ajuste lo arregla.','Con la máquina firme, se deja la cama pareja en toda la superficie.','Con la cama pareja, recién se puede afinar cuánto baja la boquilla.','Con la primera capa resuelta, se busca la temperatura de la bobina.','Con la temperatura definida, se mide si el motor empuja lo que debe.','Al final se afina el flujo, que depende de todo lo anterior.'];
   (function(){var box=$('ord1');[3,0,5,2,4,1].forEach(function(i){var b=document.createElement('button');b.type='button';b.textContent=ST1[i];b.setAttribute('aria-pressed','false');b.addEventListener('click',function(){
       if(i===O1.got){b.disabled=true;b.className='right';b.textContent=(i+1)+'. '+ST1[i];O1.got++;O1.t0=performance.now();
@@ -664,7 +665,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l1=function(){loop(draw1)};
 
   // ---------- 5.2 nivelar la cama ----------
-  var G2=[.30,.10,.20,.00],N2=['Adelante, izquierda','Adelante, derecha','Atrás, derecha','Atrás, izquierda'];
+  window.CACS=window.CACS||{};var G2=CACS.l2=[.30,.10,.20,.00],N2=['Adelante, izquierda','Adelante, derecha','Atrás, derecha','Atrás, izquierda'];
   function st2(g){return g>.13?['suelto','el papel pasa sin tocar','']:g>=.07?['roza','leve resistencia: así','ok']:['trabado',g<=0?'la boquilla toca la cama':'el papel no pasa','bad']}
   (function(){var box=$('knobs2');N2.forEach(function(n,i){var d=document.createElement('div');d.className='kn';d.innerHTML='<b></b><span class="st"></span><div class="row"><button class="btn ghost" type="button" data-d="-0.05">Acercar</button><button class="btn ghost" type="button" data-d="0.05">Alejar</button></div>';
       d.querySelector('b').textContent=n;d.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;G2[i]=Math.round((G2[i]+ +b.dataset.d)*100)/100;G2[i]=Math.max(-.1,Math.min(.4,G2[i]));
@@ -684,7 +685,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l2=function(){upd2();loop(draw2)};
 
   // ---------- 5.3 malla ----------
-  var M3={n:0,t0:0,run:false},NP=5;
+  window.CACS=window.CACS||{};var M3=CACS.l3={n:0,t0:0,run:false},NP=5;
   function zb(u,v){return-.16+.64*((u-.5)*(u-.5)+(v-.5)*(v-.5))}
   $('probe3').addEventListener('click',function(){M3.n=0;M3.t0=performance.now();M3.run=true;say('m3','Midiendo: el sensor toca la cama punto por punto…')});
   function msg3(){if(M3.run)return;var use=$('use3').checked,loose=$('loose3').checked,meas=M3.n>=NP*NP;
@@ -716,7 +717,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     ['Eso es justo lo que la malla compensa.',null,'Para eso está la malla.'],function(){mark('l3')});
 
   // ---------- 5.4 offset Z ----------
-  var Z4={o:.12};
+  window.CACS=window.CACS||{};var Z4=CACS.l4={o:.12};
   function st4(){var o=Z4.o;return o>.06?'alto':o>.02?'algo alto':o>=-.02?'justo':o>=-.06?'algo bajo':'bajo'}
   function upd4(){var o=Z4.o,s=st4();$('r4a').textContent=sgn(o)+' mm';$('r4b').textContent=num(Math.max(0,.2+o),2)+' mm';
     say('m4',{alto:'Boquilla alta: el plástico cae redondo, las líneas no se tocan y casi no se agarran a la cama.','algo alto':'Todavía un poco alta: las líneas se tocan, pero quedan surcos entre ellas.',justo:'Justa: líneas aplastadas, unidas y parejas. La superficie se ve lisa y opaca.','algo bajo':'Un poco baja: aparecen crestas donde el plástico sobrante se levanta entre líneas.',bajo:'Boquilla baja: raspa la cama, la capa queda transparente y el extrusor hace clic porque no tiene por dónde sacar plástico.'}[s],s==='justo'?'ok':s==='alto'||s==='bajo'?'bad':'');

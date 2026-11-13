@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m5b">
+<html lang="es" data-d3="m5b" data-d3-l="l1 l2 l3 l4" data-cac="cac-m5b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -340,6 +340,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Nivelación, offset Z, temperatura, extrusor, flujo y retracción. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -618,7 +619,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -669,7 +670,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     for(var i=0;i<n*2;i++){var ang=i*Math.PI/n,rr2=i%2?r*.8:r;c.lineTo(Math.cos(ang)*rr2,Math.sin(ang)*rr2)}c.closePath();c.fill();c.fillStyle='#4A5675';c.beginPath();c.arc(0,0,r*.28,0,7);c.fill();c.restore()}
 
   // ---------- 5.6 pasos del extrusor ----------
-  var E1={v:93,t0:0,tgt:0,mv:0,run:false,res:null},TRUE1=97.89;
+  window.CACS=window.CACS||{};var E1=CACS.l1={v:93,t0:0,tgt:0,mv:0,run:false,res:null},TRUE1=97.89;
   function rd1(){var v=parseFloat(String($('es1').value).replace(',','.'));return isFinite(v)?v:NaN}
   $('go1').addEventListener('click',function(){var v=rd1();if(!(v>=60&&v<=140)){say('m1','Escribí un valor entre 60 y 140 pasos por milímetro.','bad');return}
     E1.v=v;E1.tgt=100*v/TRUE1;E1.mv=0;E1.t0=performance.now();E1.run=true;E1.res=null;say('m1','Empujando 100 mm…')});
