@@ -280,8 +280,9 @@ code{color:var(--ui)}
 /* imágenes del glosario: en la cabecera de cada lección y como miniatura en el glosario */
 .lhead.wimg .lhimg{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;border-radius:24px;margin-bottom:16px;background:var(--low)}
 @media (min-width:861px){
-  .lhead.wimg{max-width:none;display:grid;grid-template-columns:minmax(0,68ch) minmax(200px,300px);column-gap:40px;align-items:start}
-  .lhead.wimg>*{grid-column:1}
+  .lhead.wimg{max-width:none;display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,300px);column-gap:40px;align-items:start}
+  .lhead.wimg>*{grid-column:1;max-width:68ch}
+  .lhead.wimg .lhimg{justify-self:end;max-width:none}
   .lhead.wimg .lhimg{grid-column:2;grid-row:1/span 8;aspect-ratio:1/1;margin:0}
 }
 .gi.wimg{display:grid;grid-template-columns:minmax(0,1fr) 104px;column-gap:18px;align-content:start}
