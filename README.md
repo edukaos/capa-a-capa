@@ -35,6 +35,7 @@ Cada página de módulo tiene su propio contenido y simuladores, y comparte esto
 | --- | --- |
 | `tema.css` | El diseño Material 3: colores, botones, tarjetas, riel de navegación y barra superior. Cambiar algo acá lo cambia en todos los módulos y el glosario. |
 | `comun.js` | Nombres de los pasos, narración, confirmación de Reiniciar, guardado del puntaje del repaso y enlaces directos a una lección (`#l3`, `#repaso`). |
+| `cac3d.js` y `3d/` | Simuladores en 3D con Three.js (versión 0.160, desde jsDelivr). `cac3d.js` es la base compartida: cama, materiales, luces, cámara que se gira con el dedo o el mouse, etiquetas y gráfico chico. Cada página con 3D tiene sus escenas en `3d/<página>.js`. Se descargan recién al abrir una lección con 3D, y si el navegador no puede mostrarlo queda el simulador 2D. |
 | `modulos.js` | La lista de módulos, partes, retos y preguntas de cada repaso. La usan la portada y Mi avance: al sumar un módulo, se agrega acá. |
 | `sw.js` y `registro-sw.js` | Modo sin conexión. Al cambiar archivos, subí el número de `VERSION` en `sw.js`. |
 | `manifest.webmanifest` e `img/icono-*` | Nombre e ícono al instalarlo como app. |
@@ -54,6 +55,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.2-modulo-8` | Módulo 8 nuevo, Impresoras de nueva generación, en lugar de los módulos de taller y negocio. |
 | `version-2.3-modulo-9` | Módulo 9 nuevo, Multicolor y multimaterial. |
 | `version-2.4-mi-avance` | Página Mi avance con puntaje total, niveles y repasos guardados. |
+| `version-2.5-3d-modulo-4b` | Base 3D y lecciones 4.7 a 4.12 en 3D. |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.

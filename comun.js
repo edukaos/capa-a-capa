@@ -57,3 +57,14 @@
   var h='';try{h=location.hash.slice(1)}catch(e){}
   if(/^(l\d+|repaso)$/.test(h)){var b=document.querySelector('#nav button[data-l="'+h+'"]');if(b)setTimeout(function(){b.click();window.scrollTo(0,0)},0)}
 })();
+(function(){
+  // Simuladores en 3D: la base (cac3d.js) y Three.js se descargan recién cuando se abre una lección que los usa.
+  // Si el navegador no puede mostrar 3D, o no hay conexión la primera vez, queda el simulador 2D.
+  var H=document.documentElement,pg=H.getAttribute('data-d3');if(!pg)return;
+  var ids=(H.getAttribute('data-d3-l')||'').split(' '),go=false;
+  function check(){if(go)return;for(var i=0;i<ids.length;i++){var s=document.getElementById(ids[i]);if(s&&!s.hidden){go=true;start();return}}}
+  function start(){var t=document.createElement('canvas');if(!(t.getContext('webgl2')||t.getContext('webgl')))return;
+    import('./cac3d.js').then(function(m){return m.boot(pg)}).catch(function(e){console.warn('3D no disponible, sigue el 2D:',e)})}
+  if(window.MutationObserver)new MutationObserver(check).observe(document.querySelector('.wrap')||document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});
+  check();
+})();
