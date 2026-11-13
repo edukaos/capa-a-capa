@@ -62,6 +62,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.9-3d-modulo-3` | Módulo 3 en 3D. |
 | `version-2.10-3d-modulo-5` | Módulo 5 en 3D (la 5.10, la etiqueta de la bobina, queda en 2D). |
 | `version-2.11-3d-modulo-6` | Módulo 6 en 3D (la 6.1, libreta de pruebas, y la 6.10, diagnosticador, quedan en 2D). |
+| `version-2.12-3d-modulo-7` | Módulo 7 en 3D (la 7.10, tabla de decisiones, queda en 2D). |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.

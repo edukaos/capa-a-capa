@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m7a">
+<html lang="es" data-d3="m7a" data-d3-l="l1 l2 l3 l4 l5" data-cac="cac-m7a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -340,6 +340,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -607,7 +608,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -661,7 +662,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 
   // ---------- 7.1 fuerzas ----------
   var F1=[['flex','Flexión','Intenta doblarla. Para aguantar mejor, conviene una sección más alta.'],['trac','Tracción','Intenta estirarla. Las líneas deberían seguir la dirección de la carga.'],['tors','Torsión','Intenta retorcerla. Las formas cerradas y tubulares la aguantan mejor.'],['corte','Corte','Intenta deslizar una parte respecto de otra. Los pasadores y uniones necesitan sección suficiente.'],['comp','Compresión','Intenta aplastarla. Es la que mejor aguantan las capas.']],
-    NM1=['Tracción','Compresión','Flexión','Torsión','Corte'],G1={i:0,ok:0};
+    NM1=['Tracción','Compresión','Flexión','Torsión','Corte'],G1=(window.CACS=window.CACS||{}).l1={i:0,ok:0};
   function opts1(){var box=$('opt1');box.textContent='';NM1.forEach(function(n){var b=document.createElement('button');b.type='button';b.textContent=n;b.setAttribute('aria-pressed','false');box.appendChild(b)})}
   opts1();
   $('opt1').addEventListener('click',function(e){var b=e.target.closest('button');if(!b||b.disabled||G1.i>=F1.length)return;var f=F1[G1.i];
@@ -690,7 +691,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l1=function(){loop(draw1)};
 
   // ---------- 7.2 esquinas ----------
-  var E2={cor:'viva',kg:2,brk:0,bt:0},K2={viva:3,chaflan:1.8,radio:1.3},LIM2=9;
+  window.CACS=window.CACS||{};var E2=CACS.l2={cor:'viva',kg:2,brk:0,bt:0},K2={viva:3,chaflan:1.8,radio:1.3},LIM2=9;
   function upd2(){var st=E2.kg*K2[E2.cor],br=st>LIM2;$('vkg2').textContent=E2.kg+' kg';if(br&&!E2.brk){E2.brk=1;E2.bt=performance.now()}if(!br)E2.brk=0;
     var nm={viva:'la esquina viva',chaflan:'el chaflán',radio:'el radio'}[E2.cor];
     say('m2',br?'Con '+E2.kg+' kg, '+nm+' no aguanta: la fuerza se amontona en la esquina y la fisura arranca ahí.':st>LIM2*.7?'Aguanta, pero la esquina está al límite: mirá cómo se juntan las líneas de fuerza.':'Aguanta tranquilo: la fuerza dobla la esquina sin amontonarse.',br?'bad':st>LIM2*.7?'':'ok');
@@ -768,7 +769,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l4=function(){upd4();loop(draw4)};
 
   // ---------- 7.5 holguras ----------
-  var REQ5=[['un rodamiento a presión en su alojamiento','firme',.1,.2],['una tapa de caja que deslice','deslizante',.2,.4],['una rueda que gire libre en su eje','libre',.4,.6]],H5={i:0,cl:0,t0:-1,res:null};
+  var REQ5=[['un rodamiento a presión en su alojamiento','firme',.1,.2],['una tapa de caja que deslice','deslizante',.2,.4],['una rueda que gire libre en su eje','libre',.4,.6]],H5=(window.CACS=window.CACS||{}).l5={i:0,cl:0,t0:-1,res:null};
   function cat5(v){return v<.1-1e-9?'no':v<=.2+1e-9?'firme':v<=.4+1e-9?'deslizante':v<=.6+1e-9?'libre':'baila'}
   var CN5={no:'no entra',firme:'muy firme',deslizante:'deslizante',libre:'libre',baila:'baila'};
   function ask5(){$('ask5').textContent=H5.i<3?'Pedido '+(H5.i+1)+' de 3: '+REQ5[H5.i][0]+'.':'¡Los tres ajustes resueltos!'}

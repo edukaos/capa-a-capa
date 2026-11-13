@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m7b">
+<html lang="es" data-d3="m7b" data-d3-l="l1 l2 l3 l4" data-cac="cac-m7b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -340,6 +340,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Fuerzas, esquinas, nervaduras, piezas sin soportes, holguras, tornillos, snap fits y bisagras. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -606,7 +607,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -659,7 +660,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   function counter(c,x,y,n,tot,col){txt(c,n+' de '+tot,x,y,'right',col||C.soft,14,700)}
 
   // ---------- 7.6 tornillos ----------
-  var T1={typ:'directo',t0:-1,res:null};
+  window.CACS=window.CACS||{};var T1=CACS.l1={typ:'directo',t0:-1,res:null};
   chips('typ1','v',function(v){T1.typ=v;T1.t0=-1;T1.res=null;say('m1',{directo:'Directo en plástico: el tornillo forma su propia rosca en el tetón.',tuerca:'Tuerca cautiva: un alojamiento hexagonal guarda una tuerca de metal.',inserto:'Inserto roscado: un buje de bronce con rosca, colocado con calor.'}[v])});
   $('go1').addEventListener('click',function(){T1.t0=performance.now();T1.res=null;say('m1','Abriendo y cerrando…');setTimeout(function(){var d=T1.typ==='directo';T1.res=d?'gastado':'ok';
     if(d){say('m1','A la cuarta apertura la rosca de plástico se gastó: el tornillo gira en falso y la tapa queda floja. Directo en plástico sirve para piezas que se arman una vez.','bad');if(!done.l1)say('r1','Todavía no.')}
@@ -682,7 +683,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l1=function(){loop(draw1)};
 
   // ---------- 7.7 snap fit ----------
-  var P2={L:8,t:2.5,ori:'cruzadas',rad:false,t0:-1,res:null};
+  window.CACS=window.CACS||{};var P2=CACS.l2={L:8,t:2.5,ori:'cruzadas',rad:false,t0:-1,res:null};
   function calc2(){var e=P2.t/(P2.L*P2.L)*100,m=(P2.rad?.75:1)*(P2.ori==='cruzadas'?2.2:1);return{e:e,v:e*m}}
   function lab2(){$('vlen2').textContent=P2.L+' mm';$('vthk2').textContent=num(P2.t,2).replace(/0$/,'')+' mm'}
   $('len2').addEventListener('input',function(){P2.L=+this.value;lab2();P2.t0=-1});$('thk2').addEventListener('input',function(){P2.t=+this.value;lab2();P2.t0=-1});
@@ -714,7 +715,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l2=function(){lab2();loop(draw2)};
 
   // ---------- 7.8 bisagras ----------
-  var B3={typ:'viva',mat:'PLA',t0:-1,res:null};
+  window.CACS=window.CACS||{};var B3=CACS.l3={typ:'viva',mat:'PLA',t0:-1,res:null};
   chips('typ3','v',function(v){B3.typ=v;B3.t0=-1});chips('mat3','v',function(v){B3.mat=v;B3.t0=-1});
   $('go3').addEventListener('click',function(){B3.res=B3.typ==='pieza'?'soldada':B3.typ==='viva'&&B3.mat==='PLA'?'rota':'ok';B3.t0=performance.now();say('m3','Abriendo y cerrando…');setTimeout(function(){
     if(B3.res==='soldada')say('m3','La bisagra salió soldada: con una impresora poco calibrada, el eje se pega a su alojamiento y no gira. Funciona en máquinas bien calibradas y con holgura suficiente.','bad');
@@ -742,7 +743,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 
   // ---------- 7.9 perfiles ----------
   var REQ4=[['una repisa larga que carga libros: que se doble poco','flex','i'],['una manija que se retuerce al girarla: que no se tuerza','tors','tubo']],
-    PR4={macizo:{n:'macizo',flex:1,tors:1,g:20},u:{n:'en U',flex:1.5,tors:.25,g:10},tubo:{n:'tubular',flex:1.4,tors:1.6,g:10},i:{n:'en I',flex:2,tors:.3,g:10}},Q4={i:0,p:'macizo'};
+    PR4={macizo:{n:'macizo',flex:1,tors:1,g:20},u:{n:'en U',flex:1.5,tors:.25,g:10},tubo:{n:'tubular',flex:1.4,tors:1.6,g:10},i:{n:'en I',flex:2,tors:.3,g:10}},Q4=(window.CACS=window.CACS||{}).l4={i:0,p:'macizo'};
   function ask4(){$('ask4').textContent=Q4.i<2?'Pedido '+(Q4.i+1)+' de 2: '+REQ4[Q4.i][0]+'.':'¡Los dos pedidos resueltos!'}ask4();
   chips('pro4','v',function(v){Q4.p=v;var p=PR4[v],ld=REQ4[Math.min(Q4.i,1)][1];say('m4','Perfil '+p.n+': '+p.g+' g. '+(ld==='flex'?'Rigidez a la flexión: ':'Rigidez a la torsión: ')+'×'+num(p[ld],1)+' respecto del macizo.')});
   $('go4').addEventListener('click',function(){if(Q4.i>=2)return;var q=REQ4[Q4.i],p=PR4[Q4.p];
