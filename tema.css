@@ -271,3 +271,8 @@ code{color:var(--ui)}
   .sim>.spanel .card.preto h3{font-size:17px}
   .sim>.spanel .card.preto p{font-size:14px}
 }
+/* simuladores con panel propio pegado al dibujo (1.3): el panel pasa al de la derecha */
+.sim>.gwrap:not(:has(.gside)){display:block}
+.sim>.spanel>.gside{padding:4px 18px 18px;display:flex;flex-direction:column;gap:12px}
+@media (min-width:1000px){.sim>.gwrap{align-self:center;justify-self:center;width:100%}.sim>.gwrap canvas{max-height:calc(100% - 8px);margin:auto}}
+@media (max-width:999px){.sim>.gwrap{position:sticky;top:var(--stk,0px);z-index:5;background:var(--surface)}.sim>.gwrap canvas{max-height:42svh;margin:0 auto}}
