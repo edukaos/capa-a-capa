@@ -276,3 +276,15 @@ code{color:var(--ui)}
 .sim>.spanel>.gside{padding:4px 18px 18px;display:flex;flex-direction:column;gap:12px}
 @media (min-width:1000px){.sim>.gwrap{align-self:center;justify-self:center;width:100%}.sim>.gwrap canvas{max-height:calc(100% - 8px);margin:auto}}
 @media (max-width:999px){.sim>.gwrap{position:sticky;top:var(--stk,0px);z-index:5;background:var(--surface)}.sim>.gwrap canvas{max-height:42svh;margin:0 auto}}
+
+/* imágenes del glosario: en la cabecera de cada lección y como miniatura en el glosario */
+.lhead.wimg .lhimg{display:block;width:100%;height:auto;aspect-ratio:2/1;object-fit:cover;border-radius:24px;margin-bottom:16px;background:var(--low)}
+@media (min-width:861px){
+  .lhead.wimg{max-width:none;display:grid;grid-template-columns:minmax(0,68ch) minmax(200px,300px);column-gap:40px;align-items:start}
+  .lhead.wimg>*{grid-column:1}
+  .lhead.wimg .lhimg{grid-column:2;grid-row:1/span 8;aspect-ratio:1/1;margin:0}
+}
+.gi.wimg{display:grid;grid-template-columns:minmax(0,1fr) 104px;column-gap:18px;align-content:start}
+.gi.wimg>*{grid-column:1;min-width:0}
+.gi.wimg .gimg{grid-column:2;grid-row:1/span 4;width:104px;height:104px;object-fit:cover;border-radius:16px;background:var(--low)}
+@media (max-width:600px){.gi.wimg{grid-template-columns:minmax(0,1fr) 72px;column-gap:12px}.gi.wimg .gimg{width:72px;height:72px}}

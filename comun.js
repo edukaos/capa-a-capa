@@ -79,3 +79,12 @@
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
   addEventListener('resize',stk);
 })();
+
+/* imagen de cada lección en su cabecera (las mismas del glosario; la lista está en glos.js) */
+(function(){
+  function go(){var G=window.CAC_GIMG;if(!G)return;
+    [].forEach.call(document.querySelectorAll('section.lesson .lhead'),function(h){if(h.querySelector('.lhimg'))return;var e=h.querySelector('.eyebrow'),m=e&&e.textContent.match(/Lecci[oó]n\s+(\d+\.\d+)/);if(!m||!G[m[1]])return;
+      var i=document.createElement('img');i.className='lhimg';i.src='img/glos/'+G[m[1]]+'.webp';i.alt='';i.loading='lazy';i.width=800;i.height=800;h.classList.add('wimg');h.insertBefore(i,h.firstChild)})}
+  if(!document.querySelector('section.lesson .lhead'))return;
+  if(window.CAC_GIMG)go();else{var s=document.createElement('script');s.src='glos.js';s.onload=go;document.head.appendChild(s)}
+})();

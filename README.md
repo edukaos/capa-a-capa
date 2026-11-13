@@ -35,6 +35,7 @@ Cada página de módulo tiene su propio contenido y simuladores, y comparte esto
 | --- | --- |
 | `tema.css` | El diseño Material 3: colores, botones, tarjetas, riel de navegación y barra superior. Cambiar algo acá lo cambia en todos los módulos y el glosario. |
 | `comun.js` | Nombres de los pasos, narración, confirmación de Reiniciar, guardado del puntaje del repaso y enlaces directos a una lección (`#l3`, `#repaso`). |
+| `glos.js` e `img/glos/` | Imágenes del glosario. `glos.js` lista las que ya existen (código de lección → archivo); cada lección muestra la suya en la cabecera y el glosario la usa como miniatura. Para sumar una tanda nueva alcanza con agregar los archivos y regenerar `glos.js`. |
 | `cac3d.js` y `3d/` | Simuladores en 3D con Three.js (versión 0.160, desde jsDelivr). `cac3d.js` es la base compartida: cama, materiales, luces, cámara que se gira con el dedo o el mouse, etiquetas y gráfico chico. Cada página con 3D tiene sus escenas en `3d/<página>.js`. Se descargan recién al abrir una lección con 3D, y si el navegador no puede mostrarlo queda el simulador 2D. |
 | `modulos.js` | La lista de módulos, partes, retos y preguntas de cada repaso. La usan la portada y Mi avance: al sumar un módulo, se agrega acá. |
 | `sw.js` y `registro-sw.js` | Modo sin conexión. Al cambiar archivos, subí el número de `VERSION` en `sw.js`. |

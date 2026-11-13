@@ -314,6 +314,7 @@ mark{background:rgba(255,185,94,.28);color:inherit;border-radius:3px;padding:0 1
 .mhero p{margin:0;color:#D5DBE8;font-size:15px;line-height:1.45;max-width:44ch}
 @media (max-width:600px){.mhero{aspect-ratio:16/10}.mhero img{object-position:72% center}.mhero .tx{right:16px}.mhero::after{background:linear-gradient(0deg,rgba(14,20,34,.96) 0%,rgba(14,20,34,.6) 48%,rgba(14,20,34,.1) 100%)}.mhero p{display:none}}
 </style>
+<script src="glos.js"></script>
 <meta name="description" content="Todas las fichas del curso en un buscador, en español y en inglés. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -384,7 +385,7 @@ mark{background:rgba(255,185,94,.28);color:inherit;border-radius:3px;padding:0 1
     var h='<div class="kd"><span class="kk '+e.k+'">'+KN[e.k]+'</span><a class="src" href="'+e.p+'#'+e.l+'">Lección '+e.c+' · '+esc(e.n)+' →</a></div>';
     h+='<h3>'+hl(e.t,terms)+(e.e&&fold(e.e)!==fold(e.t)?'<span class="en" lang="en">'+hl(e.e,terms)+'</span>':'')+'</h3><p>'+hl(e.d,terms)+'</p>';
     if(e.s){h+='<div class="gs">';ORD.forEach(function(k){var v=e.s[k];if(!v)return;if(!Array.isArray(v)){if(v.note)h+='<b>'+NM[k]+'</b><span><i>'+hl(v.note,terms)+'</i></span>';return}if(!v.length)return;h+='<b>'+NM[k]+'</b><span>'+v.map(function(p){return hl(p[1],terms)+(p[0]!==p[1]?'<i lang="en">'+hl(p[0],terms)+'</i>':'')}).join('')+'</span>'});h+='</div>'}
-    d.innerHTML=h;return d}
+    var gim=window.CAC_GIMG&&CAC_GIMG[e.k==='lec'?e.c:e.k==='lam'?'lam:'+e.t:''];if(gim){h='<img class="gimg" src="img/glos/'+gim+'.webp" alt="" loading="lazy" width="800" height="800">'+h;d.classList.add('wimg')}d.innerHTML=h;return d}
   function render(){var terms=fold(ST.q).split(/\s+/).filter(Boolean),R=[];
     E.forEach(function(e){if(ST.k&&e.k!==ST.k)return;if(ST.m&&String(e.m)!==ST.m)return;var s=score(e,terms);if(s<0)return;R.push([s,e])});
     if(terms.length)R.sort(function(a,b){return b[0]-a[0]||a[1].i-b[1].i});

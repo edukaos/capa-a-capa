@@ -2,8 +2,8 @@
    Las páginas, el estilo y el código propio se piden primero a internet (así siempre llega la última versión) y, si no hay conexión, salen de la copia guardada.
    El resto (imágenes, tipografías, Three.js) sale de la copia y se actualiza en segundo plano.
    Al cambiar archivos, subí el número de VERSION para renovar la copia. */
-var VERSION='cac-v20';
-var ARCHIVOS=['./','index.html','avance.html','modulos.js','tema.css','comun.js','cac3d.js','3d/m1.js','3d/m2.js','3d/m2b.js','3d/m3.js','3d/m4a.js','3d/m4b.js','3d/m4c.js','3d/m5a.js','3d/m5b.js','3d/m6a.js','3d/m6b.js','3d/m7a.js','3d/m7b.js','3d/m8.js','3d/m9.js','registro-sw.js','manifest.webmanifest',
+var VERSION='cac-v21';
+var ARCHIVOS=['./','index.html','avance.html','modulos.js','tema.css','comun.js','glos.js','cac3d.js','3d/m1.js','3d/m2.js','3d/m2b.js','3d/m3.js','3d/m4a.js','3d/m4b.js','3d/m4c.js','3d/m5a.js','3d/m5b.js','3d/m6a.js','3d/m6b.js','3d/m7a.js','3d/m7b.js','3d/m8.js','3d/m9.js','registro-sw.js','manifest.webmanifest',
   'capa-a-capa-glosario.html','capa-a-capa-modulo-1.html','capa-a-capa-modulo-2.html','capa-a-capa-modulo-2b.html','capa-a-capa-modulo-3.html',
   'capa-a-capa-modulo-4a.html','capa-a-capa-modulo-4b.html','capa-a-capa-modulo-4c.html','capa-a-capa-modulo-5a.html','capa-a-capa-modulo-5b.html',
   'capa-a-capa-modulo-6a.html','capa-a-capa-modulo-6b.html','capa-a-capa-modulo-7a.html','capa-a-capa-modulo-7b.html',
