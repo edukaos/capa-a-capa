@@ -65,6 +65,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.12-3d-modulo-7` | Módulo 7 en 3D (la 7.10, tabla de decisiones, queda en 2D). |
 | `version-2.13-3d-modulos-8-y-9` | Módulos 8 y 9 en 3D (la 9.4, pintar el modelo, queda en 2D porque se dibuja con el dedo). Todos los simuladores pasaron a 3D salvo los gráficos y ejercicios que quedaron en 2D. |
 | `version-2.14-panel-lateral` | Simulador y controles siempre a la vista: en compu, el visual a la izquierda y el panel (paso, reto, controles y mensaje) a la derecha, del alto de la ventana; en celular, el visual queda fijo arriba mientras se scrollean los controles. |
+| `version-2.15-ancho-90` | En compu el cuerpo de la página usa el 90 % de la ventana y el panel de controles es más compacto. |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.

@@ -243,3 +243,31 @@ code{color:var(--ui)}
   .sim>.v3d{position:sticky;top:var(--stk,0px);z-index:5;aspect-ratio:auto!important;height:min(42svh,92vw)}
   .sim>canvas:not(.cv-ghost){position:sticky;top:var(--stk,0px);z-index:5;max-height:42svh}
 }
+
+/* compu: cuerpo más ancho (90 % de la ventana) y panel de controles un poco más compacto */
+@media (min-width:861px){.wrap{max-width:90%}}
+@media (min-width:1000px){
+  .sim{grid-template-columns:minmax(0,1fr) clamp(320px,33%,460px)}
+  .sim>.spanel{font-size:14px}
+  .sim>.spanel .pstep .n{width:36px;height:36px;font-size:16px;border-radius:12px}
+  .sim>.spanel .pstep .t b{font-size:17px}
+  .sim>.spanel .pstep .t small{font-size:12px}
+  .sim>.spanel .mision{padding:11px 13px}
+  .sim>.spanel .mision p{font-size:14px}
+  .sim>.spanel .mision .ic{width:30px;height:30px}
+  .sim>.spanel .simbody{gap:11px}
+  .sim>.spanel .pctl{padding:12px 14px;gap:9px}
+  .sim>.spanel .pctl label,.sim>.spanel .simbody label,.sim>.spanel .sl span{font-size:14px}
+  .sim>.spanel .chipset button,.sim>.spanel .opts button{min-height:40px;padding:6px 14px;font-size:14px}
+  .sim>.spanel .btn{min-height:40px;padding:0 18px;font-size:14px}
+  .sim>.spanel input[type=range]{height:34px}
+  .sim>.spanel .reads{gap:9px}
+  .sim>.spanel .reads div{padding:10px 12px;border-radius:16px}
+  .sim>.spanel .reads dt{font-size:12px}
+  .sim>.spanel .reads dd{font-size:17px}
+  .sim>.spanel .msg{font-size:14px;padding:10px 13px}
+  .sim>.spanel .note{font-size:13px;padding:10px 13px}
+  .sim>.spanel .card.preto{padding:13px 14px}
+  .sim>.spanel .card.preto h3{font-size:17px}
+  .sim>.spanel .card.preto p{font-size:14px}
+}
