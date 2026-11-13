@@ -218,3 +218,28 @@ code{color:var(--ui)}
 @media (max-width:600px){.v3d .lab3.s{display:none}}
 .sim{position:relative}
 .sim canvas.cv-ghost{position:absolute!important;left:0;top:0;opacity:0;pointer-events:none;z-index:-1}
+
+/* ---- simulador: visual + panel de controles (compu: lado a lado; celular: visual fijo arriba) ---- */
+.sim>.spanel{display:flex;flex-direction:column;min-width:0}
+@media (min-width:1000px){
+  .sim{display:grid!important;grid-template-columns:minmax(0,1fr) clamp(320px,34%,410px);grid-template-rows:minmax(0,1fr);height:clamp(460px,calc(100vh - var(--stk,0px) - 28px),880px);overflow:clip!important;scroll-margin-top:calc(var(--stk,0px) + 12px)}
+  .sim>*:not(.spanel):not(.sello):not(.cv-ghost){grid-column:1;grid-row:1;min-width:0}
+  .sim>canvas:not(.cv-ghost){align-self:center;max-height:100%}
+  .sim>.v3d{aspect-ratio:auto!important;height:100%}
+  .sim>.vs,.sim>.gwrap{align-self:center;max-height:100%;overflow:auto}
+  .sim>.spanel{grid-column:2;grid-row:1;overflow-y:auto;overscroll-behavior:contain;border-left:1px solid var(--line);scrollbar-width:thin}
+  .sim>.spanel>.pstep{padding:16px 18px 0}
+  .sim>.spanel>.mision{margin:12px 18px 2px}
+  .sim>.spanel>.simbody{padding:12px 18px 18px}
+  .sim>.spanel>.preto{margin:0 18px 18px}
+  .sim>.spanel .sl{grid-template-columns:minmax(0,1fr) 62px}
+  .sim>.spanel .sl label{grid-column:1/-1}
+  .sim>.spanel .reads dd{font-size:18px}
+  .sim>.spanel .mision .how{font-size:0!important}
+  .sim>.spanel .mision .how::after{content:'Usá los controles de acá abajo ↓';font-size:14px}
+}
+@media (max-width:999px){
+  .sim{overflow:clip!important}
+  .sim>.v3d{position:sticky;top:var(--stk,0px);z-index:5;aspect-ratio:auto!important;height:min(42svh,92vw)}
+  .sim>canvas:not(.cv-ghost){position:sticky;top:var(--stk,0px);z-index:5;max-height:42svh}
+}

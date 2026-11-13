@@ -202,7 +202,7 @@ function mk(id){
   return L;
 }
 function size(){if(!act)return;const r=act.box.getBoundingClientRect();if(r.width<10)return;R.setSize(r.width,r.height,false);cam.aspect=r.width/r.height;
-  const port=cam.aspect<1.5,v=act.def.view||{};cam.fov=port?(v.fovP||38):(v.fov||32);cam.updateProjectionMatrix();
+  const port=cam.aspect<1.5,v=act.def.view||{};cam.fov=port?(v.fovP||38):(v.fov||32);if(!port&&cam.aspect<2.3)cam.fov=2*Math.atan(Math.tan(cam.fov*Math.PI/360)*2.3/cam.aspect)*180/Math.PI;cam.updateProjectionMatrix();
   if(!act.view&&v.targetP&&port)ctl.target.fromArray(v.targetP);need=true}
 function place(L){const r=L.box.getBoundingClientRect(),v=new THREE.Vector3();for(const k in L.labels){const o=L.labels[k];if(o.el.hidden)continue;v.copy(o.v).project(cam);
   if(v.z>1){o.el.style.opacity=0;continue}o.el.style.opacity=1;o.el.style.transform='translate('+((v.x+1)/2*r.width).toFixed(1)+'px,'+((1-v.y)/2*r.height).toFixed(1)+'px) translate(-50%,-50%)'}}

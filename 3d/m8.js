@@ -35,7 +35,7 @@ function profile(P,v,a){const vj=8,segs=[];let T=0,L=0;for(let i=1;i<P.length;i+
   return{segs,T,L,avg:L/T,vj}}
 function spAt(sg,tt,a,vj){const tu=(sg.vp-vj)/a;if(tt<tu)return vj+a*tt;if(tt>sg.t-tu)return vj+a*(sg.t-tt);return sg.vp}
 function segAt(pr,tt){let sg=pr.segs[0];for(const q of pr.segs)if(q.t0<=tt)sg=q;return sg}
-register('l2',{span:34,view:{pos:[0,80,50],target:[0,22,0],posP:[0,100,70],targetP:[0,22,0],min:30,max:200},build(E){
+register('l2',{span:34,view:{pos:[0,96,34],target:[0,22,0],posP:[0,100,70],targetP:[0,22,0],min:30,max:200},build(E){
   const P=E.corexy(40,40),PATH=E.state('l2'),SC=.55;P.set(0,0,.4);
   const pts=[],pts2=[];PATH.forEach((p,i)=>{(i<=34?pts:pts2).push(new THREE.Vector3(p[0]*SC,.15,p[1]*SC))});pts2.unshift(pts[pts.length-1]);
   [[pts,0xFF9E70],[pts2,0xFFB95E]].forEach(q=>{const l=new THREE.Line(new THREE.BufferGeometry().setFromPoints(q[0]),new THREE.LineBasicMaterial({color:q[1]}));P.bed.add(l)});

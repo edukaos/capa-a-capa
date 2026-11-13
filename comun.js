@@ -68,3 +68,14 @@
   if(window.MutationObserver)new MutationObserver(check).observe(document.querySelector('.wrap')||document.body,{subtree:true,attributes:true,attributeFilter:['hidden']});
   check();
 })();
+
+/* simulador: junta paso, reto, controles y mensajes en un panel aparte del visual, y mide la barra fija de arriba */
+(function(){
+  var VIS=/^(CANVAS)$/,VC=['vs','gwrap','v3d','tag','sello','cv-ghost'];
+  function lay(){[].forEach.call(document.querySelectorAll('.sim'),function(s){var p=s.querySelector(':scope>.spanel');if(!p){p=document.createElement('div');p.className='spanel';s.appendChild(p)}
+    [].slice.call(s.children).forEach(function(e){if(e===p||VIS.test(e.tagName))return;for(var i=0;i<VC.length;i++)if(e.classList.contains(VC[i]))return;p.appendChild(e)})})}
+  function stk(){var t=document.querySelector('.top'),h=0;if(t&&getComputedStyle(t).position==='sticky')h=Math.round(t.getBoundingClientRect().height);document.documentElement.style.setProperty('--stk',h+'px')}
+  function go(){lay();stk();new MutationObserver(function(ms){var need=false;ms.forEach(function(m){if(m.target.classList&&m.target.classList.contains('sim'))need=true});if(need)lay()}).observe(document.body,{childList:true,subtree:true})}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',go);else go();
+  addEventListener('resize',stk);
+})();
