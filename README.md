@@ -56,6 +56,7 @@ Cada versión importante queda guardada en una rama, para poder volver atrás:
 | `version-2.3-modulo-9` | Módulo 9 nuevo, Multicolor y multimaterial. |
 | `version-2.4-mi-avance` | Página Mi avance con puntaje total, niveles y repasos guardados. |
 | `version-2.5-3d-modulo-4b` | Base 3D y lecciones 4.7 a 4.12 en 3D. |
+| `version-2.6-3d-modulo-4` | Módulo 4 completo en 3D (salvo la 4.2, que es un ejercicio de clasificar). |
 | `main` | La versión publicada. |
 
 Los módulos anteriores 8 (El taller) y 9 (Del hobby al negocio) se retiraron del manual y siguen guardados en la rama `version-2.1-app`.

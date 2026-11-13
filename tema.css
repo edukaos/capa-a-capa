@@ -216,3 +216,5 @@ code{color:var(--ui)}
 }
 @media (prefers-reduced-motion:reduce){.v3d .hint3{transition:none}}
 @media (max-width:600px){.v3d .lab3.s{display:none}}
+.sim{position:relative}
+.sim canvas.cv-ghost{position:absolute!important;left:0;top:0;opacity:0;pointer-events:none;z-index:-1}

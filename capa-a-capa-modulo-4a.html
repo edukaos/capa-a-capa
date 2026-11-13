@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m4a">
+<html lang="es" data-d3="m4a" data-d3-l="l1 l3 l4 l5 l6" data-cac="cac-m4a">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -324,6 +324,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Perfiles, capas, paredes, relleno, soportes, retracción y vista previa. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -625,7 +626,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -716,7 +717,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     ['El STL guarda solo la forma: los ajustes y la posición se pierden.',null,'El G-code sirve para imprimir de nuevo lo mismo, pero ya no se puede cambiar nada.'],function(){mark('l3')});
 
   // ---------- 4.4 orientacion ----------
-  var O4={o:'parado',load:0,test:false,brk:0,held:false},OD={parado:[80,'Muchos','El más largo'],placa:[30,'Pocos','Intermedio'],acostado:[100,'Ninguno','El más corto']},
+  window.CACS=window.CACS||{};var O4=CACS.l4={o:'parado',load:0,test:false,brk:0,held:false},OD={parado:[80,'Muchos','El más largo'],placa:[30,'Pocos','Intermedio'],acostado:[100,'Ninguno','El más corto']},
     UR=[[0,0,3,16],[3,4,9,3],[9,7,3,4]];
   function reset4(){O4.load=0;O4.test=false;O4.brk=0;O4.held=false}
   chips('ori4','o',function(v){O4.o=v;reset4();$('r4a').textContent=OD[v][1];$('r4b').textContent=OD[v][2];say('m4','Probala con carga para ver cuánto aguanta.')});

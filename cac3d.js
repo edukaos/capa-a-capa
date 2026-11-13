@@ -42,6 +42,18 @@ function rrectPath(w,d,r,hole){const p=hole?new THREE.Path():new THREE.Shape(),a
   p.lineTo(-a+r,b);p.quadraticCurveTo(-a,b,-a,b-r);p.lineTo(-a,-b+r);p.quadraticCurveTo(-a,-b,-a+r,-b);return p}
 function extrudeUp(shape,h,y){const g=new THREE.ExtrudeGeometry(shape,{depth:h,bevelEnabled:false,curveSegments:6});g.rotateX(-Math.PI/2);if(y)g.translate(0,y,0);return g}
 
+
+/* ---------- 3DBenchy (dominio público): perfil lateral en mm, 60 de largo por 48 de alto, igual que en los simuladores 2D ---------- */
+const BOUT=[[2,0],[0,4],[0,15],[13,14.6],[13,36],[10.5,36],[10.5,39.5],[18.5,39.5],[18.5,47],[18,47],[18,48],[26,48],[26,47],[25.5,47],[25.5,39.5],[41,39.5],[41,36],[38,36],[37.5,15.3],[45,16.2],[52,17.5],[60,19.5],[57.5,14],[53.5,8],[48,3],[42,0]],
+  BHOLES=[[[18.5,21],[32.5,21],[32.5,32],[18.5,32]],[[49.3,11.8],[51.7,11.8],[52.9,13.5],[51.7,15.2],[49.3,15.2],[48.1,13.5]]],BPOLYS=[BOUT].concat(BHOLES),SPM={};
+export function benchySpans(y){const key=y.toFixed(2);if(SPM[key])return SPM[key];const xs=[];BPOLYS.forEach(P=>{for(let i=0;i<P.length;i++){const a=P[i],b=P[(i+1)%P.length];if((a[1]>y)!==(b[1]>y))xs.push(a[0]+(y-a[1])/(b[1]-a[1])*(b[0]-a[0]))}});
+  xs.sort((a,b)=>a-b);const r=[];for(let i=0;i+1<xs.length;i+=2)if(xs[i+1]-xs[i]>.05)r.push([xs[i],xs[i+1]]);return SPM[key]=r}
+export function benchyBeam(x,y){if(y>=39.5){const d=x-22;return Math.sqrt(Math.max(.2,14.1-d*d))}if(y>=36)return 11;if(y>=14.5&&x>=12.9&&x<=38.2)return 9.5;
+  const bw=x<8?12.5+3*(x/8):x<30?15.5:15.5*Math.sqrt(Math.max(0,1-Math.pow((x-30)/30.5,2)));return Math.max(.5,bw*(.6+.4*Math.min(1,y/9)))}
+/* contorno de cada isla a la altura y (mm del perfil), en coordenadas de escena con escala k: [[X,Z],...] */
+export function benchyIslands(y,k){return benchySpans(y).map(q=>{const p=[],N=12;for(let i=0;i<=N;i++){const x=q[0]+(q[1]-q[0])*i/N;p.push([(x-30)*k,benchyBeam(x,y)*k])}
+  for(let i=N;i>=0;i--){const x=q[0]+(q[1]-q[0])*i/N;p.push([(x-30)*k,-benchyBeam(x,y)*k])}return p})}
+
 function makeCtx(L){
   const scene=new THREE.Scene();scene.environment=ENV;scene.environmentIntensity=.22;
   const span=L.def.span||45;
@@ -54,6 +66,7 @@ function makeCtx(L){
   const E={THREE,scene,MOB,COL,CSS,M,sec:L.sec,
     need(){need=true},
     val(id){return +document.getElementById(id).value},
+    state(k){return (window.CACS||{})[k]||{}},
     chip(id,attr){const b=document.querySelector('#'+id+' [aria-pressed="true"]');return b?b.dataset[attr]:null},
     layerTex,rrectPath,extrudeUp,
     /* material de filamento con líneas de capa (para piezas hechas con extrudeUp) */
@@ -88,6 +101,18 @@ function makeCtx(L){
     clipSeg(a,b,c,d,X0,Z0,X1,Z1){let t0=0,t1=1;const dx=c-a,dy=d-b,p=[-dx,dx,-dy,dy],q=[a-X0,X1-a,b-Z0,Z1-b];
       for(let i=0;i<4;i++){if(p[i]===0){if(q[i]<0)return null}else{const r=q[i]/p[i];if(p[i]<0){if(r>t1)return null;if(r>t0)t0=r}else{if(r<t0)return null;if(r<t1)t1=r}}}
       return [a+t0*dx,b+t0*dy,a+t1*dx,b+t1*dy]},
+    /* Benchy impreso por capas. bounds: alturas de corte en unidades de escena (de 0 a 48*k); colorOf(i,z0,z1) -> material.
+       Devuelve {g, show(n)} para mostrar solo las primeras n capas. */
+    benchy(bounds,k,colorOf){const by=new Map(),n=bounds.length-1;
+      for(let i=0;i<n;i++){const z0=bounds[i],z1=bounds[i+1],y=(z0+z1)/2/k,m=colorOf(i,z0,z1);let e=by.get(m);if(!e){e={pos:[],nor:[],ends:new Array(n).fill(0)};by.set(m,e)}
+        benchyIslands(y,k).forEach(pts=>{const sh=new THREE.Shape(pts.map(p=>new THREE.Vector2(p[0],p[1])));const g=new THREE.ExtrudeGeometry(sh,{depth:z1-z0,bevelEnabled:false,curveSegments:1});
+          g.rotateX(Math.PI/2);g.translate(0,z1,0);const ng=g.index?g.toNonIndexed():g;ng.computeVertexNormals();e.pos.push(...ng.attributes.position.array);e.nor.push(...ng.attributes.normal.array);g.dispose()});
+        for(const [mm,ee] of by)ee.ends[i]=ee.pos.length/3}
+      const g=new THREE.Group(),meshes=[];
+      for(const [m,e] of by){for(let i=1;i<n;i++)if(!e.ends[i])e.ends[i]=e.ends[i-1];const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(e.pos,3));geo.setAttribute('normal',new THREE.Float32BufferAttribute(e.nor,3));
+        const o=E.mesh(geo,m);o.userData.ends=e.ends;g.add(o);meshes.push(o)}
+      scene.add(g);return {g,meshes,show(c){meshes.forEach(o=>{const e=o.userData.ends;o.geometry.setDrawRange(0,c>=n?Infinity:(c>0?e[c-1]:0))})},
+        dispose(){scene.remove(g);meshes.forEach(o=>o.geometry.dispose())}}},
     /* cabezal: bloque calefactor, boquilla de bronce y disipador; la punta queda en (0,0,0) */
     nozzle(s){s=s||1;const g=new THREE.Group();
       const tip=new THREE.Mesh(new THREE.CylinderGeometry(.9*s,.22*s,1.6*s,24),M.brass);tip.position.y=.8*s;g.add(tip);
@@ -151,7 +176,7 @@ function enter(id){
   let L=LES[id];
   if(!L){try{L=LES[id]=mk(id)}catch(e){console.warn('3D: no se pudo armar '+id,e);delete DEFS[id];return false}}
   if(act&&act!==L)act.view={p:cam.position.clone(),t:ctl.target.clone()};
-  L.box.hidden=false;L.cv.hidden=true;L.box.prepend(R.domElement);act=L;
+  L.box.hidden=false;if(L.def.keep2d)L.cv.classList.add('cv-ghost');else L.cv.hidden=true;L.box.prepend(R.domElement);act=L;
   const v=L.def.view||{};ctl.minDistance=v.min||20;ctl.maxDistance=v.max||200;ctl.maxPolarAngle=v.maxPolar||1.45;ctl.minPolarAngle=v.minPolar||0;
   const rb=L.box.getBoundingClientRect(),port=rb.height>0&&rb.width/rb.height<1.5;
   if(L.view){cam.position.copy(L.view.p);ctl.target.copy(L.view.t)}else{cam.position.fromArray((port&&v.posP)||v.pos||[50,50,60]);ctl.target.fromArray((port&&v.targetP)||v.target||[0,5,0])}
@@ -167,7 +192,7 @@ function run(){if(!live){live=true;last=performance.now()/1000;requestAnimationF
 /* La página llama a CAC3D.take(lección) desde su bucle de dibujo: si la lección tiene escena 3D, la toma. */
 export async function boot(page){
   await import('./3d/'+page+'.js');core();
-  window.CAC3D={take(id){return !!DEFS[id]&&enter(id)}};
+  window.CAC3D={take(id){return !!DEFS[id]&&enter(id)&&!DEFS[id].keep2d}};
   const vis=Object.keys(DEFS).find(k=>{const s=document.getElementById(k);return s&&!s.hidden});
-  if(vis){if(window.CAC3Dstop)window.CAC3Dstop();if(!enter(vis)&&window.CAC3Dagain)window.CAC3Dagain()}
+  if(vis){if(window.CAC3Dstop&&!DEFS[vis].keep2d)window.CAC3Dstop();if(!enter(vis)&&window.CAC3Dagain)window.CAC3Dagain()}
 }
