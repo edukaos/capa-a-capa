@@ -112,7 +112,26 @@ function makeCtx(L){
       for(const [m,e] of by){for(let i=1;i<n;i++)if(!e.ends[i])e.ends[i]=e.ends[i-1];const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(e.pos,3));geo.setAttribute('normal',new THREE.Float32BufferAttribute(e.nor,3));
         const o=E.mesh(geo,m);o.userData.ends=e.ends;g.add(o);meshes.push(o)}
       scene.add(g);return {g,meshes,show(c){meshes.forEach(o=>{const e=o.userData.ends;o.geometry.setDrawRange(0,c>=n?Infinity:(c>0?e[c-1]:0))})},
+        range(a,b){meshes.forEach(o=>{const e=o.userData.ends,s0=a>0?e[Math.min(n,a)-1]:0,s1=b>=n?e[n-1]:(b>0?e[b-1]:0);o.geometry.setDrawRange(s0,Math.max(0,s1-s0))})},
         dispose(){scene.remove(g);meshes.forEach(o=>o.geometry.dispose())}}},
+    /* impresora tipo Ender 3 (cama que se mueve en Y): W = lado de la cama, H = alto del marco.
+       Devuelve {g, bed, head, set(x,y,z)}: x del cabezal, y de la cama (hacia adelante +), z del pórtico (altura de la punta). Lo impreso va dentro de bed. */
+    printer(W,H,opt){opt=opt||{};const g=new THREE.Group(),blk=new THREE.MeshStandardMaterial({color:0x2A3142,roughness:.45,metalness:.6}),X=W/2+5,D=W+14;
+      const box=(w,h,d,m,x,y,z,par)=>{const o=E.mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);(par||g).add(o);return o};
+      box(3.2,3.2,D,blk,-X+1.6,-4.6,0);box(3.2,3.2,D,blk,X-1.6,-4.6,0);box(2*X,3.2,3.2,blk,0,-4.6,-D/2+1.6);box(2*X,3.2,3.2,blk,0,-4.6,D/2-1.6);
+      box(3.2,H+3.2,3.2,blk,-X+1.6,H/2-4.6,-3);box(3.2,H+3.2,3.2,blk,X-1.6,H/2-4.6,-3);box(2*X,3.2,3.2,blk,0,H-3,-3);
+      const scr=box(7,4.5,1,M.dark,X+3,2,D/2-6);scr.rotation.y=-.5;const glow=box(5.6,3.2,.1,new THREE.MeshStandardMaterial({color:0x254777,emissive:0x254777,emissiveIntensity:.8}),0,0,.55,scr);glow.castShadow=false;
+      // cama sobre su carro (se mueve hacia adelante y atrás)
+      const bed=new THREE.Group();g.add(bed);box(W+2,1.6,W+2,M.alu,0,-2.2,0,bed);const pl=box(W,1,W,M.pei,0,-.5,0,bed);pl.castShadow=false;
+      [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(c=>{const k=E.mesh(new THREE.CylinderGeometry(1.1,1.1,1.2,16),new THREE.MeshStandardMaterial({color:0xFFB95E,roughness:.5}));k.position.set(c[0]*(W/2-2),-3.6,c[1]*(W/2-2));bed.add(k)});
+      // pórtico del eje X y cabezal
+      const gan=new THREE.Group();g.add(gan);box(2*X-3.2,2.6,2.6,blk,0,5,-3,gan);
+      const head=new THREE.Group();gan.add(head);const hb=box(6,7,4.5,new THREE.MeshStandardMaterial({color:0x313C55,roughness:.5,metalness:.3}),0,4.4,.6,head);
+      const fanf=E.mesh(new THREE.CylinderGeometry(2,2,.4,24),M.dark);fanf.rotation.x=Math.PI/2;fanf.position.set(0,4.8,2.95);head.add(fanf);
+      const nz=new THREE.Mesh(new THREE.CylinderGeometry(.55,.12,1,16),M.brass);nz.position.y=.5;head.add(nz);const hbk=box(2.4,1.4,2,M.alu,0,1.6,0,head);
+      if(opt.spool!==false){const sp=new THREE.Group();sp.position.set(0,H+2.4,-3);g.add(sp);const r=E.mesh(new THREE.CylinderGeometry(5.2,5.2,3.6,32),new THREE.MeshStandardMaterial({color:COL.fil,roughness:.55}));r.rotation.z=Math.PI/2;sp.add(r);
+        const c=E.mesh(new THREE.CylinderGeometry(5.8,5.8,.3,32),M.dark);c.rotation.z=Math.PI/2;c.position.x=-1.9;sp.add(c);const c2=c.clone();c2.position.x=1.9;sp.add(c2)}
+      scene.add(g);return {g,bed,head,gan,set(x,y,z){head.position.x=x;bed.position.z=-y;gan.position.y=z;gan.position.z=0}}},
     /* cabezal: bloque calefactor, boquilla de bronce y disipador; la punta queda en (0,0,0) */
     nozzle(s){s=s||1;const g=new THREE.Group();
       const tip=new THREE.Mesh(new THREE.CylinderGeometry(.9*s,.22*s,1.6*s,24),M.brass);tip.position.y=.8*s;g.add(tip);
@@ -135,7 +154,7 @@ function makeCtx(L){
     unlabel(key){const o=L.labels[key];if(o)o.el.hidden=true},
     pill(text,tone){let el=box.querySelector('.pill3');if(!el){el=document.createElement('span');el.className='pill3';box.appendChild(el)}el.textContent=text;el.style.setProperty('--t',tone||CSS.ui)},
     title(text){let el=box.querySelector('.ttl3');if(!el){el=document.createElement('span');el.className='ttl3';box.appendChild(el)}el.textContent=text},
-    chart(fn){let c=box.querySelector('.ch3');if(!c){c=document.createElement('canvas');c.className='ch3';c.setAttribute('aria-hidden','true');box.appendChild(c)}L.chartFn=fn;drawChart(L)},
+    chart(fn){let c=box.querySelector('.ch3');if(!c){c=document.createElement('canvas');c.className='ch3';c.setAttribute('aria-hidden','true');box.appendChild(c)}L.chartFn=fn;drawChart(L);return c},
     redraw(){drawChart(L)}};
   return E;
 }
@@ -157,9 +176,9 @@ function core(){
   addEventListener('pagehide',()=>{live=false});
 }
 function mk(id){
-  const def=DEFS[id],sec=document.getElementById(id),cv=def.cv?document.getElementById(def.cv):sec.querySelector('.sim canvas');
+  const def=DEFS[id],sec=document.getElementById(id),cv=def.cv?document.getElementById(def.cv):def.sel?sec.querySelector(def.sel):sec.querySelector('.sim canvas');
   const box=document.createElement('div');box.className='v3d';box.hidden=true;
-  const r=cv.getBoundingClientRect();box.style.setProperty('--ar',r.width>10&&r.height>10?(r.width/r.height).toFixed(3):(def.ar||'5/2'));
+  const r=cv.getBoundingClientRect();box.style.setProperty('--ar',def.ar||(r.width>10&&r.height>10?(r.width/r.height).toFixed(3):'5/2'));
   box.innerHTML='<span class="hint3'+(touched?' off':'')+'">Arrastrá para girar</span>';cv.parentNode.insertBefore(box,cv);
   const L={id,def,sec,cv,box,labels:{},spun:false,view:null};L.E=makeCtx(L);L.scene=L.E.scene;L.inst=def.build(L.E)||{};
   new ResizeObserver(()=>{if(act===L){size();drawChart(L)}}).observe(box);
