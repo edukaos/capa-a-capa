@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m8">
+<html lang="es" data-d3="m8" data-d3-l="l1 l2 l3 l4 l5 l6" data-cac="cac-m8">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -316,6 +316,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="CoreXY, input shaping, calibración automática, alto flujo y cámara: qué cambió desde la Ender 3. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -633,7 +634,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;['l1','l2','l3','l4','l5','l6'].forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de 6 retos';$('prog-bar').style.width=(n/6*100)+'%';
@@ -682,7 +683,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   function camIcon(c,x,y,col){c.fillStyle=col;rr(c,x-9,y-6,14,12,3);c.beginPath();c.moveTo(x+5,y-2);c.lineTo(x+10,y-5);c.lineTo(x+10,y+5);c.lineTo(x+5,y+2);c.closePath();c.fill()}
 
   // ---------- 8.1 de la Ender 3 a la nueva generacion ----------
-  var UP1=['CoreXY liviana','Input shaping','Hotend de alto flujo','Nivelación automática','Cámara y control remoto'],SEL1=[false,false,false,false,false],T0_1=0,BASE1=105;
+  var UP1=['CoreXY liviana','Input shaping','Hotend de alto flujo','Nivelación automática','Cámara y control remoto'],SEL1=(window.CACS=window.CACS||{}).l1=[false,false,false,false,false],T0_1=0,BASE1=105;
   function caps1(){return{m:SEL1[0]?5.6:1,v:SEL1[1]?5.6:1.3,f:SEL1[2]?5.6:1.6}}
   function time1(){var k=caps1();return BASE1/Math.min(k.m,k.v,k.f)}
   function limit1(){var k=caps1(),mn=Math.min(k.m,k.v,k.f);if(mn>=5.6)return '';return k.m===mn?'la mecánica: la cama pesada no deja acelerar':k.v===mn?'las vibraciones: sin input shaping, acelerar deja ondas':'el hotend: no llega a fundir el plástico a esa velocidad'}
@@ -708,7 +709,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 
   // ---------- 8.2 CoreXY y velocidad real ----------
   // recorrido de una capa: el contorno del casco (tramos cortos) y un relleno en zigzag (tramos largos)
-  var PATH2=(function(){var p=[],i,x,y=6;for(i=0;i<=16;i++){x=60*i/16;p.push([x-30,beam(x,y)])}for(i=16;i>=0;i--){x=60*i/16;p.push([x-30,-beam(x,y)])}
+  window.CACS=window.CACS||{};var PATH2=CACS.l2=(function(){var p=[],i,x,y=6;for(i=0;i<=16;i++){x=60*i/16;p.push([x-30,beam(x,y)])}for(i=16;i>=0;i--){x=60*i/16;p.push([x-30,-beam(x,y)])}
     for(i=0;i<9;i++){var xx=-22+i*5.2,b1=beam(xx+30,y)*.8,b2=beam(xx+32.6,y)*.8,sg=i%2?1:-1;p.push([xx,-sg*b1]);p.push([xx+2.6,sg*b2])}return p})();
   function profile2(v,a){var vj=8,segs=[],T=0,L=0;for(var i=1;i<PATH2.length;i++){var dx=PATH2[i][0]-PATH2[i-1][0],dy=PATH2[i][1]-PATH2[i-1][1],len=Math.sqrt(dx*dx+dy*dy)*1.6;if(len<.01)continue;
       var d1=(v*v-vj*vj)/(2*a),t,vp;if(2*d1<=len){vp=v;t=2*(v-vj)/a+(len-2*d1)/v}else{vp=Math.sqrt(vj*vj+a*len);t=2*(vp-vj)/a}segs.push({i:i,len:len,t:t,vp:vp,t0:T});T+=t;L+=len}
@@ -740,7 +741,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l2=function(){T2s=0;loop(draw2)};
 
   // ---------- 8.3 input shaping ----------
-  var S3={meas:0,measT:0,on:false},F3=47;
+  window.CACS=window.CACS||{};var S3=CACS.l3={meas:0,measT:0,on:false},F3=47;
   function ripple3(){var a=+$('a3').value,amp=Math.max(0,(a-1500)/18500);return S3.on?amp*.06:amp}
   function draw3(now){var f=fit($('c3'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,vert=w<520;bg(c,w,h);
     var A=vert?{x:0,y:0,w:w,h:h/2}:{x:0,y:0,w:w*.56,h:h},B=vert?{x:0,y:h/2,w:w,h:h/2}:{x:w*.56,y:0,w:w*.44,h:h};
@@ -781,7 +782,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l3=function(){loop(draw3)};
 
   // ---------- 8.4 calibracion automatica ----------
-  var G4=[3,5,7],GI4=0,S4={state:0,t0:0,grid:3,mesh:null};
+  var G4=[3,5,7],GI4=0,S4=(window.CACS=window.CACS||{}).l4={state:0,t0:0,grid:3,mesh:null};
   function zf4(x,y){return .16*Math.sin(x*2.6+.4)*Math.cos(y*2.1-.3)+.11*(x*x-.25)+.07*Math.sin(x*6.4+y*5.1)*Math.exp(-((x-.6)*(x-.6)+(y-.35)*(y-.35))*6)}
   function interp4(mesh,n,x,y){var fx=x*(n-1),fy=y*(n-1),i=Math.min(n-2,Math.floor(fx)),j=Math.min(n-2,Math.floor(fy)),u=fx-i,v=fy-j;
     return mesh[j][i]*(1-u)*(1-v)+mesh[j][i+1]*u*(1-v)+mesh[j+1][i]*(1-u)*v+mesh[j+1][i+1]*u*v}
@@ -853,7 +854,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l5=function(){T5=0;loop(draw5)};
 
   // ---------- 8.6 camara y deteccion de fallas ----------
-  var S6={t0:0,ai:false,ended:false,caught:false,result:null},DUR6=11,FAIL6=.38;
+  window.CACS=window.CACS||{};var S6=CACS.l6={t0:0,ai:false,ended:false,caught:false,result:null},DUR6=11,FAIL6=.38;
   function spag6(c,cx,by,s,k,t){c.strokeStyle='rgba(255,179,138,.9)';c.lineWidth=Math.max(1,.25*s);c.lineCap='round';var n=Math.floor(6+k*90);
     for(var i=0;i<n;i++){var a=i*2.399,r=(.6+((i*37)%17)/17)*(2+k*9)*s,x=cx+Math.cos(a)*r,y=by-Math.abs(Math.sin(a*1.7))*r*.55-.4*s;c.beginPath();c.moveTo(x,y);c.bezierCurveTo(x+3*s*Math.sin(i),y-2*s,x-2*s,y-3*s*Math.cos(i),x+Math.sin(i*1.3)*4*s,y-Math.abs(Math.cos(i))*2*s);c.stroke()}}
   function draw6(now){var f=fit($('c6'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000;bg(c,w,h);if(!S6.t0)S6.t0=now;
