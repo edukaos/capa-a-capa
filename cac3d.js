@@ -132,6 +132,21 @@ function makeCtx(L){
       if(opt.spool!==false){const sp=new THREE.Group();sp.position.set(0,H+2.4,-3);g.add(sp);const r=E.mesh(new THREE.CylinderGeometry(5.2,5.2,3.6,32),new THREE.MeshStandardMaterial({color:COL.fil,roughness:.55}));r.rotation.z=Math.PI/2;sp.add(r);
         const c=E.mesh(new THREE.CylinderGeometry(5.8,5.8,.3,32),M.dark);c.rotation.z=Math.PI/2;c.position.x=-1.9;sp.add(c);const c2=c.clone();c2.position.x=1.9;sp.add(c2)}
       scene.add(g);return {g,bed,head,gan,set(x,y,z){head.position.x=x;bed.position.z=-y;gan.position.y=z;gan.position.z=0}}},
+    /* impresora CoreXY en caja: la cama baja en Z y el cabezal se mueve en X e Y arriba. W = lado de la cama, H = alto.
+       Devuelve {g, bed, head, beam, motors, set(x,y,z)}: x e y del cabezal (y hacia adelante +), z = altura de la punta sobre la cama. */
+    corexy(W,H,opt){opt=opt||{};const g=new THREE.Group(),blk=new THREE.MeshStandardMaterial({color:0x2A3142,roughness:.45,metalness:.6}),A=W/2+6;
+      const box=(w,h,d,m,x,y,z,par)=>{const o=E.mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);(par||g).add(o);return o};
+      [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(c=>box(2.6,H,2.6,blk,c[0]*A,H/2-6,c[1]*A));
+      [-6,H-6].forEach(y=>{box(2*A,2.6,2.6,blk,0,y,-A);box(2*A,2.6,2.6,blk,0,y,A);box(2.6,2.6,2*A,blk,-A,y,0);box(2.6,2.6,2*A,blk,A,y,0)});
+      if(opt.glass!==false){const gm=new THREE.MeshStandardMaterial({color:0xA9C7FF,transparent:true,opacity:.07,roughness:.1,depthWrite:false,side:THREE.DoubleSide});
+        [[0,A,0],[0,-A,Math.PI],[A,0,Math.PI/2],[-A,0,-Math.PI/2]].forEach(q=>{if(opt.open&&q[1]===A)return;const p=new THREE.Mesh(new THREE.PlaneGeometry(2*A,H),gm);p.position.set(q[0],H/2-6,q[1]);p.rotation.y=q[2];g.add(p)})}
+      const bed=new THREE.Group();g.add(bed);box(W+2,1.6,W+2,M.alu,0,-2.2,0,bed);const pl=box(W,1,W,M.pei,0,-.5,0,bed);pl.castShadow=false;
+      const top=H-8;box(1.6,1.6,2*A-2,M.steel,-A+2.2,top+4,0);box(1.6,1.6,2*A-2,M.steel,A-2.2,top+4,0);
+      const beam=new THREE.Group();g.add(beam);box(2*A-4,1.8,2,blk,0,top+4,0,beam);
+      const head=new THREE.Group();beam.add(head);head.position.y=top-7;box(5,5,5,new THREE.MeshStandardMaterial({color:0x313C55,roughness:.5,metalness:.3}),0,4.5,0,head);
+      const nz=new THREE.Mesh(new THREE.CylinderGeometry(.55,.12,1,16),M.brass);nz.position.y=.5;head.add(nz);box(2.2,1.2,2,M.alu,0,1.6,0,head);
+      const motors=[];[-1,1].forEach(sx=>{const m=box(4.2,4.2,4.2,M.dark,sx*(A-2.5),top+6.8,-A+2.5);const pu=E.mesh(new THREE.CylinderGeometry(.9,.9,1.2,12),M.steel);pu.position.y=-2.8;m.add(pu);motors.push(m)});
+      scene.add(g);return {g,bed,head,beam,motors,top,set(x,y,z){head.position.x=x;beam.position.z=y;bed.position.y=top-7-z}}},
     /* cabezal: bloque calefactor, boquilla de bronce y disipador; la punta queda en (0,0,0) */
     nozzle(s){s=s||1;const g=new THREE.Group();
       const tip=new THREE.Mesh(new THREE.CylinderGeometry(.9*s,.22*s,1.6*s,24),M.brass);tip.position.y=.8*s;g.add(tip);

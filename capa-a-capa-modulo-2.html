@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m2">
+<html lang="es" data-d3="m2" data-d3-l="l1 l2 l3 l4 l5" data-cac="cac-m2">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -316,6 +316,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Ejes, motores, correas, extrusor, hotend, cama y electrónica. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -597,7 +598,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;['l1','l2','l3','l4','l5'].forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de 5 retos';$('prog-bar').style.width=(n/5*100)+'%';
@@ -696,7 +697,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     ['En la cama móvil la torre viaja con la cama y se sacude en cada cambio de dirección.',null,'Mirá las dos torres de abajo con la aceleración al máximo.'],function(){mark('l2')});
 
   // ---------- 2.3 motor paso a paso ----------
-  var M3={cmd:0,real:0,d:0,dc:0};
+  window.CACS=window.CACS||{};var M3=CACS.l3={cmd:0,real:0,d:0,dc:0};
   function upd3(){$('r3a').textContent=fmm(M3.cmd*.2);$('r3b').textContent=fmm(M3.real*.2);var m=$('m3');
     if(M3.cmd===150&&M3.real===150){m.className='msg ok';m.textContent='¡Justo en 30 mm! Fueron 150 pasos y no se perdió ninguno.';mark('l3')}
     else if(M3.cmd!==M3.real){m.className='msg bad';m.textContent='Se perdieron '+Math.abs(M3.cmd-M3.real)+' pasos. La impresora cree una cosa y el carro está en otra. Volvé a cero para corregirlo.'}
@@ -751,7 +752,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   START.l4=function(){upd4();loop(draw4)};
 
   // ---------- 2.5 homing ----------
-  var H5={x:34,st:'idle',known:false,t0:0,last:0};
+  window.CACS=window.CACS||{};var H5=CACS.l5={x:34,st:'idle',known:false,t0:0,last:0};
   function say5(t,k){var m=$('m5');m.className='msg'+(k?' '+k:'');m.textContent=t}
   $('home5').addEventListener('click',function(){if(H5.st==='fast'||H5.st==='back'||H5.st==='slow')return;if(H5.x<3)H5.x=3;H5.st='fast';H5.known=false;say5('Buscando el final de carrera: avanza rápido hacia la izquierda…')});
   $('rand5').addEventListener('click',function(){H5.x=14+Math.random()*40;H5.st='idle';H5.known=false;say5('Moviste el carro a mano con la impresora apagada. La máquina no sabe dónde quedó.')});

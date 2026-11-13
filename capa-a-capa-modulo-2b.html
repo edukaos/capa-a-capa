@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-cac="cac-m2b">
+<html lang="es" data-d3="m2b" data-d3-l="l1 l2 l3 l4" data-cac="cac-m2b">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -314,6 +314,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
 /* /fx */
 </style>
 <style>html{color-scheme:dark}body{margin:0}img{max-width:100%}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
 <meta name="description" content="Ejes, motores, correas, extrusor, hotend, cama y electrónica. Capa a Capa, el manual interactivo de impresión 3D de Quirón 3D.">
 <meta name="theme-color" content="#141A27">
 <meta property="og:type" content="website">
@@ -620,7 +621,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     c.fillStyle=C.soft;c.font='500 12px "DM Mono",ui-monospace,monospace';c.textAlign='left';c.fillText(title,sx+62,sy+22);
     return{x:sx+4,y:sy+30,w:sw-8,h:sh-38}}
   // el bucle nunca se corta: si un cuadro falla o el lienzo todavia no tiene tamano, se reintenta en el siguiente
-  function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
+  window.CAC3Dstop=function(){cancelAnimationFrame(raf);LOOPFN=null};window.CAC3Dagain=function(){if(START[cur])START[cur]()};function loop(fn){cancelAnimationFrame(raf);LOOPFN=fn;if(window.CAC3D&&CAC3D.take(cur)){LOOPFN=null;return}try{fn(performance.now())}catch(e){lastErr=String(e)}(function t(){raf=requestAnimationFrame(function(now){rafSeen=true;lastTick=performance.now();frames++;if(LOOPFN===fn){try{fn(now)}catch(e){lastErr=String(e)}t()}})})()}
   // ---------- progreso y navegacion ----------
   function paintProg(){var n=0;LES.forEach(function(k){if(done[k])n++});
     $('prog-txt').textContent=n+' de '+LES.length+' retos';$('prog-bar').style.width=(n/LES.length*100)+'%';
@@ -678,7 +679,7 @@ input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
     ['El cabezal liviano es una ventaja real, pero el TPU se comprime en el tubo largo.',null,'Cambiá a TPU en el simulador y compará los hilos.'],function(){mark('l1')});
 
   // ---------- 2.7 hotend ----------
-  var H2={hc:0,last:0,jam:false};
+  window.CACS=window.CACS||{};var H2=CACS.l2={hc:0,last:0,jam:false};
   function heat(T){var a=hex('#6D8FD6'),b=hex('#F2C56B'),d=hex('#FF6A3D');return T<110?mixA(a,b,Math.max(0,(T-25)/85)):mixA(b,d,Math.min(1,(T-110)/100))}
   function draw2(now){var f=fit($('c2'));if(!f)return;var c=f.c,w=f.w,h=f.h,t=now/1000,dt=H2.last?Math.min(.05,(now-H2.last)/1000):0;H2.last=now;bg(c,w,h);
     var fan=$('fan2').checked;H2.hc=Math.max(0,Math.min(1,H2.hc+(fan?-dt/3.5:dt/6)));var hc=H2.hc,jam=hc>.78,Ths=40+hc*135,u=h/34,cx=w*(w>560?.44:.5),g,k;
